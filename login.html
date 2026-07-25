@@ -52,6 +52,7 @@
       font-size: 15px;
       transition: 0.3s;
       background: #f8f9fa;
+      text-align: center;
     }
     .login-box input:focus {
       border-color: #1a237e;
@@ -88,25 +89,11 @@
     .login-box .error.show {
       display: block;
     }
-    #pinSection {
-      display: none;
-    }
-    .loading-container {
+    .login-box .hint {
+      font-size: 11px;
+      color: #aaa;
       text-align: center;
-      padding: 10px;
-    }
-    .spinner {
-      display: inline-block;
-      width: 24px;
-      height: 24px;
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #1a237e;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      margin-top: 8px;
     }
     @media (max-width: 480px) {
       .login-box {
@@ -125,146 +112,48 @@
       <p>الثانوية الرسمية بلس</p>
     </div>
 
-    <!-- إظهار رسالة تسجيل الدخول -->
-    <div id="loginStatus" style="text-align:center;padding:20px;">
-      <div class="spinner"></div>
-      <p style="margin-top:12px;color:#555;">⏳ جاري تسجيل الدخول...</p>
-    </div>
-
-    <div class="error" id="loginError"></div>
+    <form id="loginForm">
+      <input type="password" id="loginPassword" placeholder="🔑 أدخل كلمة المرور" required>
+      <button type="submit">🚀 دخول</button>
+      <div class="error" id="loginError"></div>
+      <div class="hint">💡 كلمة المرور: admin2024</div>
+    </form>
   </div>
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js">
-  </script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js">
-  </script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js">
-  </script>
 
   <script>
     // ============================================================
-    // 🔑 Firebase Configuration
+    // 🔑 كلمة المرور الثابتة
     // ============================================================
-    const firebaseConfig = {
-      apiKey: "AIzaSyAz9BfG1INB3shlCiMtK395SEo6sCkaZSI",
-      authDomain: "thanawya-official-plus.firebaseapp.com",
-      databaseURL: "https://thanawya-official-plus-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "thanawya-official-plus",
-      storageBucket: "thanawya-official-plus.firebasestorage.app",
-      messagingSenderId: "883728724353",
-      appId: "1:883728724353:web:3f611e29d556d03c61b880",
-      measurementId: "G-1KN0QEZKWX"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+    const ADMIN_PASSWORD = 'admin2024';
 
     // ============================================================
-    // 🔐 بيانات الدخول الثابتة
+    // 📝 تسجيل الدخول
     // ============================================================
-    const FIXED_EMAIL = 'admin@thanawya.com';
-    const FIXED_PASSWORD = 'Admin@2024';
-    const FIXED_PIN = '2024';
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
 
-    // ============================================================
-    // 🚀 تسجيل الدخول التلقائي
-    // ============================================================
-    async function autoLogin() {
+      const password = document.getElementById('loginPassword').value.trim();
       const errorEl = document.getElementById('loginError');
-      const statusEl = document.getElementById('loginStatus');
+      errorEl.classList.remove('show');
 
-      try {
-        // 1. التحقق من PIN
-        const pinDoc = await db.collection('settings').doc('adminPin').get();
-        const correctPin = pinDoc.exists ? pinDoc.data().pin : '2024';
-
-        if (FIXED_PIN !== correctPin) {
-          errorEl.textContent = '❌ PIN غير صحيح';
-          errorEl.classList.add('show');
-          statusEl.innerHTML = '<p style="color:#e74c3c;">❌ فشل تسجيل الدخول</p>';
-          return;
-        }
-
-        // 2. تسجيل الدخول
-        const userCred = await auth.signInWithEmailAndPassword(FIXED_EMAIL, FIXED_PASSWORD);
-        const user = userCred.user;
-
-        // 3. التحقق من بيانات المستخدم
-        const userDoc = await db.collection('users').doc(user.uid).get();
-        const userData = userDoc.data();
-
-        if (!userData) {
-          errorEl.textContent = '❌ لم يتم العثور على بيانات المستخدم';
-          errorEl.classList.add('show');
-          statusEl.innerHTML = '<p style="color:#e74c3c;">❌ فشل تسجيل الدخول</p>';
-          await auth.signOut();
-          return;
-        }
-
-        if (userData.isBanned === true) {
-          errorEl.textContent = '⛔ حسابك محظور';
-          errorEl.classList.add('show');
-          statusEl.innerHTML = '<p style="color:#e74c3c;">❌ فشل تسجيل الدخول</p>';
-          await auth.signOut();
-          return;
-        }
-
-        const role = userData.role || 'student';
-        if (role === 'admin' || role === 'superAdmin') {
-          statusEl.innerHTML = '<p style="color:#2ecc71;">✅ تم تسجيل الدخول بنجاح!</p>';
-          setTimeout(() => {
-            window.location.href = 'dashboard.html';
-          }, 500);
-        } else {
-          errorEl.textContent = '⛔ ليس لديك صلاحية';
-          errorEl.classList.add('show');
-          statusEl.innerHTML = '<p style="color:#e74c3c;">❌ فشل تسجيل الدخول</p>';
-          await auth.signOut();
-        }
-      } catch (err) {
-        errorEl.textContent = '❌ ' + err.message;
+      if (password === ADMIN_PASSWORD) {
+        // ✅ دخول ناجح → حول للوحة التحكم
+        window.location.href = 'dashboard.html';
+      } else {
+        // ❌ كلمة مرور غلط
+        errorEl.textContent = '❌ كلمة المرور غير صحيحة';
         errorEl.classList.add('show');
-        statusEl.innerHTML = '<p style="color:#e74c3c;">❌ فشل تسجيل الدخول: ' + err.message + '</p>';
-        console.error('❌ خطأ:', err);
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('loginPassword').focus();
       }
-    }
-
-    // ============================================================
-    // 🔄 تنفيذ تسجيل الدخول التلقائي عند تحميل الصفحة
-    // ============================================================
-    document.addEventListener('DOMContentLoaded', function() {
-      autoLogin();
     });
 
     // ============================================================
-    // 🔐 التحقق من الجلسة (لو فيه مستخدم مسجل)
+    // 🔄 لو دخلت بالغلط، نقدر نرجع
     // ============================================================
-    auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        try {
-          const userDoc = await db.collection('users').doc(user.uid).get();
-          const userData = userDoc.data();
-
-          if (userData) {
-            if (userData.isBanned === true) {
-              await auth.signOut();
-              window.location.reload();
-              return;
-            }
-
-            const role = userData.role || 'student';
-            if (role === 'admin' || role === 'superAdmin') {
-              // لو هو أصلاً في login.html، حوله للوحة التحكم
-              if (window.location.pathname.includes('login.html')) {
-                window.location.href = 'dashboard.html';
-              }
-            }
-          }
-        } catch (err) {
-          console.error('❌ خطأ:', err);
-        }
+    document.getElementById('loginPassword').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        document.getElementById('loginForm').dispatchEvent(new Event('submit'));
       }
     });
   </script>
