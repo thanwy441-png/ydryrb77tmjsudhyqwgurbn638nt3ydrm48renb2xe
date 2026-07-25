@@ -6,15 +6,28 @@
     <meta name="theme-color" content="#1a237e" />
     <title>لوحة التحكم - الثانوية الرسمية بلس</title>
 
+    <!-- ===== Manifest ===== -->
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="apple-touch-icon" href="./icon-512.jpg" />
+
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js">
     </script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js">
+    </script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js">
+    </script>
+
+    <!-- DOMPurify -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js">
     </script>
 
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
 
     <style>
+        /* ===== الأساسيات ===== */
         * {
             margin: 0;
             padding: 0;
@@ -23,37 +36,35 @@
         }
         body {
             background: #f0f4f8;
+            transition: background 0.3s, color 0.3s;
             min-height: 100vh;
         }
         body.dark-mode {
             background: #0f0f1a;
             color: #e0e0e0;
         }
-        body.dark-mode .sidebar,
-        body.dark-mode .topbar,
-        body.dark-mode .stat-card,
-        body.dark-mode .table-container,
-        body.dark-mode .modal-content {
-            background: #1e1e32;
+
+        /* ===== علامة التوثيق الزرقاء ===== */
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 4px;
+            vertical-align: middle;
         }
-        body.dark-mode th {
-            background: #2d2d44;
-        }
-        body.dark-mode td {
-            border-bottom-color: #333;
-        }
-        body.dark-mode .stat-card .stat-number {
-            color: #ecf0f1;
-        }
-        body.dark-mode .stat-card .stat-label {
-            color: #aaa;
+        .verified-badge svg {
+            display: block;
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
         }
 
+        /* ===== الشريط الجانبي ===== */
         .sidebar {
             position: fixed;
             top: 0;
             right: 0;
-            width: 220px;
+            width: 240px;
             height: 100%;
             background: white;
             box-shadow: -2px 0 20px rgba(0, 0, 0, 0.08);
@@ -62,12 +73,18 @@
             overflow-y: auto;
             padding: 12px 0;
         }
+        body.dark-mode .sidebar {
+            background: #1a1a2e;
+        }
         .sidebar .logo {
             display: flex;
             align-items: center;
             gap: 8px;
             padding: 0 12px 14px;
             border-bottom: 1px solid #eee;
+        }
+        body.dark-mode .sidebar .logo {
+            border-bottom-color: #333;
         }
         .sidebar .logo img {
             height: 30px;
@@ -85,6 +102,17 @@
             padding: 12px;
             text-align: center;
             border-bottom: 1px solid #eee;
+        }
+        body.dark-mode .sidebar .admin-info {
+            border-bottom-color: #333;
+        }
+        .sidebar .admin-info .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #1a237e;
+            margin-bottom: 4px;
         }
         .sidebar .admin-info .avatar-placeholder {
             width: 40px;
@@ -127,10 +155,17 @@
         .sidebar .nav-list li:hover {
             background: #f0f4f8;
         }
+        body.dark-mode .sidebar .nav-list li:hover {
+            background: #2d2d44;
+        }
         .sidebar .nav-list li.active {
             background: #1a237e15;
             border-right-color: #1a237e;
             color: #1a237e;
+        }
+        body.dark-mode .sidebar .nav-list li.active {
+            background: #1a237e40;
+            color: #90caf9;
         }
         .sidebar .nav-list li .icon {
             font-size: 16px;
@@ -147,9 +182,15 @@
             min-width: 18px;
             text-align: center;
         }
+        .sidebar .nav-list li .badge.green {
+            background: #2ecc71;
+        }
+        .sidebar .nav-list li .badge.orange {
+            background: #f39c12;
+        }
 
         .main-content {
-            margin-right: 220px;
+            margin-right: 240px;
             padding: 12px 16px;
             min-height: 100vh;
         }
@@ -164,6 +205,9 @@
             margin-bottom: 16px;
             flex-wrap: wrap;
             gap: 8px;
+        }
+        body.dark-mode .topbar {
+            background: #1e1e32;
         }
         .topbar h1 {
             font-size: 18px;
@@ -200,7 +244,10 @@
             background: #3498db;
             color: white;
         }
-        .btn-live {
+        .topbar .actions .btn-refresh:hover {
+            transform: rotate(180deg);
+        }
+        .topbar .actions .btn-live {
             background: #e74c3c;
             color: white;
             animation: pulse-live 1.5s infinite;
@@ -232,6 +279,7 @@
             display: block;
         }
 
+        /* ===== الإحصائيات ===== */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -247,6 +295,9 @@
             text-align: center;
             transition: 0.3s;
         }
+        body.dark-mode .stat-card {
+            background: #1e1e32;
+        }
         .stat-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
@@ -256,9 +307,15 @@
             font-weight: 900;
             color: #2c3e50;
         }
+        body.dark-mode .stat-card .stat-number {
+            color: #ecf0f1;
+        }
         .stat-card .stat-label {
             font-size: 11px;
             color: #888;
+        }
+        body.dark-mode .stat-card .stat-label {
+            color: #aaa;
         }
         .stat-card.green {
             border-right-color: #2ecc71;
@@ -279,6 +336,7 @@
             border-right-color: #1abc9c;
         }
 
+        /* ===== الجداول ===== */
         .table-container {
             background: white;
             border-radius: 12px;
@@ -286,6 +344,9 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             overflow-x: auto;
             margin-bottom: 14px;
+        }
+        body.dark-mode .table-container {
+            background: #1e1e32;
         }
         .table-header {
             display: flex;
@@ -342,10 +403,16 @@
             top: 0;
             z-index: 5;
         }
+        body.dark-mode th {
+            background: #2d2d44;
+        }
         td {
             padding: 6px 8px;
             border-bottom: 1px solid #f0f0f0;
             vertical-align: middle;
+        }
+        body.dark-mode td {
+            border-bottom-color: #333;
         }
         tr:hover {
             background: #f8f9fa;
@@ -385,6 +452,10 @@
             background: #2ecc7120;
             color: #2ecc71;
         }
+        .status-badge.official {
+            background: #1a237e20;
+            color: #1a237e;
+        }
 
         .btn {
             padding: 3px 8px;
@@ -417,6 +488,14 @@
             background: #3498db;
             color: white;
         }
+        .btn-purple {
+            background: #9b59b6;
+            color: white;
+        }
+        .btn-dark {
+            background: #2c3e50;
+            color: white;
+        }
         .btn-xs {
             padding: 1px 6px;
             font-size: 9px;
@@ -426,6 +505,7 @@
             font-size: 10px;
         }
 
+        /* ===== الإعلانات ===== */
         .ad-item {
             background: #e3f2fd;
             border-right: 4px solid #1a237e;
@@ -436,6 +516,19 @@
         body.dark-mode .ad-item {
             background: #1a237e40;
             border-color: #64b5f6;
+        }
+        .ad-item .ad-images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 6px;
+            margin: 4px 0;
+        }
+        .ad-item .ad-images-grid img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+            cursor: pointer;
         }
         .ad-item .ad-title {
             font-weight: 800;
@@ -457,18 +550,118 @@
             font-size: 10px;
             color: #888;
         }
-        .ad-item .ad-images-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-            gap: 6px;
-            margin: 4px 0;
-        }
-        .ad-item .ad-images-grid img {
-            width: 100%;
-            height: 80px;
-            object-fit: cover;
+
+        /* ===== الردود الرسمية ===== */
+        .admin-reply {
+            background: #e3f2fd;
+            border-right: 3px solid #1a237e;
+            padding: 4px 8px;
             border-radius: 6px;
+            margin: 2px 0;
+        }
+        .admin-reply .reply-header {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 9px;
+            font-weight: 700;
+            color: #1a237e;
+        }
+        .admin-reply .reply-header img {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid #1a237e;
+        }
+        .admin-reply .reply-body {
+            font-size: 10px;
+            padding: 2px 0;
+            color: #1a237e;
+        }
+        .dark-mode .admin-reply {
+            background: #1a237e40;
+            border-color: #64b5f6;
+        }
+        .dark-mode .admin-reply .reply-header {
+            color: #90caf9;
+        }
+        .dark-mode .admin-reply .reply-body {
+            color: #e3f2fd;
+        }
+
+        .official-like {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #e3f2fd;
+            padding: 1px 8px;
+            border-radius: 20px;
+            font-size: 9px;
+            font-weight: 700;
+            color: #1a237e;
+            border: 1px solid #90caf9;
+        }
+        .official-like img {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid #1a237e;
+        }
+        .dark-mode .official-like {
+            background: #1a237e40;
+            color: #90caf9;
+            border-color: #64b5f6;
+        }
+
+        .quick-reply {
+            display: flex;
+            gap: 4px;
+            margin-top: 3px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .quick-reply input {
+            flex: 1;
+            min-width: 60px;
+            padding: 3px 8px;
+            border: 2px solid #eee;
+            border-radius: 4px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 9px;
+            background: #f8f9fa;
+            outline: none;
+        }
+        body.dark-mode .quick-reply input {
+            background: #2d2d44;
+            border-color: #3d3d55;
+            color: white;
+        }
+        .quick-reply input:focus {
+            border-color: #1a237e;
+        }
+        .quick-reply button {
+            padding: 2px 6px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 700;
             cursor: pointer;
+            font-size: 9px;
+            font-family: 'Tajawal', sans-serif;
+            background: #1a237e;
+            color: white;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .quick-reply button:hover {
+            background: #2d4373;
+        }
+        .quick-reply .like-btn {
+            background: transparent;
+            font-size: 14px;
+            padding: 0 4px;
+        }
+        .quick-reply .like-btn.liked {
+            color: #e74c3c;
         }
 
         .toast {
@@ -528,6 +721,7 @@
             padding: 16px;
         }
 
+        /* ===== النوافذ المنبثقة ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -658,6 +852,68 @@
             display: none;
         }
 
+        .stats-detail {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .stats-detail .stat-box {
+            background: white;
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            text-align: center;
+            border-top: 4px solid #1a237e;
+        }
+        body.dark-mode .stats-detail .stat-box {
+            background: #1e1e32;
+        }
+        .stats-detail .stat-box .num {
+            font-size: 28px;
+            font-weight: 900;
+            color: #1a237e;
+        }
+        body.dark-mode .stats-detail .stat-box .num {
+            color: #90caf9;
+        }
+        .stats-detail .stat-box .label {
+            font-size: 12px;
+            color: #888;
+        }
+        .stats-detail .stat-box .sub {
+            font-size: 10px;
+            color: #aaa;
+        }
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #2ecc71;
+            font-weight: 700;
+        }
+        .live-indicator .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #2ecc71;
+            animation: pulse-dot 1s infinite;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ===== قنوات اليوتيوب ===== */
         .youtube-channel-item {
             background: white;
             border-radius: 12px;
@@ -724,6 +980,15 @@
             .stats-grid {
                 grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
             }
+            .stats-detail {
+                grid-template-columns: 1fr 1fr;
+            }
+            .quick-reply {
+                flex-direction: column;
+            }
+            .quick-reply input {
+                min-width: auto;
+            }
             .table-header {
                 flex-direction: column;
                 align-items: stretch;
@@ -742,6 +1007,9 @@
         @media (max-width: 480px) {
             .stats-grid {
                 grid-template-columns: 1fr 1fr;
+            }
+            .stats-detail {
+                grid-template-columns: 1fr;
             }
             .stat-card .stat-number {
                 font-size: 16px;
@@ -778,40 +1046,13 @@
         body.dark-mode ::-webkit-scrollbar-thumb {
             background: #555;
         }
-
-        .live-indicator .dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #2ecc71;
-            animation: pulse-dot 1s infinite;
-            vertical-align: middle;
-        }
-        @keyframes pulse-dot {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.5;
-                transform: scale(0.8);
-            }
-        }
-        .live-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            color: #2ecc71;
-            font-weight: 700;
-        }
     </style>
 </head>
 <body>
 
-    <!-- ===== الشريط الجانبي ===== -->
+    <!-- ============================================================
+    الشريط الجانبي
+    ============================================================ -->
     <aside class="sidebar" id="sidebar">
         <div class="logo">
             <img src="https://cdn.phototourl.com/free/2026-07-21-1dd4b984-ed08-4a40-aead-9ef086ebbd45.jpg" alt="شعار المنصة">
@@ -870,7 +1111,9 @@
         </ul>
     </aside>
 
-    <!-- ===== المحتوى الرئيسي ===== -->
+    <!-- ============================================================
+    المحتوى الرئيسي
+    ============================================================ -->
     <div class="main-content">
         <div class="topbar">
             <div>
@@ -886,7 +1129,9 @@
             </div>
         </div>
 
-        <!-- ===== DASHBOARD ===== -->
+        <!-- ============================================================ -->
+        <!-- DASHBOARD -->
+        <!-- ============================================================ -->
         <div class="page active" id="page-dashboard">
             <div class="stats-grid" id="statsGrid"><div class="loading-container"><div class="spinner"></div></div></div>
             <div class="stats-detail" id="statsDetail"><div class="loading-container"><div class="spinner"></div></div></div>
@@ -900,7 +1145,9 @@
             </div>
         </div>
 
-        <!-- ===== المستخدمين ===== -->
+        <!-- ============================================================ -->
+        <!-- المستخدمين -->
+        <!-- ============================================================ -->
         <div class="page" id="page-users">
             <div class="table-container">
                 <div class="table-header">
@@ -918,7 +1165,9 @@
             </div>
         </div>
 
-        <!-- ===== التعليقات ===== -->
+        <!-- ============================================================ -->
+        <!-- التعليقات -->
+        <!-- ============================================================ -->
         <div class="page" id="page-comments">
             <div class="table-container">
                 <div class="table-header">
@@ -937,7 +1186,9 @@
             </div>
         </div>
 
-        <!-- ===== الكتب ===== -->
+        <!-- ============================================================ -->
+        <!-- الكتب -->
+        <!-- ============================================================ -->
         <div class="page" id="page-books">
             <div class="table-container">
                 <div class="table-header">
@@ -956,7 +1207,9 @@
             </div>
         </div>
 
-        <!-- ===== المنتدى ===== -->
+        <!-- ============================================================ -->
+        <!-- المنتدى -->
+        <!-- ============================================================ -->
         <div class="page" id="page-forum">
             <div class="table-container">
                 <div class="table-header">
@@ -975,7 +1228,9 @@
             </div>
         </div>
 
-        <!-- ===== منشورات الفريق ===== -->
+        <!-- ============================================================ -->
+        <!-- منشورات الفريق -->
+        <!-- ============================================================ -->
         <div class="page" id="page-teamPosts">
             <div class="table-container">
                 <div class="table-header">
@@ -986,7 +1241,9 @@
             </div>
         </div>
 
-        <!-- ===== المرفوعات ===== -->
+        <!-- ============================================================ -->
+        <!-- المرفوعات -->
+        <!-- ============================================================ -->
         <div class="page" id="page-uploads">
             <div class="table-container">
                 <div class="table-header">
@@ -1004,7 +1261,9 @@
             </div>
         </div>
 
-        <!-- ===== الملخصات ===== -->
+        <!-- ============================================================ -->
+        <!-- الملخصات -->
+        <!-- ============================================================ -->
         <div class="page" id="page-handwritten">
             <div class="table-container">
                 <div class="table-header">
@@ -1023,7 +1282,9 @@
             </div>
         </div>
 
-        <!-- ===== قنوات يوتيوب ===== -->
+        <!-- ============================================================ -->
+        <!-- قنوات يوتيوب -->
+        <!-- ============================================================ -->
         <div class="page" id="page-youtube">
             <div class="table-container">
                 <div class="table-header">
@@ -1034,7 +1295,9 @@
             </div>
         </div>
 
-        <!-- ===== الإعلانات ===== -->
+        <!-- ============================================================ -->
+        <!-- الإعلانات -->
+        <!-- ============================================================ -->
         <div class="page" id="page-ads">
             <div class="table-container">
                 <div class="table-header">
@@ -1045,7 +1308,9 @@
             </div>
         </div>
 
-        <!-- ===== البلاغات ===== -->
+        <!-- ============================================================ -->
+        <!-- البلاغات -->
+        <!-- ============================================================ -->
         <div class="page" id="page-reports">
             <div class="table-container">
                 <div class="table-header">
@@ -1063,7 +1328,9 @@
             </div>
         </div>
 
-        <!-- ===== الإشعارات ===== -->
+        <!-- ============================================================ -->
+        <!-- الإشعارات -->
+        <!-- ============================================================ -->
         <div class="page" id="page-notifications">
             <div class="table-container">
                 <div class="table-header">
@@ -1074,7 +1341,9 @@
             </div>
         </div>
 
-        <!-- ===== التحليلات ===== -->
+        <!-- ============================================================ -->
+        <!-- التحليلات -->
+        <!-- ============================================================ -->
         <div class="page" id="page-analytics">
             <div class="stats-grid" id="analyticsStats"><div class="loading-container"><div class="spinner"></div></div></div>
             <div class="table-container">
@@ -1087,7 +1356,9 @@
             </div>
         </div>
 
-        <!-- ===== الإعدادات ===== -->
+        <!-- ============================================================ -->
+        <!-- الإعدادات -->
+        <!-- ============================================================ -->
         <div class="page" id="page-settings">
             <div class="table-container">
                 <h3 style="margin-bottom:12px;">⚙️ الإعدادات العامة</h3>
@@ -1108,8 +1379,10 @@
 
     </div>
 
-    <!-- ===== النوافذ المنبثقة ===== -->
-    
+    <!-- ============================================================ -->
+    <!-- النوافذ المنبثقة -->
+    <!-- ============================================================ -->
+
     <!-- إضافة مستخدم -->
     <div class="modal-overlay" id="addUserModal">
         <div class="modal-content">
@@ -1286,11 +1559,12 @@
         };
 
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
 
         // ============================================================
-        // 🔐 نظام الحماية - كلمة مرور ثابتة (بدون تعقيدات)
+        // 🔐 نظام الحماية - كلمة مرور ثابتة (لأن Firebase Auth مش شغال)
         // ============================================================
         const ADMIN_PASSWORD = 'admin2024';
         let isLoggedIn = false;
@@ -1326,6 +1600,16 @@
             return true;
         }
 
+        // ===== تسجيل الخروج =====
+        function logoutAdmin() {
+            if (confirm('⚠️ هل تريد تسجيل الخروج من لوحة التحكم؟')) {
+                isLoggedIn = false;
+                localStorage.removeItem('adminSession');
+                showToast('👋 تم تسجيل الخروج', 'warning');
+                setTimeout(() => location.reload(), 1000);
+            }
+        }
+
         // ============================================================
         // 2. المتغيرات العامة
         // ============================================================
@@ -1344,6 +1628,21 @@
         let liveInterval = null;
         let isLive = false;
         let adImages = [];
+
+        const OFFICIAL_TEAM = {
+            name: 'فريق الثانوية الرسمية بلس',
+            logo: 'https://cdn.phototourl.com/free/2026-07-21-1dd4b984-ed08-4a40-aead-9ef086ebbd45.jpg',
+            verified: true
+        };
+
+        const VERIFIED_BADGE_SVG = `
+                <span class="verified-badge" title="حساب موثق">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#1D9BF0">
+                        <path d="M22.25 12c0-1.06-.82-1.95-1.88-2.07.61-.88.54-2.08-.25-2.87-.79-.79-1.99-.86-2.87-.25C17.13 5.82 16.24 5 15.18 5c-.52 0-1 .18-1.39.48A2.07 2.07 0 0 0 12 4c-.69 0-1.32.34-1.7.86A2.07 2.07 0 0 0 8.82 5c-1.06 0-1.95.82-2.07 1.88-.88-.61-2.08-.54-2.87.25-.79.79-.86 1.99-.25 2.87C2.82 10.05 2 10.94 2 12s.82 1.95 1.88 2.07c-.61.88-.54 2.08.25 2.87.79.79 1.99.86 2.87.25.12 1.06 1.01 1.88 2.07 1.88.52 0 1-.18 1.39-.48.38.52 1.01.86 1.7.86.69 0 1.32-.34 1.7-.86.39.3.87.48 1.39.48 1.06 0 1.95-.82 2.07-1.88.88.61 2.08.54 2.87-.25.79-.79.86-1.99.25-2.87A2.08 2.08 0 0 0 22.25 12z"/>
+                        <path fill="#FFFFFF" d="M10.3 15.7l-2.5-2.5 1.06-1.06 1.44 1.44 4.9-4.9 1.06 1.06z"/>
+                    </svg>
+                </span>
+            `;
 
         // ============================================================
         // 3. دوال مساعدة
@@ -2039,7 +2338,7 @@
         }
 
         // ============================================================
-        // 12. التعليقات
+        // 12. التعليقات (مختصر)
         // ============================================================
         function renderComments() {
             const container = document.getElementById('commentsTable');
