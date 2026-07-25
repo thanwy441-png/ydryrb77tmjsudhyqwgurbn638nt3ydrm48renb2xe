@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول - لوحة الإدارة</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Tajawal', 'Segoe UI', sans-serif;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a237e, #0d47a1);
+    }
+    .login-box {
+      background: white;
+      padding: 40px 35px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 400px;
+    }
+    .login-box .logo {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .login-box .logo img {
+      height: 70px;
+      border-radius: 12px;
+    }
+    .login-box .logo h2 {
+      color: #1a237e;
+      margin-top: 10px;
+      font-size: 20px;
+    }
+    .login-box .logo p {
+      color: #888;
+      font-size: 13px;
+    }
+    .login-box input {
+      width: 100%;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      border: 2px solid #e8e8e8;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: 0.3s;
+      background: #f8f9fa;
+    }
+    .login-box input:focus {
+      border-color: #1a237e;
+      outline: none;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(26, 35, 126, 0.1);
+    }
+    .login-box button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #1a237e, #283593);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .login-box button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(26, 35, 126, 0.3);
+    }
+    .login-box .error {
+      color: #e74c3c;
+      font-size: 14px;
+      text-align: center;
+      margin-top: 12px;
+      padding: 8px;
+      background: #fde8e8;
+      border-radius: 8px;
+      display: none;
+    }
+    .login-box .error.show {
+      display: block;
+    }
+    @media (max-width: 480px) {
+      .login-box {
+        padding: 25px 20px;
+        margin: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-box">
+    <div class="logo">
+      <img src="https://cdn.phototourl.com/free/2026-07-21-1dd4b984-ed08-4a40-aead-9ef086ebbd45.jpg" alt="شعار المنصة">
+      <h2>لوحة الإدارة</h2>
+      <p>الثانوية الرسمية بلس</p>
+    </div>
+
+    <form id="loginForm">
+      <input type="email" id="loginEmail" placeholder="📧 البريد الإلكتروني" required>
+      <input type="password" id="loginPassword" placeholder="🔑 كلمة المرور" required>
+      <button type="submit">🚀 دخول</button>
+      <div class="error" id="loginError"></div>
+    </form>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js">
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js">
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js">
+  </script>
+
+  <script>
+    // ============================================================
+    // 🔑 Firebase Configuration
+    // ============================================================
+    const firebaseConfig = {
+      apiKey: "mh9Dq0UVhpfC0m5N71vIZEiWdzQ2",
+      authDomain: "thanawya-official-plus.firebaseapp.com",
+      projectId: "thanawya-official-plus",
+      storageBucket: "thanawya-official-plus.firebasestorage.app",
+      messagingSenderId: "883728724353",
+      appId: "1:883728724353:web:3f611e29d556d03c61b880"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // ============================================================
+    // 🔐 التحقق من الجلسة
+    // ============================================================
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          const userDoc = await db.collection('users').doc(user.uid).get();
+          const userData = userDoc.data();
+
+          if (userData) {
+            // التحقق من الحظر
+            if (userData.isBanned === true) {
+              document.getElementById('loginError').textContent = '⛔ حسابك محظور';
+              document.getElementById('loginError').classList.add('show');
+              await auth.signOut();
+              return;
+            }
+
+            // التحقق من صلاحية الأدمن
+            const role = userData.role || 'student';
+            if (role === 'admin' || role === 'superAdmin') {
+              window.location.href = 'dashboard.html';
+            } else {
+              document.getElementById('loginError').textContent = '⛔ ليس لديك صلاحية';
+              document.getElementById('loginError').classList.add('show');
+              await auth.signOut();
+            }
+          }
+        } catch (err) {
+          console.error('❌ خطأ:', err);
+        }
+      }
+    });
+
+    // ============================================================
+    // 📝 تسجيل الدخول
+    // ============================================================
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const errorEl = document.getElementById('loginError');
+      errorEl.classList.remove('show');
+
+      try {
+        const userCred = await auth.signInWithEmailAndPassword(email, password);
+        const user = userCred.user;
+
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        const userData = userDoc.data();
+
+        if (!userData) {
+          errorEl.textContent = '❌ لم يتم العثور على بيانات المستخدم';
+          errorEl.classList.add('show');
+          await auth.signOut();
+          return;
+        }
+
+        if (userData.isBanned === true) {
+          errorEl.textContent = '⛔ حسابك محظور';
+          errorEl.classList.add('show');
+          await auth.signOut();
+          return;
+        }
+
+        const role = userData.role || 'student';
+        if (role === 'admin' || role === 'superAdmin') {
+          window.location.href = 'dashboard.html';
+        } else {
+          errorEl.textContent = '⛔ ليس لديك صلاحية الدخول للوحة التحكم';
+          errorEl.classList.add('show');
+          await auth.signOut();
+        }
+      } catch (err) {
+        errorEl.textContent = '❌ ' + err.message;
+        errorEl.classList.add('show');
+      }
+    });
+  </script>
+
+</body>
+</html>
