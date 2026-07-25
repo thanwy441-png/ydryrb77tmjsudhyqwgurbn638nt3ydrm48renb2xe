@@ -88,6 +88,9 @@
     .login-box .error.show {
       display: block;
     }
+    #pinSection {
+      display: none;
+    }
     @media (max-width: 480px) {
       .login-box {
         padding: 25px 20px;
@@ -108,6 +111,11 @@
     <form id="loginForm">
       <input type="email" id="loginEmail" placeholder="📧 البريد الإلكتروني" required>
       <input type="password" id="loginPassword" placeholder="🔑 كلمة المرور" required>
+
+      <div id="pinSection">
+        <input type="password" id="loginPin" placeholder="🔐 كود الأمان (PIN)" maxlength="6" inputmode="numeric">
+      </div>
+
       <button type="submit">🚀 دخول</button>
       <div class="error" id="loginError"></div>
     </form>
@@ -123,7 +131,7 @@
 
   <script>
     // ============================================================
-    // 🔑 Firebase Configuration - API Key صح
+    // 🔑 Firebase Configuration
     // ============================================================
     const firebaseConfig = {
       apiKey: "AIzaSyAz9BfG1INB3shlCiMtK395SEo6sCkaZSI",
@@ -173,17 +181,29 @@
     });
 
     // ============================================================
-    // 📝 تسجيل الدخول
+    // 📝 تسجيل الدخول مع PIN
     // ============================================================
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
+      const pin = document.getElementById('loginPin').value.trim();
       const errorEl = document.getElementById('loginError');
       errorEl.classList.remove('show');
 
       try {
+        // 1. التحقق من PIN أولاً
+        const pinDoc = await db.collection('settings').doc('adminPin').get();
+        const correctPin = pinDoc.exists ? pinDoc.data().pin : '2024';
+
+        if (pin !== correctPin) {
+          errorEl.textContent = '❌ كود الأمان غير صحيح';
+          errorEl.classList.add('show');
+          return;
+        }
+
+        // 2. تسجيل الدخول
         const userCred = await auth.signInWithEmailAndPassword(email, password);
         const user = userCred.user;
 
@@ -215,6 +235,18 @@
       } catch (err) {
         errorEl.textContent = '❌ ' + err.message;
         errorEl.classList.add('show');
+      }
+    });
+
+    // ============================================================
+    // 🔄 إظهار حقل PIN بعد كتابة الباسورد
+    // ============================================================
+    document.getElementById('loginPassword').addEventListener('input', function() {
+      const pinSection = document.getElementById('pinSection');
+      if (this.value.length >= 4) {
+        pinSection.style.display = 'block';
+      } else {
+        pinSection.style.display = 'none';
       }
     });
   </script>
