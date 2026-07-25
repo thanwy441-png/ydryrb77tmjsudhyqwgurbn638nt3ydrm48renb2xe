@@ -123,15 +123,17 @@
 
   <script>
     // ============================================================
-    // 🔑 Firebase Configuration
+    // 🔑 Firebase Configuration - API Key صح
     // ============================================================
     const firebaseConfig = {
-      apiKey: "mh9Dq0UVhpfC0m5N71vIZEiWdzQ2",
+      apiKey: "AIzaSyAz9BfG1INB3shlCiMtK395SEo6sCkaZSI",
       authDomain: "thanawya-official-plus.firebaseapp.com",
+      databaseURL: "https://thanawya-official-plus-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "thanawya-official-plus",
       storageBucket: "thanawya-official-plus.firebasestorage.app",
       messagingSenderId: "883728724353",
-      appId: "1:883728724353:web:3f611e29d556d03c61b880"
+      appId: "1:883728724353:web:3f611e29d556d03c61b880",
+      measurementId: "G-1KN0QEZKWX"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -148,7 +150,6 @@
           const userData = userDoc.data();
 
           if (userData) {
-            // التحقق من الحظر
             if (userData.isBanned === true) {
               document.getElementById('loginError').textContent = '⛔ حسابك محظور';
               document.getElementById('loginError').classList.add('show');
@@ -156,7 +157,6 @@
               return;
             }
 
-            // التحقق من صلاحية الأدمن
             const role = userData.role || 'student';
             if (role === 'admin' || role === 'superAdmin') {
               window.location.href = 'dashboard.html';
