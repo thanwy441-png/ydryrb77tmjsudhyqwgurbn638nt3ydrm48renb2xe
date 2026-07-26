@@ -1,162 +1,312 @@
 <!DOCTYPE html>
-<html dir="rtl">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تسجيل الدخول - لوحة الإدارة</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Tajawal', 'Segoe UI', sans-serif;
-    }
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #1a237e, #0d47a1);
-    }
-    .login-box {
-      background: white;
-      padding: 40px 35px;
-      border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      width: 100%;
-      max-width: 400px;
-    }
-    .login-box .logo {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-    .login-box .logo img {
-      height: 70px;
-      border-radius: 12px;
-    }
-    .login-box .logo h2 {
-      color: #1a237e;
-      margin-top: 10px;
-      font-size: 20px;
-    }
-    .login-box .logo p {
-      color: #888;
-      font-size: 13px;
-    }
-    .login-box input {
-      width: 100%;
-      padding: 14px 16px;
-      margin-bottom: 14px;
-      border: 2px solid #e8e8e8;
-      border-radius: 10px;
-      font-size: 15px;
-      transition: 0.3s;
-      background: #f8f9fa;
-      text-align: center;
-    }
-    .login-box input:focus {
-      border-color: #1a237e;
-      outline: none;
-      background: white;
-      box-shadow: 0 0 0 4px rgba(26, 35, 126, 0.1);
-    }
-    .login-box button {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #1a237e, #283593);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 18px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .login-box button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(26, 35, 126, 0.3);
-    }
-    .login-box .error {
-      color: #e74c3c;
-      font-size: 14px;
-      text-align: center;
-      margin-top: 12px;
-      padding: 8px;
-      background: #fde8e8;
-      border-radius: 8px;
-      display: none;
-    }
-    .login-box .error.show {
-      display: block;
-    }
-    .login-box .hint {
-      font-size: 11px;
-      color: #aaa;
-      text-align: center;
-      margin-top: 8px;
-    }
-    @media (max-width: 480px) {
-      .login-box {
-        padding: 25px 20px;
-        margin: 16px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - لوحة الإدارة</title>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js">
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', 'Segoe UI', sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+        }
+        .login-box {
+            background: white;
+            padding: 40px 35px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-box .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .login-box .logo img {
+            height: 70px;
+            border-radius: 12px;
+        }
+        .login-box .logo h2 {
+            color: #1a237e;
+            margin-top: 10px;
+            font-size: 20px;
+        }
+        .login-box .logo p {
+            color: #888;
+            font-size: 13px;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+            border: 2px solid #e8e8e8;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: 0.3s;
+            background: #f8f9fa;
+        }
+        .login-box input:focus {
+            border-color: #1a237e;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(26, 35, 126, 0.1);
+        }
+        .login-box button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .login-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(26, 35, 126, 0.3);
+        }
+        .login-box button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .login-box .error {
+            color: #e74c3c;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 12px;
+            padding: 8px;
+            background: #fde8e8;
+            border-radius: 8px;
+            display: none;
+        }
+        .login-box .error.show {
+            display: block;
+        }
+        .login-box .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 25px 20px;
+                margin: 16px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <div class="login-box">
-    <div class="logo">
-      <img src="https://cdn.phototourl.com/free/2026-07-21-1dd4b984-ed08-4a40-aead-9ef086ebbd45.jpg" alt="شعار المنصة">
-      <h2>لوحة الإدارة</h2>
-      <p>الثانوية الرسمية بلس</p>
+    <div class="login-box">
+        <div class="logo">
+            <img src="https://cdn.phototourl.com/free/2026-07-21-1dd4b984-ed08-4a40-aead-9ef086ebbd45.jpg" alt="شعار المنصة">
+            <h2>لوحة الإدارة</h2>
+            <p>الثانوية الرسمية بلس</p>
+        </div>
+
+        <form id="loginForm">
+            <input type="email" id="loginEmail" placeholder="📧 البريد الإلكتروني" required autocomplete="email">
+            <input type="password" id="loginPassword" placeholder="🔑 كلمة المرور" required autocomplete="current-password">
+            <button type="submit" id="loginBtn">🚀 دخول</button>
+            <div class="error" id="loginError"></div>
+        </form>
     </div>
 
-    <form id="loginForm">
-      <input type="password" id="loginPassword" placeholder="🔑 أدخل كلمة المرور" required>
-      <button type="submit">🚀 دخول</button>
-      <div class="error" id="loginError"></div>
-      <div class="hint">💡 كلمة المرور: admin2024</div>
-    </form>
-  </div>
+    <script>
+        // ============================================================
+        // 🔑 Firebase Configuration
+        // ============================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyAz9BfG1INB3shlCiMtK395SEo6sCkaZSI",
+            authDomain: "thanawya-official-plus.firebaseapp.com",
+            projectId: "thanawya-official-plus",
+            storageBucket: "thanawya-official-plus.firebasestorage.app",
+            messagingSenderId: "883728724353",
+            appId: "1:883728724353:web:3f611e29d556d03c61b880"
+        };
 
-  <script>
-    // ============================================================
-    // 🔑 كلمة المرور الثابتة
-    // ============================================================
-    const ADMIN_PASSWORD = 'admin2024';
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-    // ============================================================
-    // 📝 تسجيل الدخول
-    // ============================================================
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-      e.preventDefault();
+        // ============================================================
+        // 🔐 عناصر الصفحة
+        // ============================================================
+        const emailInput = document.getElementById('loginEmail');
+        const passwordInput = document.getElementById('loginPassword');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginForm = document.getElementById('loginForm');
+        const errorEl = document.getElementById('loginError');
 
-      const password = document.getElementById('loginPassword').value.trim();
-      const errorEl = document.getElementById('loginError');
-      errorEl.classList.remove('show');
+        // ============================================================
+        // 🔐 التحقق من الجلسة الحالية
+        // ============================================================
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                try {
+                    // جلب بيانات المستخدم من Firestore
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    const userData = userDoc.data();
 
-      if (password === ADMIN_PASSWORD) {
-        // ✅ دخول ناجح → حول للوحة التحكم
-        window.location.href = 'dashboard.html';
-      } else {
-        // ❌ كلمة مرور غلط
-        errorEl.textContent = '❌ كلمة المرور غير صحيحة';
-        errorEl.classList.add('show');
-        document.getElementById('loginPassword').value = '';
-        document.getElementById('loginPassword').focus();
-      }
-    });
+                    if (!userData) {
+                        // المستخدم مش موجود في Firestore
+                        await auth.signOut();
+                        return;
+                    }
 
-    // ============================================================
-    // 🔄 لو دخلت بالغلط، نقدر نرجع
-    // ============================================================
-    document.getElementById('loginPassword').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        document.getElementById('loginForm').dispatchEvent(new Event('submit'));
-      }
-    });
-  </script>
+                    // التحقق من الحظر والنشاط والدور
+                    if (userData.isBanned === true) {
+                        showError('⛔ حسابك محظور، يرجى التواصل مع الإدارة');
+                        await auth.signOut();
+                        return;
+                    }
+
+                    if (userData.isActive === false) {
+                        showError('⛔ حسابك غير نشط، يرجى التواصل مع الإدارة');
+                        await auth.signOut();
+                        return;
+                    }
+
+                    if (userData.role === 'admin' || userData.role === 'superAdmin') {
+                        // ✅ مسموح - توجيه للوحة التحكم
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        showError('⛔ ليس لديك صلاحية الدخول للوحة التحكم');
+                        await auth.signOut();
+                    }
+                } catch (err) {
+                    console.error('❌ خطأ في التحقق:', err);
+                    showError('❌ حدث خطأ، يرجى المحاولة مرة أخرى');
+                    await auth.signOut();
+                }
+            }
+        });
+
+        // ============================================================
+        // 📝 تسجيل الدخول
+        // ============================================================
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            if (!email || !password) {
+                showError('❌ يرجى ملء جميع الحقول');
+                return;
+            }
+
+            // تعطيل الزر أثناء التحميل
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '⏳ جاري التحقق... <span class="spinner"></span>';
+            errorEl.classList.remove('show');
+
+            try {
+                // 1. تسجيل الدخول
+                const userCred = await auth.signInWithEmailAndPassword(email, password);
+                const user = userCred.user;
+
+                // 2. جلب بيانات المستخدم من Firestore
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                const userData = userDoc.data();
+
+                if (!userData) {
+                    showError('❌ لم يتم العثور على بيانات المستخدم');
+                    await auth.signOut();
+                    return;
+                }
+
+                // 3. التحقق من الحظر
+                if (userData.isBanned === true) {
+                    showError('⛔ حسابك محظور، يرجى التواصل مع الإدارة');
+                    await auth.signOut();
+                    return;
+                }
+
+                // 4. التحقق من النشاط
+                if (userData.isActive === false) {
+                    showError('⛔ حسابك غير نشط، يرجى التواصل مع الإدارة');
+                    await auth.signOut();
+                    return;
+                }
+
+                // 5. التحقق من الدور
+                const role = userData.role || 'user';
+                if (role === 'admin' || role === 'superAdmin') {
+                    // ✅ مسموح
+                    window.location.href = 'dashboard.html';
+                } else {
+                    showError('⛔ ليس لديك صلاحية الدخول للوحة التحكم');
+                    await auth.signOut();
+                }
+            } catch (err) {
+                console.error('❌ خطأ في تسجيل الدخول:', err);
+
+                // رسائل خطأ واضحة
+                let message = '❌ حدث خطأ، يرجى المحاولة مرة أخرى';
+                if (err.code === 'auth/user-not-found') {
+                    message = '❌ البريد الإلكتروني غير موجود';
+                } else if (err.code === 'auth/wrong-password') {
+                    message = '❌ كلمة المرور غير صحيحة';
+                } else if (err.code === 'auth/invalid-email') {
+                    message = '❌ البريد الإلكتروني غير صحيح';
+                } else if (err.code === 'auth/too-many-requests') {
+                    message = '❌ تجاوزت عدد المحاولات، حاول لاحقاً';
+                } else if (err.code === 'auth/network-request-failed') {
+                    message = '❌ مشكلة في الاتصال بالإنترنت';
+                } else if (err.code === 'auth/user-disabled') {
+                    message = '⛔ الحساب معطل، يرجى التواصل مع الإدارة';
+                }
+
+                showError(message);
+            } finally {
+                // إعادة تفعيل الزر
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '🚀 دخول';
+            }
+        });
+
+        // ============================================================
+        // 🛠️ دوال مساعدة
+        // ============================================================
+        function showError(message) {
+            errorEl.textContent = message;
+            errorEl.classList.add('show');
+        }
+    </script>
 
 </body>
 </html>
