@@ -1564,7 +1564,7 @@
         const storage = firebase.storage();
 
         // ============================================================
-        // 🛡️ نظام الأمان - التحقق من المستخدم
+        // 🛡️ نظام الأمان - التحقق من المستخدم (تم إزالة الباسورد القديم)
         // ============================================================
         let currentUser = null;
         let isAdmin = false;
@@ -1603,21 +1603,21 @@
 
                 userData = userDoc.data();
 
-                // التحقق من الحظر
+                // ✅ التحقق من الحظر
                 if (userData.isBanned === true) {
                     showAccessDenied('⛔ حسابك محظور، يرجى التواصل مع الإدارة');
                     await auth.signOut();
                     return false;
                 }
 
-                // التحقق من النشاط
+                // ✅ التحقق من النشاط
                 if (userData.isActive === false) {
                     showAccessDenied('⛔ حسابك غير نشط، يرجى التواصل مع الإدارة');
                     await auth.signOut();
                     return false;
                 }
 
-                // التحقق من الدور
+                // ✅ التحقق من الدور (Admin فقط)
                 const role = userData.role || 'user';
                 if (role !== 'admin' && role !== 'superAdmin') {
                     showAccessDenied('ليس لديك صلاحية الدخول إلى لوحة التحكم');
@@ -1646,7 +1646,7 @@
             }
         }
 
-        // ===== التحقق من الصلاحية للعمليات الحساسة =====
+        // ===== التحقق من الصلاحية للعمليات الحساسة (محور الحماية) =====
         function requireAdmin() {
             if (!isAdmin && !isSuperAdmin) {
                 showToast('⛔ غير مصرح بهذه العملية', 'error');
@@ -1675,7 +1675,7 @@
         }
 
         // ============================================================
-        // 🔐 مراقبة حالة المستخدم
+        // 🔐 مراقبة حالة المستخدم (القائد الأمني)
         // ============================================================
         auth.onAuthStateChanged(async (user) => {
             if (user) {
@@ -1684,6 +1684,9 @@
                     console.log('✅ مرحباً بك في لوحة التحكم');
                     loadAllData();
                     updateBadges();
+                } else {
+                    // لو فشل التحقق أو كان المستخدم مش أدمن
+                    // سيتم تسجيل خروج وتوجيه للوجين من دوال verifyUser
                 }
             } else {
                 // غير مسجل دخول
@@ -3582,10 +3585,10 @@
             document.querySelector('.btn-dark').textContent = '☀️';
         }
 
-        // ❌ تم حذف ADMIN_PASSWORD
+        // ❌ تم حذف ADMIN_PASSWORD نهائياً
         // ✅ النظام يعتمد على Firebase Authentication فقط
-        // loadAllData() يتم استدعاؤها من نظام المصادقة
         console.log('✅ لوحة التحكم - نظام المصادقة عبر Firebase Authentication');
+        console.log('✅ تم إزالة نظام الباسورد القديم (prompt, localStorage, hardcoded)');
     </script>
 
 </body>
