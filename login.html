@@ -182,7 +182,6 @@
                     const userData = userDoc.data();
 
                     if (!userData) {
-                        // المستخدم مش موجود في Firestore
                         await auth.signOut();
                         return;
                     }
