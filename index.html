@@ -1059,10 +1059,10 @@
             <h2>لوحة التحكم</h2>
         </div>
 
-        <div class="admin-info">
+        <div class="admin-info" id="adminInfo">
             <div class="avatar-placeholder">ف</div>
-            <div class="name">فريق الثانوية الرسمية</div>
-            <div class="email">official@thanawya-plus.com</div>
+            <div class="name" id="adminName">فريق الثانوية الرسمية</div>
+            <div class="email" id="adminEmail">official@thanawya-plus.com</div>
         </div>
 
         <ul class="nav-list" id="navList">
@@ -1564,38 +1564,101 @@
         const storage = firebase.storage();
 
         // ============================================================
-        // 🔐 نظام الحماية - كلمة مرور ثابتة (لأن Firebase Auth مش شغال)
+        // 🛡️ نظام الأمان - التحقق من المستخدم (تم إزالة الباسورد القديم)
         // ============================================================
-        const ADMIN_PASSWORD = 'admin2024';
-        let isLoggedIn = false;
+        let currentUser = null;
+        let isAdmin = false;
+        let isSuperAdmin = false;
+        let isBanned = false;
+        let isActive = false;
+        let userData = null;
 
-        // ===== التحقق من كلمة المرور =====
-        function checkPassword() {
-            if (isLoggedIn) return true;
-            const password = prompt('🔐 أدخل كلمة مرور المدير:');
-            if (password === ADMIN_PASSWORD) {
-                isLoggedIn = true;
-                showToast('✅ مرحباً بك في لوحة التحكم');
+        // ===== صفحة منع الوصول =====
+        function showAccessDenied(message = 'غير مصرح بالدخول') {
+            document.body.innerHTML = `
+                    <div style="text-align:center;padding:60px;font-family:'Tajawal',sans-serif;background:#f0f4f8;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+                        <div style="font-size:80px;margin-bottom:20px;">⛔</div>
+                        <h1 style="color:#e74c3c;font-size:36px;">${message}</h1>
+                        <p style="font-size:18px;color:#888;margin:10px 0;">ليس لديك صلاحية للدخول إلى لوحة التحكم</p>
+                        <button onclick="window.location.href='login.html'" style="padding:12px 24px;background:#1a237e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:16px;margin-top:20px;">🔐 تسجيل الدخول</button>
+                    </div>
+                `;
+        }
+
+        // ===== التحقق من المستخدم =====
+        async function verifyUser(user) {
+            if (!user) {
+                showAccessDenied('يرجى تسجيل الدخول أولاً');
+                return false;
+            }
+
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+
+                if (!userDoc.exists) {
+                    showAccessDenied('لم يتم العثور على بيانات المستخدم');
+                    await auth.signOut();
+                    return false;
+                }
+
+                userData = userDoc.data();
+
+                // ✅ التحقق من الحظر
+                if (userData.isBanned === true) {
+                    showAccessDenied('⛔ حسابك محظور، يرجى التواصل مع الإدارة');
+                    await auth.signOut();
+                    return false;
+                }
+
+                // ✅ التحقق من النشاط
+                if (userData.isActive === false) {
+                    showAccessDenied('⛔ حسابك غير نشط، يرجى التواصل مع الإدارة');
+                    await auth.signOut();
+                    return false;
+                }
+
+                // ✅ التحقق من الدور (Admin فقط)
+                const role = userData.role || 'user';
+                if (role !== 'admin' && role !== 'superAdmin') {
+                    showAccessDenied('ليس لديك صلاحية الدخول إلى لوحة التحكم');
+                    await auth.signOut();
+                    return false;
+                }
+
+                // ✅ كل شيء تمام
+                isAdmin = role === 'admin';
+                isSuperAdmin = role === 'superAdmin';
+                isBanned = false;
+                isActive = true;
+                currentUser = user;
+
+                // تحديث معلومات الأدمن في الشريط الجانبي
+                document.getElementById('adminName').textContent = userData.name || 'المدير';
+                document.getElementById('adminEmail').textContent = userData.email || user.email;
+
                 return true;
-            } else {
-                alert('❌ كلمة المرور غير صحيحة!');
+
+            } catch (err) {
+                console.error('❌ خطأ في التحقق:', err);
+                showAccessDenied('حدث خطأ في التحقق من الصلاحية');
+                await auth.signOut();
                 return false;
             }
         }
 
+        // ===== التحقق من الصلاحية للعمليات الحساسة (محور الحماية) =====
         function requireAdmin() {
-            if (!isLoggedIn) {
-                if (!checkPassword()) {
-                    document.body.innerHTML = `
-                        <div style="text-align:center;padding:60px;font-family:'Tajawal',sans-serif;background:#f0f4f8;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;">
-                            <h1 style="color:#e74c3c;font-size:48px;">⛔ غير مصرح</h1>
-                            <p style="font-size:18px;color:#888;">كلمة المرور غير صحيحة</p>
-                            <button onclick="location.reload()" style="padding:12px 24px;background:#1a237e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:16px;margin-top:20px;">🔄 إعادة المحاولة</button>
-                        </div>
-                    `;
-                    return false;
-                }
-                return true;
+            if (!isAdmin && !isSuperAdmin) {
+                showToast('⛔ غير مصرح بهذه العملية', 'error');
+                return false;
+            }
+            return true;
+        }
+
+        function requireSuperAdmin() {
+            if (!isSuperAdmin) {
+                showToast('⛔ هذه العملية تتطلب صلاحيات سوبر أدمن', 'error');
+                return false;
             }
             return true;
         }
@@ -1603,12 +1666,51 @@
         // ===== تسجيل الخروج =====
         function logoutAdmin() {
             if (confirm('⚠️ هل تريد تسجيل الخروج من لوحة التحكم؟')) {
-                isLoggedIn = false;
-                localStorage.removeItem('adminSession');
-                showToast('👋 تم تسجيل الخروج', 'warning');
-                setTimeout(() => location.reload(), 1000);
+                auth.signOut().then(() => {
+                    window.location.href = 'login.html';
+                }).catch((err) => {
+                    showToast('❌ ' + err.message, 'error');
+                });
             }
         }
+
+        // ============================================================
+        // 🔐 مراقبة حالة المستخدم (القائد الأمني)
+        // ============================================================
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const verified = await verifyUser(user);
+                if (verified) {
+                    console.log('✅ مرحباً بك في لوحة التحكم');
+                    loadAllData();
+                    updateBadges();
+                } else {
+                    // لو فشل التحقق أو كان المستخدم مش أدمن
+                    // سيتم تسجيل خروج وتوجيه للوجين من دوال verifyUser
+                }
+            } else {
+                // غير مسجل دخول
+                showAccessDenied('يرجى تسجيل الدخول أولاً');
+            }
+        });
+
+        // ============================================================
+        // 🔒 إضافة زر تسجيل الخروج في الشريط الجانبي
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const navList = document.getElementById('navList');
+            if (navList) {
+                const logoutLi = document.createElement('li');
+                logoutLi.style.cssText = 'margin-top:20px;border-top:1px solid #eee;padding-top:12px;';
+                logoutLi.innerHTML = `
+                        <span class="icon">🚪</span> 
+                        تسجيل الخروج 
+                        <span style="margin-right:auto;font-size:9px;color:#888;">🔒</span>
+                    `;
+                logoutLi.onclick = logoutAdmin;
+                navList.appendChild(logoutLi);
+            }
+        });
 
         // ============================================================
         // 2. المتغيرات العامة
@@ -1648,6 +1750,7 @@
         // 3. دوال مساعدة
         // ============================================================
         function showToast(msg, type = 'success') {
+            if (!requireAdmin()) return;
             const t = document.getElementById('toast');
             t.textContent = msg;
             t.className = 'toast show ' + type;
@@ -1660,6 +1763,7 @@
         }
 
         function openModal(id) {
+            if (!requireAdmin()) return;
             document.getElementById(id).classList.add('active');
         }
 
@@ -1702,6 +1806,7 @@
         }
 
         function toggleLiveUpdates() {
+            if (!requireAdmin()) return;
             isLive = !isLive;
             const btn = document.querySelector('.btn-live');
             if (isLive) {
@@ -1807,6 +1912,7 @@
         }
 
         async function loadUsers() {
+            if (!requireAdmin()) return;
             try {
                 const snap = await db.collection('users').get();
                 allUsers = [];
@@ -1816,6 +1922,7 @@
         }
 
         async function loadBooks() {
+            if (!requireAdmin()) return;
             try {
                 const snap = await db.collection('books').orderBy('createdAt', 'desc').get();
                 allBooks = [];
@@ -1824,6 +1931,7 @@
         }
 
         async function loadForumPosts() {
+            if (!requireAdmin()) return;
             try {
                 const snap = await db.collection('forum_posts').orderBy('createdAt', 'desc').get();
                 allForumPosts = [];
@@ -1832,6 +1940,7 @@
         }
 
         async function loadTeamPosts() {
+            if (!requireAdmin()) return;
             try {
                 const snap = await db.collection('team_posts').orderBy('createdAt', 'desc').get();
                 allTeamPosts = [];
@@ -1840,6 +1949,7 @@
         }
 
         async function loadNotifications() {
+            if (!requireAdmin()) return;
             try {
                 const snap = await db.collection('notifications').orderBy('createdAt', 'desc').limit(100).get();
                 allNotifications = [];
@@ -1848,6 +1958,7 @@
         }
 
         async function loadUploads() {
+            if (!requireAdmin()) return;
             try {
                 const snap = await db.collection('books').where('status', '==', 'pending').get();
                 allUploads = [];
@@ -1856,6 +1967,7 @@
         }
 
         async function loadReports() {
+            if (!requireAdmin()) return;
             try {
                 const snap = await db.collection('reports').orderBy('createdAt', 'desc').get();
                 allReports = [];
@@ -1864,6 +1976,7 @@
         }
 
         async function loadAds() {
+            if (!requireAdmin()) return;
             try {
                 const snap = await db.collection('ads').orderBy('createdAt', 'desc').get();
                 allAds = [];
@@ -1875,6 +1988,7 @@
         // 6. تحميل الملخصات
         // ============================================================
         async function loadHandwritten() {
+            if (!requireAdmin()) return;
             try {
                 const snap = await db.collection('handwritten_notes').orderBy('createdAt', 'desc').get();
                 allHandwritten = [];
@@ -1886,6 +2000,7 @@
         // 7. تحميل قنوات يوتيوب
         // ============================================================
         async function loadYoutube() {
+            if (!requireAdmin()) return;
             try {
                 const snap = await db.collection('youtube_channels').get();
                 allYoutube = [];
@@ -1897,6 +2012,7 @@
         // 8. تحميل التعليقات
         // ============================================================
         async function loadAllComments() {
+            if (!requireAdmin()) return;
             allComments = [];
             try {
                 const forumSnap = await db.collection('forum_comments').orderBy('createdAt', 'desc').get();
@@ -1978,6 +2094,7 @@
         }
 
         async function loadActivities() {
+            if (!requireAdmin()) return;
             allActivities = [];
             allBooks.slice(0, 3).forEach(b => {
                 allActivities.push({
@@ -2050,6 +2167,7 @@
         // 9. تحديث البادجات
         // ============================================================
         function updateBadges() {
+            if (!requireAdmin()) return;
             const pendingComments = allComments.filter(c => c.status === 'pending').length;
             const pendingUploads = allUploads.length;
             const pendingReports = allReports.filter(r => r.status === 'pending').length;
@@ -2075,6 +2193,7 @@
         // 10. Dashboard
         // ============================================================
         function updateDashboard() {
+            if (!requireAdmin()) return;
             const totalUsers = allUsers.length;
             const totalBooks = allBooks.length;
             const totalHandwritten = allHandwritten.length;
@@ -2165,6 +2284,7 @@
         // 11. المستخدمين
         // ============================================================
         function renderUsers() {
+            if (!requireAdmin()) return;
             const container = document.getElementById('usersTable');
             const filter = document.getElementById('userFilter')?.value || 'all';
             const search = document.getElementById('userSearch')?.value?.toLowerCase() || '';
@@ -2341,6 +2461,7 @@
         // 12. التعليقات (مختصر)
         // ============================================================
         function renderComments() {
+            if (!requireAdmin()) return;
             const container = document.getElementById('commentsTable');
             const filter = document.getElementById('commentFilter')?.value || 'all';
             const search = document.getElementById('commentSearch')?.value?.toLowerCase() || '';
@@ -2458,6 +2579,7 @@
         // 13. الكتب
         // ============================================================
         function renderBooks() {
+            if (!requireAdmin()) return;
             const container = document.getElementById('booksTable');
             const filter = document.getElementById('bookFilter')?.value || 'all';
             const search = document.getElementById('bookSearch')?.value?.toLowerCase() || '';
@@ -2587,6 +2709,7 @@
         // 14. المنتدى
         // ============================================================
         function renderForum() {
+            if (!requireAdmin()) return;
             const container = document.getElementById('forumTable');
             const filter = document.getElementById('forumFilter')?.value || 'all';
             const search = document.getElementById('forumSearch')?.value?.toLowerCase() || '';
@@ -2673,6 +2796,7 @@
         // 15. منشورات الفريق
         // ============================================================
         function renderTeamPosts() {
+            if (!requireAdmin()) return;
             const container = document.getElementById('teamPostsTable');
             if (allTeamPosts.length === 0) {
                 container.innerHTML =
@@ -2758,6 +2882,7 @@
         // 16. المرفوعات
         // ============================================================
         function renderUploads() {
+            if (!requireAdmin()) return;
             const container = document.getElementById('uploadsTable');
             const filter = document.getElementById('uploadFilter')?.value || 'all';
 
@@ -2839,6 +2964,7 @@
         // 17. الملخصات
         // ============================================================
         function renderHandwritten() {
+            if (!requireAdmin()) return;
             const container = document.getElementById('handwrittenTable');
             const filter = document.getElementById('handwrittenFilter')?.value || 'all';
             const search = document.getElementById('handwrittenSearch')?.value?.toLowerCase() || '';
@@ -2970,6 +3096,7 @@
         // 18. قنوات يوتيوب
         // ============================================================
         function renderYoutube() {
+            if (!requireAdmin()) return;
             const container = document.getElementById('youtubeTable');
             if (allYoutube.length === 0) {
                 container.innerHTML =
@@ -3085,6 +3212,7 @@
         });
 
         function renderAds() {
+            if (!requireAdmin()) return;
             const container = document.getElementById('adsTable');
             if (allAds.length === 0) {
                 container.innerHTML =
@@ -3194,6 +3322,7 @@
         // 20. البلاغات
         // ============================================================
         function renderReports() {
+            if (!requireAdmin()) return;
             const container = document.getElementById('reportsTable');
             const filter = document.getElementById('reportFilter')?.value || 'all';
 
@@ -3276,6 +3405,7 @@
         // 21. الإشعارات
         // ============================================================
         function renderNotifications() {
+            if (!requireAdmin()) return;
             const container = document.getElementById('notificationsTable');
             if (allNotifications.length === 0) {
                 container.innerHTML =
@@ -3351,6 +3481,7 @@
         // 22. التحليلات
         // ============================================================
         function loadAnalytics() {
+            if (!requireAdmin()) return;
             const totalDownloads = allBooks.reduce((s, b) => s + (b.downloads || 0), 0);
             const totalViews = allBooks.reduce((s, b) => s + (b.views || 0), 0);
             const totalFavorites = allBooks.reduce((s, b) => s + (b.favorites || 0), 0);
@@ -3454,10 +3585,10 @@
             document.querySelector('.btn-dark').textContent = '☀️';
         }
 
-        // تحميل البيانات
-        if (requireAdmin()) {
-            loadAllData();
-        }
+        // ❌ تم حذف ADMIN_PASSWORD نهائياً
+        // ✅ النظام يعتمد على Firebase Authentication فقط
+        console.log('✅ لوحة التحكم - نظام المصادقة عبر Firebase Authentication');
+        console.log('✅ تم إزالة نظام الباسورد القديم (prompt, localStorage, hardcoded)');
     </script>
 
 </body>
