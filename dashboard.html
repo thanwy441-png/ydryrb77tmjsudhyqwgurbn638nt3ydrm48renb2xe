@@ -50,8 +50,22 @@
         body.dark-mode .topbar,
         body.dark-mode .chart-container,
         body.dark-mode .status-item,
-        body.dark-mode .stat-box {
+        body.dark-mode .stat-box,
+        body.dark-mode .sidebar {
             background: #1a1a2e !important;
+        }
+        body.dark-mode .sidebar .logo {
+            border-bottom-color: #333;
+        }
+        body.dark-mode .sidebar .admin-info {
+            border-bottom-color: #333;
+        }
+        body.dark-mode .sidebar .nav-list li:hover {
+            background: #2d2d44;
+        }
+        body.dark-mode .sidebar .nav-list li.active {
+            background: #1a237e40;
+            color: #90caf9;
         }
 
         /* ===== الشريط الجانبي ===== */
@@ -59,17 +73,14 @@
             position: fixed;
             top: 0;
             right: 0;
-            width: 250px;
+            width: 260px;
             height: 100%;
             background: white;
-            box-shadow: -2px 0 20px rgba(0, 0, 0, 0.08);
+            box-shadow: -2px 0 25px rgba(0, 0, 0, 0.08);
             transition: all 0.3s;
             z-index: 1000;
             overflow-y: auto;
             padding: 12px 0;
-        }
-        body.dark-mode .sidebar {
-            background: #1a1a2e;
         }
         .sidebar .logo {
             display: flex;
@@ -78,16 +89,13 @@
             padding: 0 16px 14px;
             border-bottom: 1px solid #eee;
         }
-        body.dark-mode .sidebar .logo {
-            border-bottom-color: #333;
-        }
         .sidebar .logo img {
-            height: 35px;
+            height: 38px;
             width: auto;
             border-radius: 10px;
         }
         .sidebar .logo h2 {
-            font-size: 15px;
+            font-size: 16px;
             background: linear-gradient(45deg, #2ecc71, #3498db, #e74c3c);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -98,34 +106,31 @@
             text-align: center;
             border-bottom: 1px solid #eee;
         }
-        body.dark-mode .sidebar .admin-info {
-            border-bottom-color: #333;
-        }
         .sidebar .admin-info .avatar {
-            width: 50px;
-            height: 50px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid #2ecc71;
             margin-bottom: 6px;
         }
         .sidebar .admin-info .avatar-placeholder {
-            width: 50px;
-            height: 50px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
             background: linear-gradient(45deg, #2ecc71, #3498db);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 800;
             margin: 0 auto 6px;
             border: 3px solid #2ecc71;
         }
         .sidebar .admin-info .name {
             font-weight: 800;
-            font-size: 14px;
+            font-size: 15px;
         }
         .sidebar .admin-info .email {
             font-size: 11px;
@@ -135,9 +140,9 @@
             display: inline-block;
             background: #2ecc7120;
             color: #2ecc71;
-            padding: 2px 12px;
+            padding: 2px 14px;
             border-radius: 50px;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 700;
             margin-top: 4px;
         }
@@ -161,17 +166,10 @@
         .sidebar .nav-list li:hover {
             background: #f0f4f8;
         }
-        body.dark-mode .sidebar .nav-list li:hover {
-            background: #2d2d44;
-        }
         .sidebar .nav-list li.active {
             background: #1a237e15;
             border-right-color: #1a237e;
             color: #1a237e;
-        }
-        body.dark-mode .sidebar .nav-list li.active {
-            background: #1a237e40;
-            color: #90caf9;
         }
         .sidebar .nav-list li .icon {
             font-size: 18px;
@@ -194,9 +192,18 @@
         .sidebar .nav-list li .badge.orange {
             background: #f39c12;
         }
+        .sidebar .nav-list .logout-btn {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 12px;
+            color: #e74c3c;
+        }
+        .sidebar .nav-list .logout-btn:hover {
+            background: #e74c3c10;
+        }
 
         .main-content {
-            margin-right: 250px;
+            margin-right: 260px;
             padding: 12px 20px;
             min-height: 100vh;
         }
@@ -211,9 +218,6 @@
             margin-bottom: 18px;
             flex-wrap: wrap;
             gap: 10px;
-        }
-        body.dark-mode .topbar {
-            background: #1e1e32;
         }
         .topbar h1 {
             font-size: 20px;
@@ -301,9 +305,6 @@
             text-align: center;
             transition: 0.3s;
         }
-        body.dark-mode .stat-card {
-            background: #1e1e32;
-        }
         .stat-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
@@ -343,7 +344,6 @@
             border-right-color: #1abc9c;
         }
 
-        /* ===== الجداول ===== */
         .table-container {
             background: white;
             border-radius: 14px;
@@ -351,9 +351,6 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
             overflow-x: auto;
             margin-bottom: 16px;
-        }
-        body.dark-mode .table-container {
-            background: #1e1e32;
         }
         .table-header {
             display: flex;
@@ -493,14 +490,6 @@
         }
         .btn-primary {
             background: #3498db;
-            color: white;
-        }
-        .btn-purple {
-            background: #9b59b6;
-            color: white;
-        }
-        .btn-dark {
-            background: #2c3e50;
             color: white;
         }
         .btn-xs {
@@ -656,7 +645,6 @@
             animation: pulse-dot 1.5s infinite;
         }
 
-        /* ===== Stats Detail ===== */
         .stats-detail {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -670,9 +658,6 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
             text-align: center;
             border-top: 4px solid #1a237e;
-        }
-        body.dark-mode .stat-box {
-            background: #1e1e32;
         }
         .stat-box .num {
             font-size: 30px;
@@ -698,9 +683,6 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
             margin-bottom: 16px;
         }
-        body.dark-mode .chart-container {
-            background: #1e1e32;
-        }
         .chart-container canvas {
             max-height: 280px;
             width: 100% !important;
@@ -719,9 +701,6 @@
             text-align: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
         }
-        body.dark-mode .system-status .status-item {
-            background: #1e1e32;
-        }
         .system-status .status-item .status-icon {
             font-size: 28px;
         }
@@ -735,46 +714,6 @@
         }
         .system-status .status-item.online {
             border-right: 4px solid #2ecc71;
-        }
-
-        .audit-item {
-            padding: 8px 12px;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-        body.dark-mode .audit-item {
-            border-bottom-color: #333;
-        }
-        .audit-item .audit-action {
-            font-weight: 700;
-            padding: 2px 10px;
-            border-radius: 4px;
-            font-size: 10px;
-        }
-        .audit-item .audit-action.create {
-            background: #2ecc7120;
-            color: #2ecc71;
-        }
-        .audit-item .audit-action.delete {
-            background: #e74c3c20;
-            color: #e74c3c;
-        }
-        .audit-item .audit-action.update {
-            background: #3498db20;
-            color: #3498db;
-        }
-        .audit-item .audit-action.ban {
-            background: #e74c3c20;
-            color: #e74c3c;
-        }
-        .audit-item .audit-action.login {
-            background: #3498db20;
-            color: #3498db;
         }
 
         .modal-overlay {
@@ -878,31 +817,6 @@
         .submit-btn:hover {
             background: #27ae60;
         }
-        .image-upload-area {
-            border: 2px dashed #eee;
-            padding: 14px;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .image-upload-area:hover {
-            border-color: #1a237e;
-        }
-        .image-upload-area input[type="file"] {
-            display: none;
-        }
-        .image-upload-area .preview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-            gap: 6px;
-        }
-        .image-upload-area .preview-grid img {
-            width: 100%;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 6px;
-        }
 
         .live-indicator {
             display: inline-flex;
@@ -920,55 +834,10 @@
             animation: pulse-dot 1s infinite;
         }
 
-        /* ===== YouTube ===== */
-        .youtube-channel-item {
-            background: white;
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            transition: 0.3s;
-            border-right: 4px solid #ff0000;
-        }
-        body.dark-mode .youtube-channel-item {
-            background: #1e1e32;
-            border-color: #ff0000;
-        }
-        .youtube-channel-item:hover {
-            transform: translateX(-4px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-        }
-        .youtube-channel-item .channel-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #ff0000;
-            flex-shrink: 0;
-        }
-        .youtube-channel-item .channel-info {
-            flex: 1;
-        }
-        .youtube-channel-item .channel-info .name {
-            font-weight: 800;
-            font-size: 15px;
-        }
-        .youtube-channel-item .channel-info .subject {
-            font-size: 13px;
-            color: #888;
-        }
-        .youtube-channel-item .channel-info .grade {
-            font-size: 12px;
-            color: #aaa;
-        }
-
         @media (max-width: 768px) {
             .sidebar {
-                width: 210px;
-                right: -210px;
+                width: 220px;
+                right: -220px;
             }
             .sidebar.open {
                 right: 0;
@@ -1035,38 +904,6 @@
         body.dark-mode ::-webkit-scrollbar-thumb {
             background: #555;
         }
-
-        /* ===== Admin Badge ===== */
-        .admin-badge-header {
-            display: inline-block;
-            background: #1a237e20;
-            color: #1a237e;
-            padding: 1px 10px;
-            border-radius: 50px;
-            font-size: 10px;
-            font-weight: 700;
-        }
-        body.dark-mode .admin-badge-header {
-            background: #1a237e40;
-            color: #90caf9;
-        }
-
-        /* ===== Online User Status ===== */
-        .user-status-online {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            color: #2ecc71;
-            font-weight: 700;
-            font-size: 11px;
-        }
-        .user-status-online .dot {
-            width: 6px;
-            height: 6px;
-            background: #2ecc71;
-            border-radius: 50%;
-            animation: pulse-dot 1.5s infinite;
-        }
     </style>
 </head>
 <body>
@@ -1080,14 +917,14 @@
 
         <div class="admin-info" id="adminInfo">
             <div class="avatar-placeholder" id="adminAvatarPlaceholder">ف</div>
-            <div class="name" id="adminName">فريق الثانوية الرسمية</div>
-            <div class="email" id="adminEmail">official@thanawya-plus.com</div>
+            <div class="name" id="adminName">...جار التحميل</div>
+            <div class="email" id="adminEmail">...@...</div>
             <div class="role-badge">👑 مدير</div>
         </div>
 
         <ul class="nav-list" id="navList">
             <li class="active" data-page="dashboard" onclick="showPage('dashboard')">
-                <span class="icon">📊</span> Dashboard
+                <span class="icon">📊</span> Dashboard <span class="badge green" id="liveBadge">●</span>
             </li>
             <li data-page="users" onclick="showPage('users')">
                 <span class="icon">👤</span> المستخدمين <span class="badge" id="usersBadge"></span>
@@ -1131,6 +968,9 @@
             <li data-page="settings" onclick="showPage('settings')">
                 <span class="icon">⚙️</span> الإعدادات
             </li>
+            <li class="logout-btn" onclick="logoutAdmin()">
+                <span class="icon">🚪</span> تسجيل الخروج <span style="margin-right:auto;font-size:9px;color:#888;">🔒</span>
+            </li>
         </ul>
     </aside>
 
@@ -1169,6 +1009,11 @@
                 <canvas id="growthChart"></canvas>
             </div>
 
+            <div class="chart-container">
+                <div class="table-header"><h3>📊 توزيع المحتوى</h3></div>
+                <canvas id="contentChart"></canvas>
+            </div>
+
             <div class="table-container">
                 <div class="table-header"><h3>📋 آخر الأنشطة</h3></div>
                 <div id="recentActivities"><div class="loading-container"><div class="spinner"></div></div></div>
@@ -1179,6 +1024,8 @@
                 <div class="status-item online"><div class="status-icon">📊</div><div class="status-label">قراءات اليوم</div><div class="status-value" id="dailyReads">0</div></div>
                 <div class="status-item online"><div class="status-icon">✍️</div><div class="status-label">كتابات اليوم</div><div class="status-value" id="dailyWrites">0</div></div>
                 <div class="status-item online"><div class="status-icon">👥</div><div class="status-label">إجمالي المستخدمين</div><div class="status-value" id="totalUsersStatus">0</div></div>
+                <div class="status-item online"><div class="status-icon">📚</div><div class="status-label">إجمالي الكتب</div><div class="status-value" id="totalBooksStatus">0</div></div>
+                <div class="status-item online"><div class="status-icon">🟢</div><div class="status-label">المتصلون</div><div class="status-value" id="onlineStatus">0</div></div>
             </div>
         </div>
 
@@ -1460,14 +1307,6 @@
                 <div class="form-group"><label>العنوان *</label><input type="text" id="adTitle" required></div>
                 <div class="form-group"><label>الوصف</label><textarea id="adDesc" rows="2"></textarea></div>
                 <div class="form-group"><label>رابط الإعلان</label><input type="url" id="adLink"></div>
-                <div class="form-group">
-                    <label>صور الإعلان</label>
-                    <div class="image-upload-area" onclick="document.getElementById('adImagesInput').click()">
-                        <div id="adImagesPreview" class="preview-grid"></div>
-                        <p style="font-size:12px;color:#888;">اضغط لاختيار صور</p>
-                        <input type="file" id="adImagesInput" accept="image/*" multiple>
-                    </div>
-                </div>
                 <div class="row-2col">
                     <div class="form-group"><label>المستهدف</label><select id="adTarget"><option value="all">الجميع</option><option value="users">المستخدمين</option></select></div>
                     <div class="form-group"><label>الحالة</label><select id="adActive"><option value="true">نشط</option><option value="false">غير نشط</option></select></div>
@@ -1522,9 +1361,9 @@
         let isSuperAdmin = false;
         let userData = null;
         let growthChart = null;
+        let contentChart = null;
         let liveInterval = null;
         let isLive = false;
-        let adImages = [];
 
         let allUsers = [];
         let allBooks = [];
@@ -1537,6 +1376,7 @@
         let allYoutube = [];
         let allAuditLogs = [];
         let allOnlineUsers = [];
+        let allActivities = [];
 
         // ============================================================
         // دوال Realtime Database
@@ -1614,6 +1454,15 @@
                 }
 
                 userData = data;
+
+                // ✅ التحقق من الأدمن
+                const role = data.role || 'user';
+                if (role !== 'admin' && role !== 'superAdmin') {
+                    showAccessDenied('ليس لديك صلاحية الدخول إلى لوحة التحكم');
+                    await auth.signOut();
+                    return false;
+                }
+
                 if (data.isBanned === true) {
                     showAccessDenied('⛔ حسابك محظور، يرجى التواصل مع الإدارة');
                     await auth.signOut();
@@ -1626,21 +1475,14 @@
                     return false;
                 }
 
-                const role = data.role || 'user';
-                if (role !== 'admin' && role !== 'superAdmin') {
-                    showAccessDenied('ليس لديك صلاحية الدخول إلى لوحة التحكم');
-                    await auth.signOut();
-                    return false;
-                }
-
                 isAdmin = role === 'admin';
                 isSuperAdmin = role === 'superAdmin';
                 currentUser = user;
 
+                // تحديث بيانات الأدمن في الشريط الجانبي
                 document.getElementById('adminName').textContent = data.name || 'المدير';
                 document.getElementById('adminEmail').textContent = data.email || user.email;
 
-                // تحديث صورة المدير
                 if (data.photoURL) {
                     const img = document.createElement('img');
                     img.className = 'avatar';
@@ -1683,29 +1525,13 @@
             if (user) {
                 const verified = await verifyUser(user);
                 if (verified) {
-                    console.log('✅ مرحباً بك في لوحة التحكم');
+                    console.log('✅ مرحباً بك في لوحة التحكم - أدمن');
                     loadAllData();
                     updateBadges();
                     startLiveUpdates();
                 }
             } else {
                 showAccessDenied('يرجى تسجيل الدخول أولاً');
-            }
-        });
-
-        // إضافة زر تسجيل الخروج
-        document.addEventListener('DOMContentLoaded', function() {
-            const navList = document.getElementById('navList');
-            if (navList) {
-                const logoutLi = document.createElement('li');
-                logoutLi.style.cssText = 'margin-top:20px;border-top:1px solid #eee;padding-top:12px;';
-                logoutLi.innerHTML = `
-                    <span class="icon">🚪</span> 
-                    تسجيل الخروج 
-                    <span style="margin-right:auto;font-size:9px;color:#888;">🔒</span>
-                `;
-                logoutLi.onclick = logoutAdmin;
-                navList.appendChild(logoutLi);
             }
         });
 
@@ -1830,7 +1656,7 @@
             document.getElementById('pageTitle').textContent = titles[page] || page;
             document.getElementById('sidebar').classList.remove('open');
 
-            if (page === 'dashboard') loadDashboard();
+            if (page === 'dashboard') updateDashboard();
             if (page === 'users') renderUsers();
             if (page === 'onlineUsers') renderOnlineUsers();
             if (page === 'books') renderBooks();
@@ -1862,12 +1688,54 @@
                 allHandwritten = await getAllData('handwritten_notes');
                 allYoutube = await getAllData('youtube_channels');
                 allAuditLogs = await getAllData('audit_logs');
+                await loadActivities();
                 updateOnlineUsers();
                 updateDashboard();
                 updateBadges();
             } catch (err) {
-                showToast('❌ خطأ في تحميل البيانات: ' + err.message, 'error');
+                console.error('❌ خطأ في تحميل البيانات:', err);
+                showToast('❌ خطأ في تحميل البيانات', 'error');
             }
+        }
+
+        async function loadActivities() {
+            allActivities = [];
+            allBooks.slice(0, 5).forEach(b => {
+                allActivities.push({
+                    text: `📚 كتاب: "${b.title || 'بدون عنوان'}"`,
+                    time: b.createdAt ? formatTimestamp(b.createdAt) : 'الآن',
+                    status: b.status || 'pending'
+                });
+            });
+            allHandwritten.slice(0, 5).forEach(h => {
+                allActivities.push({
+                    text: `✍️ ملخص: "${h.title || 'بدون عنوان'}"`,
+                    time: h.createdAt ? formatTimestamp(h.createdAt) : 'الآن',
+                    status: h.status || 'pending'
+                });
+            });
+            allForumPosts.slice(0, 3).forEach(p => {
+                allActivities.push({
+                    text: `💬 منشور: "${p.title || 'بدون عنوان'}"`,
+                    time: p.createdAt ? formatTimestamp(p.createdAt) : 'الآن',
+                    status: p.status || 'pending'
+                });
+            });
+            allReports.slice(0, 3).forEach(r => {
+                allActivities.push({
+                    text: `🚨 بلاغ: "${r.reason || 'بدون سبب'}"`,
+                    time: r.createdAt ? formatTimestamp(r.createdAt) : 'الآن',
+                    status: r.status || 'pending'
+                });
+            });
+            allTeamPosts.slice(0, 3).forEach(t => {
+                allActivities.push({
+                    text: `📢 منشور فريق: "${t.title || 'بدون عنوان'}"`,
+                    time: t.createdAt ? formatTimestamp(t.createdAt) : 'الآن',
+                    status: 'نشط'
+                });
+            });
+            allActivities.sort((a, b) => b.time.localeCompare(a.time));
         }
 
         // ============================================================
@@ -1887,11 +1755,13 @@
                         'superAdmin';
                 });
 
-                document.getElementById('onlineBadge').textContent = allOnlineUsers.length;
+                const count = allOnlineUsers.length;
+                document.getElementById('onlineBadge').textContent = count || '';
                 document.getElementById('onlineCountHeader').innerHTML =
-                    `<span class="dot"></span> ${allOnlineUsers.length}`;
+                    `<span class="dot"></span> ${count}`;
                 document.getElementById('onlineUsersCount').innerHTML =
-                    `<span class="dot"></span> ${allOnlineUsers.length}`;
+                    `<span class="dot"></span> ${count}`;
+                document.getElementById('onlineStatus').textContent = count;
 
                 renderOnlineUsers();
             } catch (err) {
@@ -1919,7 +1789,8 @@
                     const photo = u.photoURL || '';
                     const gradeNames = { '1': 'أولى', '2': 'تانية', '3': 'تالتة' };
                     const grade = gradeNames[u.grade] || '-';
-                    const lastActive = u.lastActive ? new Date(u.lastActive).toLocaleString('ar') : 'الآن';
+                    const lastActive = u.lastActive ? new Date(u.lastActive).toLocaleString('ar') :
+                    'الآن';
                     const device = u.device || 'غير معروف';
 
                     html += `
@@ -1989,6 +1860,11 @@
             const bannedUsers = allUsers.filter(u => u.isBanned).length;
             const onlineCount = allOnlineUsers.length;
 
+            // تحديث إحصائيات النظام
+            document.getElementById('totalUsersStatus').textContent = totalUsers;
+            document.getElementById('totalBooksStatus').textContent = totalBooks;
+
+            // Stats Grid
             document.getElementById('statsGrid').innerHTML = `
                 <div class="stat-card green"><div class="stat-icon">👤</div><div class="stat-number">${totalUsers}</div><div class="stat-label">المستخدمين</div></div>
                 <div class="stat-card blue"><div class="stat-icon">📚</div><div class="stat-number">${totalBooks}</div><div class="stat-label">الكتب</div></div>
@@ -2003,6 +1879,7 @@
                 <div class="stat-card teal"><div class="stat-icon">🟢</div><div class="stat-number">${onlineCount}</div><div class="stat-label">متصلون الآن</div></div>
             `;
 
+            // Stats Detail
             document.getElementById('statsDetail').innerHTML = `
                 <div class="stat-box"><div class="num">${totalBooks}</div><div class="label">📚 الكتب</div><div class="sub">${pendingBooks} قيد المراجعة</div></div>
                 <div class="stat-box"><div class="num">${totalHandwritten}</div><div class="label">✍️ الملخصات</div><div class="sub">${pendingHandwritten} في الانتظار</div></div>
@@ -2014,57 +1891,38 @@
                 <div class="stat-box"><div class="num">${onlineCount}</div><div class="label">🟢 متصلون الآن</div><div class="sub">آخر 5 دقائق</div></div>
             `;
 
-            // Activities
-            const activities = [];
-            allBooks.slice(0, 3).forEach(b => {
-                activities.push({ text: `📚 كتاب: "${b.title || 'بدون عنوان'}"`, time: b.createdAt ? formatTimestamp(b
-                        .createdAt) : 'الآن', status: b.status || 'pending' });
-            });
-            allHandwritten.slice(0, 3).forEach(h => {
-                activities.push({ text: `✍️ ملخص: "${h.title || 'بدون عنوان'}"`, time: h.createdAt ? formatTimestamp(h
-                        .createdAt) : 'الآن', status: h.status || 'pending' });
-            });
-            allForumPosts.slice(0, 2).forEach(p => {
-                activities.push({ text: `💬 منشور: "${p.title || 'بدون عنوان'}"`, time: p.createdAt ? formatTimestamp(p
-                        .createdAt) : 'الآن', status: p.status || 'pending' });
-            });
-            allReports.slice(0, 2).forEach(r => {
-                activities.push({ text: `🚨 بلاغ: "${r.reason || 'بدون سبب'}"`, time: r.createdAt ? formatTimestamp(r
-                        .createdAt) : 'الآن', status: r.status || 'pending' });
-            });
-            activities.sort((a, b) => b.time.localeCompare(a.time));
-
+            // Recent Activities
             const container = document.getElementById('recentActivities');
-            if (activities.length === 0) {
+            if (allActivities.length === 0) {
                 container.innerHTML =
                     `<div class="empty-state"><div class="icon">📭</div><p>لا توجد أنشطة</p></div>`;
                 return;
             }
             let html = '<table><thead><tr><th>النشاط</th><th>الوقت</th><th>الحالة</th></tr></thead><tbody>';
-            activities.slice(0, 10).forEach(a => {
+            allActivities.slice(0, 10).forEach(a => {
                 const cls = a.status === 'approved' ? 'approved' : a.status === 'pending' ? 'pending' :
-                    'rejected';
+                    a.status === 'نشط' ? 'approved' : 'rejected';
                 const txt = a.status === 'approved' ? '✅ مقبول' : a.status === 'pending' ? '⏳ في الانتظار' :
-                    '❌ مرفوض';
-                html += `<tr><td>${a.text}</td><td>${a.time}</td><td><span class="status-badge ${cls}">${txt}</span></td></tr>`;
+                    a.status === 'نشط' ? '✅ نشط' : '❌ مرفوض';
+                html +=
+                    `<tr><td>${a.text}</td><td>${a.time}</td><td><span class="status-badge ${cls}">${txt}</span></td></tr>`;
             });
             html += '</tbody></table>';
             container.innerHTML = html;
 
             // System Status
             document.getElementById('dbStatus').textContent = '✅ شغال';
-            document.getElementById('totalUsersStatus').textContent = totalUsers;
-            document.getElementById('dailyReads').textContent = allBooks.length + allUsers.length + allForumPosts.length;
+            document.getElementById('dailyReads').textContent = allBooks.length + allUsers.length + allForumPosts
+            .length;
             document.getElementById('dailyWrites').textContent = allActivities.length;
 
-            // Growth Chart
+            // Charts
             updateGrowthChart();
+            updateContentChart();
         }
 
-        function loadDashboard() { updateDashboard(); }
-
         // ============================================================
-        // Growth Chart
+        // Charts
         // ============================================================
         function updateGrowthChart() {
             const ctx = document.getElementById('growthChart').getContext('2d');
@@ -2099,7 +1957,7 @@
                         backgroundColor: 'rgba(46, 204, 113, 0.1)',
                         fill: true,
                         tension: 0.4,
-                        pointRadius: 2,
+                        pointRadius: 3,
                         pointBackgroundColor: '#2ecc71'
                     }]
                 },
@@ -2111,6 +1969,38 @@
                     scales: {
                         x: { grid: { color: gridColor }, ticks: { color: textColor, maxTicksLimit: 10 } },
                         y: { grid: { color: gridColor }, ticks: { color: textColor, beginAtZero: true } }
+                    }
+                }
+            });
+        }
+
+        function updateContentChart() {
+            const ctx = document.getElementById('contentChart').getContext('2d');
+            if (contentChart) contentChart.destroy();
+
+            const isDark = document.body.classList.contains('dark-mode');
+            const textColor = isDark ? '#ecf0f1' : '#2c3e50';
+
+            contentChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['الكتب', 'الملخصات', 'منشورات المنتدى', 'قنوات يوتيوب', 'الإعلانات'],
+                    datasets: [{
+                        data: [
+                            allBooks.length,
+                            allHandwritten.length,
+                            allForumPosts.length,
+                            allYoutube.length,
+                            allAds.filter(a => a.active).length
+                        ],
+                        backgroundColor: ['#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#e74c3c'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { labels: { color: textColor } }
                     }
                 }
             });
@@ -2568,16 +2458,14 @@
                     'تالتة' : 'جميع الصفوف';
 
                 html += `
-                    <div class="youtube-channel-item">
-                        <img src="${image}" class="channel-img" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(y.name||'قناة')}&background=ff0000&color=fff&size=100'">
-                        <div class="channel-info">
-                            <div class="name">${safeText(y.name || 'قناة')}</div>
-                            <div class="subject">📖 ${safeText(y.subject || 'عام')}</div>
-                            <div class="grade">🏫 ${gradeName}</div>
+                    <div style="background:#f8f9fa;border-radius:12px;padding:12px;margin-bottom:10px;display:flex;align-items:center;gap:12px;border-right:4px solid #ff0000;">
+                        <img src="${image}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid #ff0000;" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(y.name||'قناة')}&background=ff0000&color=fff&size=100'">
+                        <div style="flex:1;">
+                            <div style="font-weight:800;font-size:14px;">${safeText(y.name || 'قناة')}</div>
+                            <div style="font-size:12px;color:#888;">📖 ${safeText(y.subject || 'عام')}</div>
+                            <div style="font-size:11px;color:#aaa;">🏫 ${gradeName}</div>
                         </div>
-                        <div class="channel-actions">
-                            <button class="btn btn-danger btn-xs" onclick="deleteYoutube('${y.id}')">🗑️</button>
-                        </div>
+                        <button class="btn btn-danger btn-xs" onclick="deleteYoutube('${y.id}')">🗑️</button>
                     </div>
                 `;
             });
@@ -2619,31 +2507,6 @@
         // ============================================================
         // Ads
         // ============================================================
-        document.getElementById('adImagesInput').addEventListener('change', function(e) {
-            const files = e.target.files;
-            const preview = document.getElementById('adImagesPreview');
-            preview.innerHTML = '';
-            adImages = [];
-            for (let file of files) {
-                if (file.size > 5 * 1024 * 1024) {
-                    showToast('❌ حجم الصورة ' + file.name + ' يتجاوز 5 ميجابايت', 'error');
-                    continue;
-                }
-                if (!file.type.startsWith('image/')) {
-                    showToast('❌ يرجى رفع صور فقط', 'error');
-                    continue;
-                }
-                adImages.push(file);
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    preview.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
         function renderAds() {
             if (!requireAdmin()) return;
             const container = document.getElementById('adsTable');
@@ -2711,25 +2574,10 @@
             if (!title) { showToast('❌ يرجى إدخال عنوان الإعلان', 'error'); return; }
 
             try {
-                let imageUrls = [];
-                if (adImages.length > 0) {
-                    // تخزين الصور مؤقتاً (لأننا في Realtime DB بدون Storage)
-                    imageUrls = await Promise.all(adImages.map(file => {
-                        return new Promise((resolve) => {
-                            const reader = new FileReader();
-                            reader.onload = function(e) { resolve(e.target.result); };
-                            reader.readAsDataURL(file);
-                        });
-                    }));
-                }
-
-                await addData('ads', { title, desc: desc || null, link: link || null, target, active,
-                    images: imageUrls });
+                await addData('ads', { title, desc: desc || null, link: link || null, target, active });
                 showToast('✅ تم نشر الإعلان');
                 closeModal('addAdModal');
                 document.getElementById('addAdForm').reset();
-                document.getElementById('adImagesPreview').innerHTML = '';
-                adImages = [];
                 await loadAllData();
                 renderAds();
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
@@ -2954,7 +2802,7 @@
                 const color = severity === 'CRITICAL' ? '#e74c3c' : severity === 'WARNING' ? '#f39c12' :
                     '#3498db';
                 html += `
-                    <div class="audit-item">
+                    <div class="audit-item" style="padding:8px 12px;border-bottom:1px solid #f0f0f0;font-size:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;">
                         <span>${icon} ${action}</span>
                         <span style="color:${color};font-weight:700;">${severity}</span>
                         <span>${time}</span>
@@ -2993,8 +2841,8 @@
                     log.action === 'login' ? 'login' : '';
                 const time = log.timestamp ? formatTimestamp(log.timestamp) : 'الآن';
                 html += `
-                    <div class="audit-item">
-                        <span><span class="audit-action ${actionClass}">${log.action}</span></span>
+                    <div class="audit-item" style="padding:8px 12px;border-bottom:1px solid #f0f0f0;font-size:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;">
+                        <span><span class="audit-action" style="font-weight:700;padding:2px 10px;border-radius:4px;font-size:10px;background:#2ecc7120;color:#2ecc71;">${log.action}</span></span>
                         <span>${safeText(log.performedBy || 'مجهول')}</span>
                         <span>${time}</span>
                     </div>
@@ -3060,9 +2908,10 @@
             document.querySelector('.btn-dark').textContent = '☀️';
         }
 
-        console.log('✅ لوحة التحكم - نسخة مطورة');
+        console.log('✅ لوحة التحكم - نسخة احترافية');
         console.log('📊 جميع البيانات من Realtime Database');
         console.log('🟢 يتم تحديث المتصلين كل 3 ثوانٍ');
+        console.log('👑 تم التحقق من صلاحيات الأدمن');
     </script>
 
 </body>
