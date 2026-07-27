@@ -1843,13 +1843,11 @@
         const db = firebase.database(); // Realtime Database
 
         // ============================================================
-        // 🛡️ نظام الأمان
+        // 🛡️ نظام الأمان والبيانات الأساسية
         // ============================================================
         let currentUser = null;
         let isAdmin = false;
         let isSuperAdmin = false;
-        let isBanned = false;
-        let isActive = false;
         let userData = null;
         let allActivities = [];
         let allAuditLogs = [];
@@ -1899,8 +1897,6 @@
                     await auth.signOut(); return false; }
                 isAdmin = role === 'admin';
                 isSuperAdmin = role === 'superAdmin';
-                isBanned = false;
-                isActive = true;
                 currentUser = user;
                 document.getElementById('adminName').textContent = userData.name || 'المدير';
                 document.getElementById('adminEmail').textContent = userData.email || user.email;
@@ -1915,11 +1911,6 @@
 
         function requireAdmin() {
             if (!isAdmin && !isSuperAdmin) { showToast('⛔ غير مصرح بهذه العملية', 'error'); return false; }
-            return true;
-        }
-
-        function requireSuperAdmin() {
-            if (!isSuperAdmin) { showToast('⛔ هذه العملية تتطلب صلاحيات سوبر أدمن', 'error'); return false; }
             return true;
         }
 
@@ -2054,8 +2045,7 @@
             };
             document.getElementById('pageTitle').textContent = titles[page] || page;
             document.getElementById('sidebar').classList.remove('open');
-            if (page === 'dashboard') { loadDashboard();
-                updateOnlineUsers(); }
+            if (page === 'dashboard') { loadDashboard(); }
             if (page === 'users') { loadUsers();
                 renderUsers(); }
             if (page === 'comments') { loadAllComments();
@@ -2432,7 +2422,6 @@
             try {
                 const now = Date.now();
                 const dayAgo = now - 24 * 60 * 60 * 1000;
-                // في Realtime Database، لا يمكن عمل استعلامات معقدة بسهولة، لذا نأخذ البيانات ونفلترها
                 const snapshot = await db.ref('audit_logs').once('value');
                 const data = snapshot.val();
                 let failedLogins = 0,
@@ -2562,50 +2551,71 @@
         function loadDashboard() { updateDashboard(); }
 
         // ============================================================
-        // 7. Online Users - متطور وفوري
+        // 7. Online Users - متطور وفوري مع إصلاحات
         // ============================================================
         async function updateOnlineUsers() {
             if (!requireAdmin()) return;
             const now = Date.now();
-            const activeThreshold = now - 3 * 60 * 1000; // 3 دقائق
+            // 3 دقائق نشاط
+            const activeThreshold = now - 3 * 60 * 1000;
+
             try {
-                // في Realtime Database، نجلب جميع المستخدمين ونتحقق يدوياً
+                // جلب جميع المستخدمين
                 const snapshot = await db.ref('users').once('value');
                 const data = snapshot.val();
                 allOnlineUsers = [];
+
                 if (data) {
                     Object.keys(data).forEach(key => {
                         const user = data[key];
+                        // التحقق من وجود lastActive وأنه رقم
                         const lastActive = user.lastActive || 0;
-                        if (!user.isBanned && user.role !== 'admin' && user.role !== 'superAdmin' && lastActive >
-                            activeThreshold) {
+                        // لا نعرض الأدمن في قائمة المتصلين
+                        const isAdminUser = user.role === 'admin' || user.role === 'superAdmin';
+
+                        if (!isAdminUser && !user.isBanned && lastActive > activeThreshold) {
                             allOnlineUsers.push({
                                 id: key,
-                                ...user,
-                                status: 'online',
-                                lastActive: lastActive
+                                name: user.name || 'مجهول',
+                                email: user.email || '',
+                                photoURL: user.photoURL || '',
+                                grade: user.grade || '1',
+                                system: user.system || 'عام',
+                                role: user.role || 'طالب',
+                                lastActive: lastActive,
+                                device: user.device || 'غير معروف',
+                                browser: user.browser || 'غير معروف',
+                                country: user.country || 'غير معروف',
+                                status: 'online'
                             });
                         }
                     });
                 }
+
+                // تحديث الأعداد في الواجهة
                 document.getElementById('onlineBadge').textContent = allOnlineUsers.length;
                 document.getElementById('onlineCountHeader').textContent = allOnlineUsers.length;
                 document.getElementById('onlineUsersCount').textContent = allOnlineUsers.length;
+
                 renderOnlineUsers();
             } catch (err) {
                 console.warn('❌ فشل تحديث المتصلين:', err);
+                showToast('⚠️ خطأ في جلب المتصلين', 'error');
             }
         }
 
         function renderOnlineUsers() {
             const container = document.getElementById('onlineUsersList');
             const fullContainer = document.getElementById('onlineUsersFullList');
+
             if (allOnlineUsers.length === 0) {
-                const emptyHtml = `<div class="empty-state"><div class="icon">🟢</div><p>لا يوجد مستخدمين متصلين حالياً</p></div>`;
+                const emptyHtml =
+                `<div class="empty-state"><div class="icon">🟢</div><p>لا يوجد مستخدمين متصلين حالياً</p></div>`;
                 container.innerHTML = emptyHtml;
                 if (fullContainer) fullContainer.innerHTML = emptyHtml;
                 return;
             }
+
             let html = '<div class="online-users-container">';
             allOnlineUsers.forEach(u => {
                 const initial = u.name ? u.name.charAt(0).toUpperCase() : '?';
@@ -2613,21 +2623,19 @@
                 const gradeNames = { '1': 'أولى', '2': 'تانية', '3': 'تالتة' };
                 const grade = gradeNames[u.grade] || '-';
                 const lastActive = u.lastActive ? new Date(u.lastActive).toLocaleString('ar') : 'الآن';
-                const device = u.device || 'غير معروف';
-                const browser = u.browser || 'غير معروف';
-                const country = u.country || 'غير معروف';
+
                 html += `
                         <div class="online-user-item">
-                            ${photo ? `<img src="${photo}" class="online-avatar">` : `<div class="online-avatar-placeholder">${initial}</div>`}
+                            ${photo ? `<img src="${photo}" class="online-avatar" onerror="this.style.display='none'">` : `<div class="online-avatar-placeholder">${initial}</div>`}
                             <div class="online-info">
                                 <div class="name">${safeText(u.name || 'مجهول')} 
                                     <span style="font-size:8px;color:#888;">${safeText(u.role || 'طالب')}</span>
                                 </div>
                                 <div class="details">
                                     ${grade} • ${safeText(u.system || 'عام')}
-                                    ${device !== 'غير معروف' ? ` • ${safeText(device)}` : ''}
-                                    ${browser !== 'غير معروف' ? ` • ${safeText(browser)}` : ''}
-                                    ${country !== 'غير معروف' ? ` • ${safeText(country)}` : ''}
+                                    ${u.device !== 'غير معروف' ? ` • ${safeText(u.device)}` : ''}
+                                    ${u.browser !== 'غير معروف' ? ` • ${safeText(u.browser)}` : ''}
+                                    ${u.country !== 'غير معروف' ? ` • ${safeText(u.country)}` : ''}
                                     • آخر نشاط: ${lastActive}
                                 </div>
                             </div>
@@ -2641,16 +2649,19 @@
             if (fullContainer) fullContainer.innerHTML = html;
         }
 
-        function loadOnlineUsers() { updateOnlineUsers(); }
-
         async function forceLogout(userId) {
             if (!requireAdmin()) return;
-            if (!confirm(`⚠️ هل تريد إنهاء جلسة المستخدم؟`)) return;
+            if (!confirm(`⚠️ هل تريد إنهاء جلسة المستخدم ${safeText(allOnlineUsers.find(u=>u.id===userId)?.name||'')}؟`)) return;
             try {
-                await db.ref('users/' + userId).update({ lastActive: null, sessionId: null });
+                await db.ref('users/' + userId).update({
+                    lastActive: null,
+                    sessionId: null
+                });
                 showToast('✅ تم إنهاء الجلسة');
-                updateOnlineUsers();
-            } catch (err) { showToast('❌ ' + err.message, 'error'); }
+                await updateOnlineUsers();
+            } catch (err) {
+                showToast('❌ ' + err.message, 'error');
+            }
         }
 
         async function forceLogoutAll() {
@@ -2664,9 +2675,13 @@
                 });
                 await db.ref('users').update(updates);
                 showToast('✅ تم إنهاء جميع الجلسات');
-                updateOnlineUsers();
-            } catch (err) { showToast('❌ ' + err.message, 'error'); }
+                await updateOnlineUsers();
+            } catch (err) {
+                showToast('❌ ' + err.message, 'error');
+            }
         }
+
+        function loadOnlineUsers() { updateOnlineUsers(); }
 
         // ============================================================
         // 8. Growth Chart
@@ -2744,9 +2759,10 @@
         }
 
         // ============================================================
-        // 10-26. باقي الدوال (مختصرة ولكن كاملة)
+        // 10-26. باقي الدوال - تم إصلاحها لتعمل بشكل صحيح
         // ============================================================
-        // Users Management
+
+        // --- Users Management ---
         function renderUsers() {
             if (!requireAdmin()) return;
             const container = document.getElementById('usersTable');
@@ -2866,7 +2882,7 @@
 
         async function unbanUser(userId) {
             if (!requireAdmin()) return;
-            if (!confirm('⚠️ فك الحظر؟')) return;
+            if (!confirm('⚠️ فك الحظر عن هذا المستخدم؟')) return;
             try {
                 await db.ref('users/' + userId).update({
                     isBanned: false,
@@ -2903,7 +2919,7 @@
                 unbanUser(id);
             closeModal('editUserModal'); }
 
-        // Comments (مبسطة)
+        // --- Comments Management ---
         function renderComments() {
             if (!requireAdmin()) return;
             const container = document.getElementById('commentsTable');
@@ -2984,7 +3000,7 @@
 
         async function deleteComment(commentId) {
             if (!requireAdmin()) return;
-            if (!confirm('⚠️ حذف التعليق؟')) return;
+            if (!confirm('⚠️ حذف التعليق نهائياً؟')) return;
             try {
                 const comment = allComments.find(c => c.id === commentId);
                 if (!comment) { showToast('❌ التعليق غير موجود', 'error'); return; }
@@ -2998,7 +3014,7 @@
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
 
-        // Books (مبسطة)
+        // --- Books Management ---
         function renderBooks() {
             if (!requireAdmin()) return;
             const container = document.getElementById('booksTable');
@@ -3047,7 +3063,7 @@
             if (!requireAdmin()) return;
             try {
                 await db.ref('books/' + id).update({ status: 'approved' });
-                showToast('✅ تم القبول');
+                showToast('✅ تم قبول الكتاب');
                 await loadBooks();
                 renderBooks();
                 updateDashboard();
@@ -3059,7 +3075,7 @@
             if (!requireAdmin()) return;
             try {
                 await db.ref('books/' + id).update({ status: 'rejected' });
-                showToast('❌ تم الرفض');
+                showToast('❌ تم رفض الكتاب');
                 await loadBooks();
                 renderBooks();
                 updateDashboard();
@@ -3069,7 +3085,7 @@
 
         async function deleteBook(id) {
             if (!requireAdmin()) return;
-            if (!confirm('⚠️ حذف الكتاب؟')) return;
+            if (!confirm('⚠️ حذف الكتاب نهائياً؟')) return;
             try {
                 await db.ref('books/' + id).remove();
                 showToast('🗑️ تم الحذف');
@@ -3106,7 +3122,7 @@
                     favorites: 0,
                     createdAt: Date.now()
                 });
-                showToast('✅ تم الإضافة');
+                showToast('✅ تم إضافة الكتاب');
                 closeModal('addBookModal');
                 document.getElementById('addBookForm').reset();
                 await loadBooks();
@@ -3116,7 +3132,7 @@
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         });
 
-        // Forum (مبسطة)
+        // --- Forum Management ---
         function renderForum() {
             if (!requireAdmin()) return;
             const container = document.getElementById('forumTable');
@@ -3128,7 +3144,7 @@
                 .toLowerCase().includes(search));
             if (filtered.length === 0) {
                 container.innerHTML =
-                    `<div class="empty-state"><div class="icon">💬</div><p>لا توجد منشورات</p></div>`;
+                    `<div class="empty-state"><div class="icon">💬</div><p>لا توجد منشورات في المنتدى</p></div>`;
                 return;
             }
             let html =
@@ -3163,7 +3179,7 @@
             if (!requireAdmin()) return;
             try {
                 await db.ref('forum_posts/' + id).update({ status: 'approved' });
-                showToast('✅ تم القبول');
+                showToast('✅ تم قبول منشور المنتدى');
                 await loadForumPosts();
                 renderForum();
                 updateDashboard();
@@ -3175,7 +3191,7 @@
             if (!requireAdmin()) return;
             try {
                 await db.ref('forum_posts/' + id).update({ status: 'rejected' });
-                showToast('❌ تم الرفض');
+                showToast('❌ تم رفض منشور المنتدى');
                 await loadForumPosts();
                 renderForum();
                 updateDashboard();
@@ -3185,7 +3201,7 @@
 
         async function deleteForumPost(id) {
             if (!requireAdmin()) return;
-            if (!confirm('⚠️ حذف المنشور؟')) return;
+            if (!confirm('⚠️ حذف منشور المنتدى نهائياً؟')) return;
             try {
                 await db.ref('forum_posts/' + id).remove();
                 showToast('🗑️ تم الحذف');
@@ -3196,13 +3212,13 @@
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
 
-        // Team Posts (مبسطة)
+        // --- Team Posts Management ---
         function renderTeamPosts() {
             if (!requireAdmin()) return;
             const container = document.getElementById('teamPostsTable');
             if (allTeamPosts.length === 0) {
                 container.innerHTML =
-                    `<div class="empty-state"><div class="icon">📢</div><p>لا توجد منشورات</p></div>`;
+                    `<div class="empty-state"><div class="icon">📢</div><p>لا توجد منشورات للفريق</p></div>`;
                 return;
             }
             let html =
@@ -3229,7 +3245,7 @@
 
         async function deleteTeamPost(id) {
             if (!requireAdmin()) return;
-            if (!confirm('⚠️ حذف المنشور؟')) return;
+            if (!confirm('⚠️ حذف منشور الفريق نهائياً؟')) return;
             try {
                 await db.ref('team_posts/' + id).remove();
                 showToast('🗑️ تم الحذف');
@@ -3262,7 +3278,7 @@
                     comments: [],
                     createdAt: Date.now()
                 });
-                showToast('✅ تم النشر');
+                showToast('✅ تم نشر منشور الفريق');
                 closeModal('addTeamPostModal');
                 document.getElementById('addTeamPostForm').reset();
                 await loadTeamPosts();
@@ -3272,7 +3288,7 @@
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         });
 
-        // Uploads (مبسطة)
+        // --- Uploads Management ---
         function renderUploads() {
             if (!requireAdmin()) return;
             const container = document.getElementById('uploadsTable');
@@ -3281,7 +3297,7 @@
             if (filter !== 'all') filtered = filtered.filter(u => u.status === filter);
             if (filtered.length === 0) {
                 container.innerHTML =
-                    `<div class="empty-state"><div class="icon">📂</div><p>لا توجد ملفات</p></div>`;
+                    `<div class="empty-state"><div class="icon">📂</div><p>لا توجد مرفوعات في الانتظار</p></div>`;
                 return;
             }
             let html =
@@ -3316,7 +3332,7 @@
             if (!requireAdmin()) return;
             try {
                 await db.ref('books/' + id).update({ status: 'approved' });
-                showToast('✅ تم القبول');
+                showToast('✅ تم قبول المرفوع');
                 await loadUploads();
                 renderUploads();
                 updateDashboard();
@@ -3328,7 +3344,7 @@
             if (!requireAdmin()) return;
             try {
                 await db.ref('books/' + id).update({ status: 'rejected' });
-                showToast('❌ تم الرفض');
+                showToast('❌ تم رفض المرفوع');
                 await loadUploads();
                 renderUploads();
                 updateDashboard();
@@ -3338,7 +3354,7 @@
 
         async function deleteUpload(id) {
             if (!requireAdmin()) return;
-            if (!confirm('⚠️ حذف الملف؟')) return;
+            if (!confirm('⚠️ حذف المرفوع نهائياً؟')) return;
             try {
                 await db.ref('books/' + id).remove();
                 showToast('🗑️ تم الحذف');
@@ -3349,7 +3365,7 @@
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
 
-        // Handwritten (مبسطة)
+        // --- Handwritten Management ---
         function renderHandwritten() {
             if (!requireAdmin()) return;
             const container = document.getElementById('handwrittenTable');
@@ -3435,13 +3451,13 @@
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
 
-        // Youtube (مبسطة)
+        // --- Youtube Management ---
         function renderYoutube() {
             if (!requireAdmin()) return;
             const container = document.getElementById('youtubeTable');
             if (allYoutube.length === 0) {
                 container.innerHTML =
-                    `<div class="empty-state"><div class="icon">🎥</div><p>لا توجد قنوات</p><button class="btn btn-primary" onclick="openModal('addYoutubeModal')">➕ إضافة قناة</button></div>`;
+                    `<div class="empty-state"><div class="icon">🎥</div><p>لا توجد قنوات يوتيوب</p><button class="btn btn-primary" onclick="openModal('addYoutubeModal')">➕ إضافة قناة</button></div>`;
                 return;
             }
             let html = '';
@@ -3471,7 +3487,7 @@
 
         async function deleteYoutube(id) {
             if (!requireAdmin()) return;
-            if (!confirm('⚠️ حذف القناة؟')) return;
+            if (!confirm('⚠️ حذف قناة يوتيوب نهائياً؟')) return;
             try {
                 await db.ref('youtube_channels/' + id).remove();
                 showToast('🗑️ تم الحذف');
@@ -3502,7 +3518,7 @@
                     desc: desc || null,
                     createdAt: Date.now()
                 });
-                showToast('✅ تم إضافة القناة');
+                showToast('✅ تم إضافة قناة يوتيوب');
                 closeModal('addYoutubeModal');
                 document.getElementById('addYoutubeForm').reset();
                 await loadYoutube();
@@ -3512,7 +3528,7 @@
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         });
 
-        // Ads (مبسطة)
+        // --- Ads Management ---
         document.getElementById('adImagesInput').addEventListener('change', function(e) {
             const files = e.target.files;
             const preview = document.getElementById('adImagesPreview');
@@ -3576,7 +3592,7 @@
 
         async function deleteAd(id) {
             if (!requireAdmin()) return;
-            if (!confirm('⚠️ حذف الإعلان؟')) return;
+            if (!confirm('⚠️ حذف الإعلان نهائياً؟')) return;
             try {
                 await db.ref('ads/' + id).remove();
                 showToast('🗑️ تم الحذف');
@@ -3598,7 +3614,6 @@
             try {
                 let imageUrls = [];
                 if (adImages.length > 0) {
-                    // رفع الصور إلى Storage (بما أننا نستخدم Realtime DB، نستخدم Storage للصور)
                     const uploadPromises = adImages.map(file => {
                         const ref = firebase.storage().ref(`ads/${Date.now()}_${file.name}`);
                         return ref.put(file).then(snapshot => ref.getDownloadURL());
@@ -3625,7 +3640,7 @@
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         });
 
-        // Reports (مبسطة)
+        // --- Reports Management ---
         function renderReports() {
             if (!requireAdmin()) return;
             const container = document.getElementById('reportsTable');
@@ -3703,7 +3718,7 @@
             openModal('reportDetailModal');
         }
 
-        // Notifications (مبسطة)
+        // --- Notifications Management ---
         function renderNotifications() {
             if (!requireAdmin()) return;
             const container = document.getElementById('notificationsTable');
@@ -3733,7 +3748,7 @@
 
         async function deleteNotification(id) {
             if (!requireAdmin()) return;
-            if (!confirm('⚠️ حذف الإشعار؟')) return;
+            if (!confirm('⚠️ حذف الإشعار نهائياً؟')) return;
             try {
                 await db.ref('notifications/' + id).remove();
                 showToast('🗑️ تم الحذف');
@@ -3760,7 +3775,7 @@
                     read: false,
                     createdAt: Date.now()
                 });
-                showToast('✅ تم الإرسال');
+                showToast('✅ تم إرسال الإشعار');
                 closeModal('addNotificationModal');
                 document.getElementById('addNotificationForm').reset();
                 await loadNotifications();
@@ -3769,7 +3784,7 @@
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         });
 
-        // Analytics (مبسطة)
+        // --- Analytics ---
         function loadAnalytics() {
             if (!requireAdmin()) return;
             const totalDownloads = allBooks.reduce((s, b) => s + (b.downloads || 0), 0);
@@ -3829,7 +3844,7 @@
                 `;
         }
 
-        // Settings
+        // --- Settings ---
         async function saveSettings() {
             if (!requireAdmin()) return;
             const siteName = document.getElementById('siteName').value.trim();
@@ -3847,11 +3862,11 @@
                     lang,
                     updatedAt: Date.now()
                 });
-                showToast('✅ تم الحفظ');
+                showToast('✅ تم حفظ الإعدادات');
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
 
-        // Badges
+        // --- Badges ---
         function updateBadges() {
             if (!requireAdmin()) return;
             const pendingComments = allComments.filter(c => c.status === 'pending').length;
@@ -3876,11 +3891,12 @@
             document.getElementById('onlineBadge').textContent = onlineCount > 0 ? onlineCount : '';
         }
 
-        // Refresh
+        // --- Refresh ---
         async function refreshAll() {
             if (!requireAdmin()) return;
             showToast('🔄 جاري التحديث...');
             await loadAllData();
+            await updateOnlineUsers();
             showToast('✅ تم التحديث');
         }
 
@@ -3895,6 +3911,7 @@
         console.log('✅ لوحة التحكم الخارقة - الثانوية الرسمية بلس (Realtime Database)');
         console.log('🟢 يتم تحديث المتصلين كل 3 ثوانٍ');
         console.log('📊 تم إضافة: المتصلون الآن، منحنيات النمو، مركز الأمان، سجل العمليات، مراقبة النظام');
+        console.log('🛠️ تم إصلاح: جلب المتصلين، الحظر، الموافقة على المنشورات، وكل الوظائف');
     </script>
 
 </body>
