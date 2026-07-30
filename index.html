@@ -743,7 +743,7 @@
         .modal-content {
             background: white;
             border-radius: 16px;
-            max-width: 520px;
+            max-width: 600px;
             width: 100%;
             padding: 20px;
             max-height: 90vh;
@@ -1208,6 +1208,168 @@
         .system-status .status-item.warning {
             border-right: 4px solid #f39c12;
         }
+
+        /* ===== Student Profile ===== */
+        .student-profile-card {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 16px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+        body.dark-mode .student-profile-card {
+            background: #2d2d44;
+        }
+        .student-profile-card .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #1a237e;
+        }
+        .student-profile-card .profile-avatar-placeholder {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #1a237e;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 800;
+            border: 3px solid #1a237e;
+        }
+        .student-profile-card .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .student-profile-card .profile-info .name {
+            font-size: 18px;
+            font-weight: 800;
+        }
+        .student-profile-card .profile-info .detail {
+            font-size: 12px;
+            color: #888;
+        }
+        .student-profile-card .profile-info .detail strong {
+            color: #2c3e50;
+        }
+        body.dark-mode .student-profile-card .profile-info .detail strong {
+            color: #ecf0f1;
+        }
+
+        /* ===== Pagination ===== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .pagination button {
+            padding: 4px 10px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 11px;
+            transition: 0.3s;
+        }
+        body.dark-mode .pagination button {
+            background: #1e1e32;
+            border-color: #333;
+            color: #ecf0f1;
+        }
+        .pagination button:hover {
+            background: #1a237e15;
+        }
+        .pagination button.active {
+            background: #1a237e;
+            color: white;
+            border-color: #1a237e;
+        }
+        body.dark-mode .pagination button.active {
+            background: #1a237e;
+        }
+
+        /* ===== Realtime indicator ===== */
+        .realtime-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #2ecc7120;
+            color: #2ecc71;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 9px;
+            font-weight: 700;
+        }
+        .realtime-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #2ecc71;
+            animation: pulse-dot 1s infinite;
+        }
+
+        /* ===== Search Results ===== */
+        .search-result-item {
+            padding: 8px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .search-result-item:hover {
+            background: #f8f9fa;
+        }
+        body.dark-mode .search-result-item {
+            border-bottom-color: #333;
+        }
+        body.dark-mode .search-result-item:hover {
+            background: #2d2d44;
+        }
+        .search-result-item .result-type {
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #3498db20;
+            color: #3498db;
+        }
+
+        /* ===== Official Account Badge ===== */
+        .official-account-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #1a237e20;
+            color: #1a237e;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 700;
+            border: 1px solid #1a237e40;
+        }
+        .official-account-badge svg {
+            width: 14px;
+            height: 14px;
+            fill: #1a237e;
+        }
+        .dark-mode .official-account-badge {
+            background: #1a237e40;
+            color: #90caf9;
+            border-color: #64b5f6;
+        }
+        .dark-mode .official-account-badge svg {
+            fill: #90caf9;
+        }
     </style>
 </head>
 <body>
@@ -1222,26 +1384,26 @@
         </div>
 
         <div class="admin-info" id="adminInfo">
-            <div class="avatar-placeholder">ف</div>
+            <div class="avatar-placeholder" id="adminAvatar">ف</div>
             <div class="name" id="adminName">فريق الثانوية الرسمية</div>
             <div class="email" id="adminEmail">official@thanawya-plus.com</div>
         </div>
 
         <ul class="nav-list" id="navList">
             <li class="active" data-page="dashboard" onclick="showPage('dashboard')">
-                <span class="icon">📊</span> Dashboard
+                <span class="icon">📊</span> Dashboard <span class="badge green" id="liveBadge">Live</span>
             </li>
             <li data-page="users" onclick="showPage('users')">
-                <span class="icon">👤</span> المستخدمين <span class="badge" id="usersBadge"></span>
+                <span class="icon">👤</span> الطلاب <span class="badge" id="usersBadge"></span>
+            </li>
+            <li data-page="forum" onclick="showPage('forum')">
+                <span class="icon">💬</span> المنتدى <span class="badge" id="forumBadge"></span>
             </li>
             <li data-page="comments" onclick="showPage('comments')">
                 <span class="icon">💬</span> التعليقات <span class="badge" id="commentsBadge"></span>
             </li>
             <li data-page="books" onclick="showPage('books')">
                 <span class="icon">📚</span> الكتب <span class="badge" id="booksBadge"></span>
-            </li>
-            <li data-page="forum" onclick="showPage('forum')">
-                <span class="icon">💬</span> المنتدى <span class="badge" id="forumBadge"></span>
             </li>
             <li data-page="teamPosts" onclick="showPage('teamPosts')">
                 <span class="icon">📢</span> منشورات الفريق
@@ -1267,11 +1429,8 @@
             <li data-page="analytics" onclick="showPage('analytics')">
                 <span class="icon">📈</span> التحليلات
             </li>
-            <li data-page="settings" onclick="showPage('settings')">
-                <span class="icon">⚙️</span> الإعدادات
-            </li>
             <li data-page="onlineUsers" onclick="showPage('onlineUsers')">
-                <span class="icon">🟢</span> المتصلون الآن <span class="badge green" id="onlineBadge">0</span>
+                <span class="icon">🟢</span> المتصلون <span class="badge green" id="onlineBadge">0</span>
             </li>
             <li data-page="security" onclick="showPage('security')">
                 <span class="icon">🛡️</span> مركز الأمان
@@ -1281,6 +1440,12 @@
             </li>
             <li data-page="monitoring" onclick="showPage('monitoring')">
                 <span class="icon">⚙️</span> مراقبة النظام
+            </li>
+            <li data-page="search" onclick="showPage('search')">
+                <span class="icon">🔍</span> البحث
+            </li>
+            <li data-page="settings" onclick="showPage('settings')">
+                <span class="icon">⚙️</span> الإعدادات
             </li>
         </ul>
     </aside>
@@ -1300,17 +1465,18 @@
                 <button class="btn-live" onclick="toggleLiveUpdates()">🔴 Live</button>
                 <button class="btn-primary btn-sm" onclick="openModal('addBookModal')">➕ كتاب</button>
                 <button class="btn-success btn-sm" onclick="openModal('addNotificationModal')">🔔 إشعار</button>
+                <button class="btn-purple btn-sm" onclick="openModal('addAdModal')">📢 إعلان</button>
             </div>
         </div>
 
         <!-- ============================================================ -->
-        <!-- DASHBOARD -->
+        <!-- DASHBOARD - Realtime احترافي -->
         <!-- ============================================================ -->
         <div class="page active" id="page-dashboard">
-            <!-- Stats Grid -->
             <div class="stats-grid" id="statsGrid"><div class="loading-container"><div class="spinner"></div></div></div>
-
-            <!-- Live Online Users -->
+            <div class="stats-detail" id="statsDetail"><div class="loading-container"><div class="spinner"></div></div></div>
+            
+            <!-- Online Users -->
             <div class="table-container">
                 <div class="table-header">
                     <h3>🟢 المتصلون الآن <span class="badge green" id="onlineCountHeader">0</span></h3>
@@ -1318,9 +1484,6 @@
                 </div>
                 <div id="onlineUsersList"><div class="loading-container"><div class="spinner"></div></div></div>
             </div>
-
-            <!-- Stats Detail -->
-            <div class="stats-detail" id="statsDetail"><div class="loading-container"><div class="spinner"></div></div></div>
 
             <!-- Growth Chart -->
             <div class="chart-container">
@@ -1334,40 +1497,70 @@
                 <div id="recentActivities"><div class="loading-container"><div class="spinner"></div></div></div>
             </div>
 
-            <!-- Quick Stats -->
-            <div class="table-container">
-                <div class="table-header"><h3>📊 إحصائيات سريعة</h3></div>
-                <div id="quickStats"><div class="loading-container"><div class="spinner"></div></div></div>
-            </div>
-
             <!-- System Status -->
             <div class="system-status" id="systemStatus">
                 <div class="status-item online"><div class="status-icon">✅</div><div class="status-label">Firestore</div><div class="status-value" id="firestoreStatus">جاري التحقق...</div></div>
                 <div class="status-item online"><div class="status-icon">✅</div><div class="status-label">Storage</div><div class="status-value" id="storageStatus">جاري التحقق...</div></div>
                 <div class="status-item online"><div class="status-icon">✅</div><div class="status-label">Authentication</div><div class="status-value" id="authStatus">جاري التحقق...</div></div>
-                <div class="status-item online"><div class="status-icon">📊</div><div class="status-label">قراءات اليوم</div><div class="status-value" id="dailyReads">0</div></div>
-                <div class="status-item online"><div class="status-icon">✍️</div><div class="status-label">كتابات اليوم</div><div class="status-value" id="dailyWrites">0</div></div>
                 <div class="status-item online"><div class="status-icon">💾</div><div class="status-label">استهلاك التخزين</div><div class="status-value" id="storageUsage">0 MB</div></div>
+            </div>
+
+            <!-- Top Students -->
+            <div class="table-container">
+                <div class="table-header"><h3>🏆 أكثر الطلاب نشاطاً</h3></div>
+                <div id="topStudents"><div class="loading-container"><div class="spinner"></div></div></div>
+            </div>
+
+            <!-- Inactive Students -->
+            <div class="table-container">
+                <div class="table-header"><h3>⏳ الطلاب غير النشطين</h3></div>
+                <div id="inactiveStudents"><div class="loading-container"><div class="spinner"></div></div></div>
             </div>
         </div>
 
         <!-- ============================================================ -->
-        <!-- المستخدمين -->
+        <!-- المستخدمين (الطلاب) - إدارة كاملة -->
         <!-- ============================================================ -->
         <div class="page" id="page-users">
             <div class="table-container">
                 <div class="table-header">
-                    <h3>👤 المستخدمين <span id="userCountDisplay"></span></h3>
+                    <h3>👤 إدارة الطلاب <span id="userCountDisplay"></span></h3>
                     <div class="filters">
                         <select class="search-input" id="userFilter" onchange="filterUsers()" style="width:auto;">
                             <option value="all">الكل</option>
                             <option value="active">✅ نشط</option>
                             <option value="banned">⛔ محظور</option>
+                            <option value="suspended">⏸️ معلق</option>
                         </select>
-                        <input type="text" class="search-input" id="userSearch" placeholder="🔍 بحث..." oninput="filterUsers()">
+                        <input type="text" class="search-input" id="userSearch" placeholder="🔍 بحث بالاسم أو البريد..." oninput="filterUsers()">
                     </div>
                 </div>
                 <div id="usersTable"><div class="loading-container"><div class="spinner"></div></div></div>
+                <div class="pagination" id="usersPagination"></div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- المنتدى -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-forum">
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>💬 إدارة المنتدى</h3>
+                    <div class="filters">
+                        <select class="search-input" id="forumFilter" onchange="filterForum()" style="width:auto;">
+                            <option value="all">الكل</option>
+                            <option value="approved">✅ مقبول</option>
+                            <option value="pending">⏳ في الانتظار</option>
+                            <option value="rejected">❌ مرفوض</option>
+                            <option value="pinned">📌 مثبت</option>
+                            <option value="hidden">👻 مخفي</option>
+                        </select>
+                        <input type="text" class="search-input" id="forumSearch" placeholder="🔍 بحث..." oninput="filterForum()">
+                    </div>
+                </div>
+                <div id="forumTable"><div class="loading-container"><div class="spinner"></div></div></div>
+                <div class="pagination" id="forumPagination"></div>
             </div>
         </div>
 
@@ -1389,6 +1582,7 @@
                     </div>
                 </div>
                 <div id="commentsTable"><div class="loading-container"><div class="spinner"></div></div></div>
+                <div class="pagination" id="commentsPagination"></div>
             </div>
         </div>
 
@@ -1398,7 +1592,7 @@
         <div class="page" id="page-books">
             <div class="table-container">
                 <div class="table-header">
-                    <h3>📚 الكتب</h3>
+                    <h3>📚 إدارة الكتب</h3>
                     <div class="filters">
                         <select class="search-input" id="bookFilter" onchange="filterBooks()" style="width:auto;">
                             <option value="all">الكل</option>
@@ -1410,27 +1604,7 @@
                     </div>
                 </div>
                 <div id="booksTable"><div class="loading-container"><div class="spinner"></div></div></div>
-            </div>
-        </div>
-
-        <!-- ============================================================ -->
-        <!-- المنتدى -->
-        <!-- ============================================================ -->
-        <div class="page" id="page-forum">
-            <div class="table-container">
-                <div class="table-header">
-                    <h3>💬 منشورات المنتدى</h3>
-                    <div class="filters">
-                        <select class="search-input" id="forumFilter" onchange="filterForum()" style="width:auto;">
-                            <option value="all">الكل</option>
-                            <option value="approved">✅ مقبول</option>
-                            <option value="pending">⏳ في الانتظار</option>
-                            <option value="rejected">❌ مرفوض</option>
-                        </select>
-                        <input type="text" class="search-input" id="forumSearch" placeholder="🔍 بحث..." oninput="filterForum()">
-                    </div>
-                </div>
-                <div id="forumTable"><div class="loading-container"><div class="spinner"></div></div></div>
+                <div class="pagination" id="booksPagination"></div>
             </div>
         </div>
 
@@ -1556,31 +1730,6 @@
                 <div class="table-header"><h3>📈 تفاصيل التحليلات</h3></div>
                 <div id="analyticsDetail"><div class="loading-container"><div class="spinner"></div></div></div>
             </div>
-            <div class="table-container">
-                <div class="table-header"><h3>📊 إحصائيات عامة</h3></div>
-                <div id="generalStats"><div class="loading-container"><div class="spinner"></div></div></div>
-            </div>
-        </div>
-
-        <!-- ============================================================ -->
-        <!-- الإعدادات -->
-        <!-- ============================================================ -->
-        <div class="page" id="page-settings">
-            <div class="table-container">
-                <h3 style="margin-bottom:12px;">⚙️ الإعدادات العامة</h3>
-                <div class="form-group"><label>اسم الموقع</label><input type="text" id="siteName" value="الثانوية الرسمية بلس"></div>
-                <div class="form-group"><label>رابط تليجرام</label><input type="text" id="telegramLink" value="https://t.me/llTwasell"></div>
-                <div class="form-group"><label>شعار المنصة (URL)</label><input type="url" id="siteLogo" value="https://cdn.phototourl.com/free/2026-07-21-1dd4b984-ed08-4a40-aead-9ef086ebbd45.jpg"></div>
-                <div class="row-2col">
-                    <div class="form-group"><label>الوضع الليلي</label>
-                        <select id="defaultDarkMode"><option value="disabled">معطل</option><option value="enabled">مفعل</option></select>
-                    </div>
-                    <div class="form-group"><label>اللغة</label>
-                        <select id="defaultLang"><option value="ar">العربية</option><option value="en">English</option></select>
-                    </div>
-                </div>
-                <button class="btn btn-primary" onclick="saveSettings()" style="padding:8px 20px;font-size:13px;margin-top:8px;">💾 حفظ الإعدادات</button>
-            </div>
         </div>
 
         <!-- ============================================================ -->
@@ -1651,14 +1800,35 @@
                 <div class="table-header"><h3>📊 استهلاك الموارد</h3></div>
                 <canvas id="resourceChart"></canvas>
             </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- البحث -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-search">
             <div class="table-container">
-                <div class="table-header"><h3>⚙️ حالة الخدمات</h3></div>
-                <div id="servicesStatus">
-                    <div class="audit-item"><span>✅ Firestore</span><span class="status-badge approved">شغال</span></div>
-                    <div class="audit-item"><span>✅ Storage</span><span class="status-badge approved">شغال</span></div>
-                    <div class="audit-item"><span>✅ Authentication</span><span class="status-badge approved">شغال</span></div>
-                    <div class="audit-item"><span>✅ Cloud Functions</span><span class="status-badge approved">شغال</span></div>
+                <div class="table-header">
+                    <h3>🔍 بحث شامل</h3>
+                    <input type="text" class="search-input" id="globalSearchInput" placeholder="🔍 ابحث عن أي شيء..." style="min-width:200px;font-size:13px;" oninput="performGlobalSearch()">
                 </div>
+                <div id="globalSearchResults"><div class="empty-state"><div class="icon">🔍</div><p>ابحث عن طلاب، منشورات، تعليقات، كتب، فيديوهات، إعلانات، إشعارات</p></div></div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- الإعدادات -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-settings">
+            <div class="table-container">
+                <h3 style="margin-bottom:12px;">⚙️ الإعدادات العامة</h3>
+                <div class="form-group"><label>اسم الموقع</label><input type="text" id="siteName" value="الثانوية الرسمية بلس"></div>
+                <div class="form-group"><label>رابط تليجرام</label><input type="text" id="telegramLink" value="https://t.me/llTwasell"></div>
+                <div class="form-group"><label>شعار المنصة (URL)</label><input type="url" id="siteLogo" value="https://cdn.phototourl.com/free/2026-07-21-1dd4b984-ed08-4a40-aead-9ef086ebbd45.jpg"></div>
+                <div class="row-2col">
+                    <div class="form-group"><label>الوضع الليلي</label><select id="defaultDarkMode"><option value="disabled">معطل</option><option value="enabled">مفعل</option></select></div>
+                    <div class="form-group"><label>اللغة</label><select id="defaultLang"><option value="ar">العربية</option><option value="en">English</option></select></div>
+                </div>
+                <button class="btn btn-primary" onclick="saveSettings()" style="padding:8px 20px;font-size:13px;margin-top:8px;">💾 حفظ الإعدادات</button>
             </div>
         </div>
 
@@ -1668,11 +1838,20 @@
     <!-- النوافذ المنبثقة -->
     <!-- ============================================================ -->
 
+    <!-- عرض ملف الطالب -->
+    <div class="modal-overlay" id="studentProfileModal">
+        <div class="modal-content" style="max-width:700px;">
+            <button class="modal-close" onclick="closeModal('studentProfileModal')">✕</button>
+            <h3>👤 ملف الطالب</h3>
+            <div id="studentProfileContent"><div class="loading-container"><div class="spinner"></div></div></div>
+        </div>
+    </div>
+
     <!-- إضافة مستخدم -->
     <div class="modal-overlay" id="addUserModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal('addUserModal')">✕</button>
-            <h3>👤 إضافة مستخدم جديد</h3>
+            <h3>👤 إضافة طالب جديد</h3>
             <form id="addUserForm">
                 <div class="form-group"><label>الاسم *</label><input type="text" id="newUserName" required></div>
                 <div class="form-group"><label>البريد الإلكتروني *</label><input type="email" id="newUserEmail" required></div>
@@ -1686,7 +1865,7 @@
                     <div class="form-group"><label>الدور</label><select id="newUserRole"><option value="طالب">طالب</option><option value="معلم">معلم</option><option value="ولي أمر">ولي أمر</option></select></div>
                 </div>
                 <div class="form-group"><label>كلمة المرور *</label><input type="password" id="newUserPassword" required minlength="6"></div>
-                <button type="submit" class="submit-btn">✅ إضافة المستخدم</button>
+                <button type="submit" class="submit-btn">✅ إضافة الطالب</button>
             </form>
         </div>
     </div>
@@ -1695,7 +1874,7 @@
     <div class="modal-overlay" id="editUserModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal('editUserModal')">✕</button>
-            <h3>✏️ تعديل مستخدم</h3>
+            <h3>✏️ تعديل طالب</h3>
             <form id="editUserForm">
                 <input type="hidden" id="editUserId">
                 <div class="form-group"><label>الاسم</label><input type="text" id="editUserName" required></div>
@@ -1709,10 +1888,29 @@
                     <div class="form-group"><label>الصف</label><select id="editUserGrade"><option value="1">أولى</option><option value="2">تانية</option><option value="3">تالتة</option></select></div>
                     <div class="form-group"><label>الدور</label><select id="editUserRole"><option value="طالب">طالب</option><option value="معلم">معلم</option><option value="ولي أمر">ولي أمر</option></select></div>
                 </div>
-                <div class="form-group"><label>الحالة</label><select id="editUserStatus"><option value="active">✅ نشط</option><option value="banned">⛔ محظور</option></select></div>
+                <div class="form-group"><label>الحالة</label><select id="editUserStatus"><option value="active">✅ نشط</option><option value="banned">⛔ محظور</option><option value="suspended">⏸️ معلق</option></select></div>
                 <button type="submit" class="submit-btn">💾 حفظ</button>
-                <button type="button" class="btn btn-danger" style="width:100%;padding:6px;margin-top:4px;" onclick="banUserFromModal()">🚫 حظر</button>
-                <button type="button" class="btn btn-success" style="width:100%;padding:6px;margin-top:4px;" onclick="unbanUserFromModal()">✅ فك</button>
+                <div style="display:flex;gap:6px;margin-top:4px;">
+                    <button type="button" class="btn btn-danger" style="flex:1;padding:6px;" onclick="banUserFromModal()">🚫 حظر</button>
+                    <button type="button" class="btn btn-success" style="flex:1;padding:6px;" onclick="unbanUserFromModal()">✅ فك الحظر</button>
+                    <button type="button" class="btn btn-warning" style="flex:1;padding:6px;" onclick="suspendUserFromModal()">⏸️ تعليق</button>
+                </div>
+                <button type="button" class="btn btn-danger" style="width:100%;padding:6px;margin-top:4px;" onclick="deleteUserFromModal()">🗑️ حذف نهائي</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- إرسال إشعار لطالب -->
+    <div class="modal-overlay" id="sendUserNotificationModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('sendUserNotificationModal')">✕</button>
+            <h3>🔔 إرسال إشعار للطالب</h3>
+            <form id="sendUserNotificationForm">
+                <input type="hidden" id="notifUserId">
+                <div class="form-group"><label>العنوان *</label><input type="text" id="notifUserTitle" required></div>
+                <div class="form-group"><label>المحتوى *</label><textarea id="notifUserBody" rows="3" required></textarea></div>
+                <div class="form-group"><label>رابط (اختياري)</label><input type="url" id="notifUserLink"></div>
+                <button type="submit" class="submit-btn">📤 إرسال</button>
             </form>
         </div>
     </div>
@@ -1733,6 +1931,27 @@
                 <div class="form-group"><label>رابط الملف *</label><input type="url" id="bookFileUrl" required></div>
                 <div class="form-group"><label>رابط الغلاف</label><input type="url" id="bookCoverUrl"></div>
                 <button type="submit" class="submit-btn">✅ إضافة</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- تعديل كتاب -->
+    <div class="modal-overlay" id="editBookModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('editBookModal')">✕</button>
+            <h3>✏️ تعديل كتاب</h3>
+            <form id="editBookForm">
+                <input type="hidden" id="editBookId">
+                <div class="form-group"><label>العنوان *</label><input type="text" id="editBookTitle" required></div>
+                <div class="form-group"><label>المؤلف *</label><input type="text" id="editBookAuthor" required></div>
+                <div class="form-group"><label>المادة</label><input type="text" id="editBookSubject"></div>
+                <div class="row-2col">
+                    <div class="form-group"><label>الصف</label><select id="editBookGrade"><option value="1">أولى</option><option value="2">تانية</option><option value="3">تالتة</option></select></div>
+                    <div class="form-group"><label>التصنيف</label><select id="editBookCategory"><option value="teachers">المدرسين</option><option value="ministry">الوزارة</option><option value="external">خارجية</option><option value="reviews">تقييمات</option></select></div>
+                </div>
+                <div class="form-group"><label>رابط الملف</label><input type="url" id="editBookFileUrl"></div>
+                <div class="form-group"><label>رابط الغلاف</label><input type="url" id="editBookCoverUrl"></div>
+                <button type="submit" class="submit-btn">💾 حفظ التعديلات</button>
             </form>
         </div>
     </div>
@@ -1783,19 +2002,29 @@
                 <div class="form-group"><label>العنوان *</label><input type="text" id="adTitle" required></div>
                 <div class="form-group"><label>الوصف</label><textarea id="adDesc" rows="2"></textarea></div>
                 <div class="form-group"><label>رابط الإعلان</label><input type="url" id="adLink"></div>
+                <div class="form-group"><label>لون الزر</label><select id="adColor"><option value="green">أخضر</option><option value="blue">أزرق</option><option value="red">أحمر</option><option value="purple">بنفسجي</option><option value="orange">برتقالي</option></select></div>
                 <div class="form-group">
-                    <label>صور الإعلان</label>
-                    <div class="image-upload-area" onclick="document.getElementById('adImagesInput').click()">
-                        <div id="adImagesPreview" class="preview-grid"></div>
-                        <p style="font-size:11px;color:#888;">اضغط لاختيار صور</p>
-                        <input type="file" id="adImagesInput" accept="image/*" multiple>
+                    <label>صورة الإعلان</label>
+                    <div class="image-upload-area" onclick="document.getElementById('adImageInput').click()">
+                        <div id="adImagePreview" class="preview-grid"></div>
+                        <p style="font-size:11px;color:#888;">اضغط لاختيار صورة</p>
+                        <input type="file" id="adImageInput" accept="image/*">
                     </div>
                 </div>
                 <div class="row-2col">
-                    <div class="form-group"><label>المستهدف</label><select id="adTarget"><option value="all">الجميع</option><option value="users">المستخدمين</option><option value="guests">الزوار</option></select></div>
-                    <div class="form-group"><label>الحالة</label><select id="adActive"><option value="true">نشط</option><option value="false">غير نشط</option></select></div>
+                    <div class="form-group"><label>تاريخ البداية</label><input type="datetime-local" id="adStartDate"></div>
+                    <div class="form-group"><label>تاريخ النهاية</label><input type="datetime-local" id="adEndDate"></div>
                 </div>
-                <button type="submit" class="submit-btn">📢 نشر</button>
+                <div class="row-2col">
+                    <div class="form-group"><label>المستهدف</label><select id="adTarget"><option value="all">الجميع</option><option value="students">الطلاب</option><option value="guests">الزوار</option></select></div>
+                    <div class="form-group"><label>الصف المستهدف</label><select id="adTargetGrade"><option value="all">جميع الصفوف</option><option value="1">أولى</option><option value="2">تانية</option><option value="3">تالتة</option></select></div>
+                </div>
+                <div class="row-2col">
+                    <div class="form-group"><label>يظهر مرة واحدة</label><select id="adShowOnce"><option value="false">لا</option><option value="true">نعم</option></select></div>
+                    <div class="form-group"><label>يظهر عند أول دخول</label><select id="adShowOnFirst"><option value="false">لا</option><option value="true">نعم</option></select></div>
+                </div>
+                <div class="form-group"><label>الحالة</label><select id="adActive"><option value="true">نشط</option><option value="false">غير نشط</option></select></div>
+                <button type="submit" class="submit-btn">📢 نشر الإعلان</button>
             </form>
         </div>
     </div>
@@ -1808,8 +2037,10 @@
             <form id="addNotificationForm">
                 <div class="form-group"><label>العنوان *</label><input type="text" id="notifTitle" required></div>
                 <div class="form-group"><label>المحتوى *</label><textarea id="notifBody" rows="3" required></textarea></div>
-                <div class="form-group"><label>إلى</label><select id="notifTarget"><option value="all">الجميع</option><option value="students">الطلاب</option><option value="teachers">المعلمين</option></select></div>
-                <div class="form-group"><label>📌 رسمي</label><select id="notifOfficial"><option value="true">نعم</option><option value="false">لا</option></select></div>
+                <div class="form-group"><label>رابط (اختياري)</label><input type="url" id="notifLink"></div>
+                <div class="form-group"><label>إلى</label><select id="notifTarget"><option value="all">الجميع</option><option value="students">الطلاب</option><option value="teachers">المعلمين</option><option value="grade1">الصف الأول</option><option value="grade2">الصف الثاني</option><option value="grade3">الصف الثالث</option></select></div>
+                <div class="form-group"><label>نوع الإشعار</label><select id="notifType"><option value="general">عام</option><option value="important">هام</option><option value="urgent">عاجل</option><option value="official">رسمي</option></select></div>
+                <div class="form-group"><label>صورة (اختياري)</label><input type="url" id="notifImage" placeholder="رابط الصورة"></div>
                 <button type="submit" class="submit-btn">📤 إرسال</button>
             </form>
         </div>
@@ -1828,7 +2059,7 @@
     <div class="toast" id="toast"></div>
 
     <!-- ============================================================ -->
-    <!-- JavaScript -->
+    <!-- JavaScript - النظام الكامل -->
     <!-- ============================================================ -->
     <script>
         // ============================================================
@@ -1849,7 +2080,7 @@
         const storage = firebase.storage();
 
         // ============================================================
-        // 🛡️ نظام الأمان
+        // 🛡️ نظام الأمان - التحقق الصارم من صلاحية الأدمن
         // ============================================================
         let currentUser = null;
         let isAdmin = false;
@@ -1864,7 +2095,7 @@
         let resourceChart = null;
         let liveInterval = null;
         let isLive = false;
-        let adImages = [];
+        let adImageFile = null;
         let allUsers = [];
         let allBooks = [];
         let allForumPosts = [];
@@ -1877,6 +2108,18 @@
         let allHandwritten = [];
         let allYoutube = [];
 
+        // Pagination
+        let currentPage = {
+            users: 1,
+            forum: 1,
+            comments: 1,
+            books: 1
+        };
+        const PAGE_SIZE = 20;
+
+        // ============================================================
+        // التحقق من صلاحية الأدمن
+        // ============================================================
         function showAccessDenied(message = 'غير مصرح بالدخول') {
             document.body.innerHTML = `
                     <div style="text-align:center;padding:60px;font-family:'Tajawal',sans-serif;background:#f0f4f8;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;">
@@ -1903,18 +2146,22 @@
                 }
 
                 userData = userDoc.data();
+
+                // التحقق من الحظر
                 if (userData.isBanned === true) {
                     showAccessDenied('⛔ حسابك محظور، يرجى التواصل مع الإدارة');
                     await auth.signOut();
                     return false;
                 }
 
+                // التحقق من النشاط
                 if (userData.isActive === false) {
                     showAccessDenied('⛔ حسابك غير نشط، يرجى التواصل مع الإدارة');
                     await auth.signOut();
                     return false;
                 }
 
+                // التحقق من صلاحية الأدمن
                 const role = userData.role || 'user';
                 if (role !== 'admin' && role !== 'superAdmin') {
                     showAccessDenied('ليس لديك صلاحية الدخول إلى لوحة التحكم');
@@ -1928,8 +2175,23 @@
                 isActive = true;
                 currentUser = user;
 
-                document.getElementById('adminName').textContent = userData.name || 'المدير';
-                document.getElementById('adminEmail').textContent = userData.email || user.email;
+                // تحديث معلومات الأدمن في الشريط الجانبي
+                const adminName = document.getElementById('adminName');
+                const adminEmail = document.getElementById('adminEmail');
+                const adminAvatar = document.getElementById('adminAvatar');
+
+                if (adminName) adminName.textContent = userData.name || 'المدير';
+                if (adminEmail) adminEmail.textContent = userData.email || user.email;
+
+                if (userData.photoURL) {
+                    const img = document.createElement('img');
+                    img.src = userData.photoURL;
+                    img.className = 'avatar';
+                    img.alt = 'صورة المدير';
+                    adminAvatar.parentNode.replaceChild(img, adminAvatar);
+                } else {
+                    adminAvatar.textContent = (userData.name || 'المدير').charAt(0).toUpperCase();
+                }
 
                 return true;
             } catch (err) {
@@ -1966,6 +2228,9 @@
             }
         }
 
+        // ============================================================
+        // مراقبة حالة المصادقة
+        // ============================================================
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 const verified = await verifyUser(user);
@@ -1974,12 +2239,22 @@
                     loadAllData();
                     updateBadges();
                     startLiveUpdates();
+                    // تحديث كل 5 ثواني
+                    setInterval(() => {
+                        if (isAdmin || isSuperAdmin) {
+                            updateOnlineUsers();
+                            updateDashboardRealtime();
+                        }
+                    }, 5000);
                 }
             } else {
                 showAccessDenied('يرجى تسجيل الدخول أولاً');
             }
         });
 
+        // ============================================================
+        // إضافة زر الخروج في القائمة
+        // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             const navList = document.getElementById('navList');
             if (navList) {
@@ -1996,10 +2271,9 @@
         });
 
         // ============================================================
-        // 3. دوال مساعدة
+        // دوال مساعدة
         // ============================================================
         function showToast(msg, type = 'success') {
-            if (!requireAdmin()) return;
             const t = document.getElementById('toast');
             t.textContent = msg;
             t.className = 'toast show ' + type;
@@ -2051,7 +2325,29 @@
             if (timestamp.toDate) {
                 return timestamp.toDate().toLocaleString('ar');
             }
+            if (timestamp.seconds) {
+                return new Date(timestamp.seconds * 1000).toLocaleString('ar');
+            }
+            if (typeof timestamp === 'number') {
+                return new Date(timestamp).toLocaleString('ar');
+            }
             return new Date(timestamp).toLocaleString('ar');
+        }
+
+        function getRelativeTime(timestamp) {
+            if (!timestamp) return 'غير معروف';
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+
+            if (minutes < 1) return 'الآن';
+            if (minutes < 60) return `${minutes} دقيقة`;
+            if (hours < 24) return `${hours} ساعة`;
+            if (days < 7) return `${days} يوم`;
+            return date.toLocaleDateString('ar');
         }
 
         function toggleLiveUpdates() {
@@ -2078,19 +2374,19 @@
             if (liveInterval) {
                 clearInterval(liveInterval);
             }
-            // تحديث أسرع للمتصلين (كل 3 ثوانٍ)
             liveInterval = setInterval(() => {
-                if (requireAdmin()) {
+                if (isAdmin || isSuperAdmin) {
                     loadAllData();
                     updateBadges();
                     updateOnlineUsers();
                     updateSystemStatus();
+                    updateDashboardRealtime();
                 }
             }, 3000);
         }
 
         // ============================================================
-        // 4. إدارة الصفحات
+        // إدارة الصفحات
         // ============================================================
         function showPage(page) {
             if (!requireAdmin()) return;
@@ -2104,7 +2400,7 @@
 
             const titles = {
                 'dashboard': '📊 Dashboard',
-                'users': '👤 المستخدمين',
+                'users': '👤 الطلاب',
                 'comments': '💬 التعليقات',
                 'books': '📚 الكتب',
                 'forum': '💬 المنتدى',
@@ -2120,7 +2416,8 @@
                 'onlineUsers': '🟢 المتصلون الآن',
                 'security': '🛡️ مركز الأمان',
                 'audit': '📝 سجل العمليات',
-                'monitoring': '⚙️ مراقبة النظام'
+                'monitoring': '⚙️ مراقبة النظام',
+                'search': '🔍 البحث'
             };
             document.getElementById('pageTitle').textContent = titles[page] || page;
             document.getElementById('sidebar').classList.remove('open');
@@ -2156,6 +2453,21 @@
             if (page === 'audit') { loadAuditLog();
                 renderAuditLog(); }
             if (page === 'monitoring') loadMonitoring();
+            if (page === 'search') { document.getElementById('globalSearchInput').focus(); }
+        }
+
+        // ============================================================
+        // تحديث Dashboard في الوقت الفعلي
+        // ============================================================
+        function updateDashboardRealtime() {
+            // تحديث الإحصائيات السريعة
+            const onlineCount = allOnlineUsers.length;
+            const activeUsers = allUsers.filter(u => !u.isBanned && !u.isSuspended).length;
+            const bannedUsers = allUsers.filter(u => u.isBanned).length;
+            const suspendedUsers = allUsers.filter(u => u.isSuspended).length;
+
+            // تحديث بطاقات الـ Dashboard
+            updateDashboard();
         }
 
         // ============================================================
@@ -2354,68 +2666,59 @@
 
         async function loadActivities() {
             allActivities = [];
+            // منشورات المنتدى
+            allForumPosts.slice(0, 5).forEach(p => {
+                allActivities.push({
+                    text: `💬 منشور: "${p.title || 'بدون عنوان'}"`,
+                    time: p.createdAt ? formatDate(p.createdAt) : 'الآن',
+                    status: p.status || 'pending',
+                    type: 'forum',
+                    id: p.id
+                });
+            });
+            // الكتب
             allBooks.slice(0, 3).forEach(b => {
                 allActivities.push({
                     text: `📚 كتاب: "${b.title || 'بدون عنوان'}"`,
-                    time: b.createdAt ? b.createdAt.toDate().toLocaleString('ar') : 'الآن',
+                    time: b.createdAt ? formatDate(b.createdAt) : 'الآن',
                     status: b.status || 'pending',
-                    type: 'book'
+                    type: 'book',
+                    id: b.id
                 });
             });
-            allHandwritten.slice(0, 3).forEach(h => {
+            // المستخدمين الجدد
+            const newUsers = allUsers.filter(u => u.createdAt).sort((a, b) => {
+                const tA = a.createdAt?.toMillis?.() || 0;
+                const tB = b.createdAt?.toMillis?.() || 0;
+                return tB - tA;
+            }).slice(0, 3);
+            newUsers.forEach(u => {
                 allActivities.push({
-                    text: `✍️ ملخص: "${h.title || 'بدون عنوان'}" من ${h.author || 'مجهول'}`,
-                    time: h.createdAt ? h.createdAt.toDate().toLocaleString('ar') : 'الآن',
-                    status: h.status || 'pending',
-                    type: 'handwritten'
-                });
-            });
-            allYoutube.slice(0, 2).forEach(y => {
-                allActivities.push({
-                    text: `🎥 قناة: "${y.name || 'بدون عنوان'}"`,
-                    time: y.createdAt ? y.createdAt.toDate().toLocaleString('ar') : 'الآن',
+                    text: `👤 مستخدم جديد: "${u.name || 'مجهول'}"`,
+                    time: u.createdAt ? formatDate(u.createdAt) : 'الآن',
                     status: 'نشط',
-                    type: 'youtube'
+                    type: 'user',
+                    id: u.id
                 });
             });
-            allForumPosts.slice(0, 2).forEach(p => {
-                allActivities.push({
-                    text: `💬 منشور: "${p.title || 'بدون عنوان'}"`,
-                    time: p.createdAt ? p.createdAt.toDate().toLocaleString('ar') : 'الآن',
-                    status: p.status || 'pending',
-                    type: 'forum'
-                });
-            });
-            allComments.slice(0, 3).forEach(c => {
-                allActivities.push({
-                    text: `💬 تعليق: "${(c.text || '').substring(0, 30)}..."`,
-                    time: c.createdAt ? new Date(c.createdAt).toLocaleString('ar') : 'الآن',
-                    status: c.status || 'pending',
-                    type: 'comment'
-                });
-            });
-            allUploads.slice(0, 2).forEach(u => {
-                allActivities.push({
-                    text: `📂 رفع: "${u.title || 'بدون عنوان'}"`,
-                    time: u.createdAt ? u.createdAt.toDate().toLocaleString('ar') : 'الآن',
-                    status: 'pending',
-                    type: 'upload'
-                });
-            });
+            // البلاغات
             allReports.slice(0, 2).forEach(r => {
                 allActivities.push({
                     text: `🚨 بلاغ: "${r.reason || 'بدون سبب'}"`,
-                    time: r.createdAt ? r.createdAt.toDate().toLocaleString('ar') : 'الآن',
+                    time: r.createdAt ? formatDate(r.createdAt) : 'الآن',
                     status: r.status || 'pending',
-                    type: 'report'
+                    type: 'report',
+                    id: r.id
                 });
             });
+            // الإعلانات
             allAds.slice(0, 2).forEach(a => {
                 allActivities.push({
                     text: `📢 إعلان: "${a.title || 'بدون عنوان'}"`,
-                    time: a.createdAt ? a.createdAt.toDate().toLocaleString('ar') : 'الآن',
+                    time: a.createdAt ? formatDate(a.createdAt) : 'الآن',
                     status: a.active ? 'نشط' : 'غير نشط',
-                    type: 'ad'
+                    type: 'ad',
+                    id: a.id
                 });
             });
             allActivities.sort((a, b) => b.time.localeCompare(a.time));
@@ -2453,112 +2756,259 @@
         }
 
         // ============================================================
-        // 6. Dashboard
+        // 6. Dashboard المتطور
         // ============================================================
         function updateDashboard() {
             if (!requireAdmin()) return;
             const totalUsers = allUsers.length;
-            const totalBooks = allBooks.length;
-            const totalHandwritten = allHandwritten.length;
-            const totalYoutube = allYoutube.length;
-            const totalForum = allForumPosts.length;
-            const totalTeam = allTeamPosts.length;
+            const activeUsers = allUsers.filter(u => !u.isBanned && !u.isSuspended).length;
+            const bannedUsers = allUsers.filter(u => u.isBanned).length;
+            const suspendedUsers = allUsers.filter(u => u.isSuspended).length;
+            const onlineCount = allOnlineUsers.length;
+
+            // المستخدمين غير النشطين
+            const now = Date.now();
+            const dayAgo = now - 24 * 60 * 60 * 1000;
+            const weekAgo = now - 7 * 24 * 60 * 60 * 1000;
+            const monthAgo = now - 30 * 24 * 60 * 60 * 1000;
+
+            const inactiveDay = allUsers.filter(u => {
+                const last = u.lastActive?.toMillis?.() || 0;
+                return last < dayAgo && !u.isBanned;
+            });
+            const inactiveWeek = allUsers.filter(u => {
+                const last = u.lastActive?.toMillis?.() || 0;
+                return last < weekAgo && !u.isBanned;
+            });
+            const inactiveMonth = allUsers.filter(u => {
+                const last = u.lastActive?.toMillis?.() || 0;
+                return last < monthAgo && !u.isBanned;
+            });
+
+            // الحسابات الجديدة
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const newToday = allUsers.filter(u => {
+                const created = u.createdAt?.toMillis?.() || 0;
+                return created > today.getTime();
+            });
+            const newWeek = allUsers.filter(u => {
+                const created = u.createdAt?.toMillis?.() || 0;
+                return created > weekAgo;
+            });
+            const newMonth = allUsers.filter(u => {
+                const created = u.createdAt?.toMillis?.() || 0;
+                return created > monthAgo;
+            });
+
+            // آخر طالب دخل
+            const sortedByLastActive = [...allUsers].filter(u => u.lastActive).sort((a, b) => {
+                const tA = a.lastActive?.toMillis?.() || 0;
+                const tB = b.lastActive?.toMillis?.() || 0;
+                return tB - tA;
+            });
+            const lastActiveStudent = sortedByLastActive[0];
+            const sortedByCreated = [...allUsers].filter(u => u.createdAt).sort((a, b) => {
+                const tA = a.createdAt?.toMillis?.() || 0;
+                const tB = b.createdAt?.toMillis?.() || 0;
+                return tB - tA;
+            });
+            const newestStudent = sortedByCreated[0];
+
+            // إحصائيات المنشورات
+            const totalPosts = allForumPosts.length;
+            const pendingPosts = allForumPosts.filter(p => p.status === 'pending').length;
+            const approvedPosts = allForumPosts.filter(p => p.status === 'approved').length;
+            const rejectedPosts = allForumPosts.filter(p => p.status === 'rejected').length;
+
+            // إحصائيات التعليقات
             const totalComments = allComments.length;
             const pendingComments = allComments.filter(c => c.status === 'pending').length;
-            const totalUploads = allUploads.length;
-            const totalReports = allReports.length;
-            const totalDownloads = allBooks.reduce((s, b) => s + (b.downloads || 0), 0);
-            const totalViews = allBooks.reduce((s, b) => s + (b.views || 0), 0);
-            const totalFavorites = allBooks.reduce((s, b) => s + (b.favorites || 0), 0);
-            const bannedUsers = allUsers.filter(u => u.isBanned).length;
-            const activeAds = allAds.filter(a => a.active).length;
-            const pendingHandwritten = allHandwritten.filter(h => h.status === 'pending').length;
-            const pendingForum = allForumPosts.filter(p => p.status === 'pending').length;
-            const pendingBooks = allBooks.filter(b => b.status === 'pending').length;
+            const totalReplies = allComments.reduce((sum, c) => sum + (c.adminReplies ? c.adminReplies.length : 0), 0);
 
-            const teachers = allUsers.filter(u => u.role === 'teacher' || u.role === 'معلم').length;
-            const students = allUsers.filter(u => u.role === 'student' || u.role === 'طالب').length;
-            const grade1 = allUsers.filter(u => u.grade === '1').length;
-            const grade2 = allUsers.filter(u => u.grade === '2').length;
-            const grade3 = allUsers.filter(u => u.grade === '3').length;
+            // الإعجابات
+            const totalLikes = allForumPosts.reduce((sum, p) => sum + (p.likesCount || 0), 0) +
+                allComments.reduce((sum, c) => sum + (c.likes || 0), 0);
+            const todayLikes = allForumPosts.filter(p => {
+                const date = p.createdAt?.toDate?.() || new Date();
+                return date.toDateString() === new Date().toDateString();
+            }).reduce((sum, p) => sum + (p.likesCount || 0), 0);
 
-            document.getElementById('statsGrid').innerHTML = `
-                    <div class="stat-card green"><div class="stat-number">${totalUsers}</div><div class="stat-label">👤 المستخدمين</div></div>
-                    <div class="stat-card blue"><div class="stat-number">${totalBooks}</div><div class="stat-label">📚 الكتب</div></div>
-                    <div class="stat-card purple"><div class="stat-number">${totalHandwritten}</div><div class="stat-label">✍️ الملخصات</div></div>
-                    <div class="stat-card teal"><div class="stat-number">${totalYoutube}</div><div class="stat-label">🎥 قنوات يوتيوب</div></div>
-                    <div class="stat-card purple"><div class="stat-number">${totalForum}</div><div class="stat-label">💬 المنتدى</div></div>
-                    <div class="stat-card teal"><div class="stat-number">${totalTeam}</div><div class="stat-label">📢 منشورات الفريق</div></div>
-                    <div class="stat-card orange"><div class="stat-number">${totalComments}</div><div class="stat-label">💬 التعليقات</div></div>
-                    <div class="stat-card red"><div class="stat-number">${pendingComments}</div><div class="stat-label">⏳ تعليقات في الانتظار</div></div>
-                    <div class="stat-card blue"><div class="stat-number">${totalUploads}</div><div class="stat-label">📂 المرفوعات</div></div>
-                    <div class="stat-card red"><div class="stat-number">${totalReports}</div><div class="stat-label">🚨 البلاغات</div></div>
-                    <div class="stat-card green"><div class="stat-number">${totalDownloads}</div><div class="stat-label">📥 التحميلات</div></div>
-                    <div class="stat-card purple"><div class="stat-number">${totalViews}</div><div class="stat-label">👁️ المشاهدات</div></div>
-                    <div class="stat-card orange"><div class="stat-number">${totalFavorites}</div><div class="stat-label">❤️ المفضلات</div></div>
-                    <div class="stat-card red"><div class="stat-number">${bannedUsers}</div><div class="stat-label">⛔ محظورين</div></div>
-                    <div class="stat-card teal"><div class="stat-number">${activeAds}</div><div class="stat-label">📢 إعلانات نشطة</div></div>
-                    <div class="stat-card orange"><div class="stat-number">${pendingHandwritten}</div><div class="stat-label">✍️ ملخصات في الانتظار</div></div>
-                    <div class="stat-card orange"><div class="stat-number">${pendingForum}</div><div class="stat-label">💬 منشورات في الانتظار</div></div>
-                    <div class="stat-card blue"><div class="stat-number">${pendingBooks}</div><div class="stat-label">📚 كتب في الانتظار</div></div>
-                    <div class="stat-card green"><div class="stat-number">${teachers}</div><div class="stat-label">👨‍🏫 المدرسين</div></div>
-                    <div class="stat-card blue"><div class="stat-number">${students}</div><div class="stat-label">👨‍🎓 الطلاب</div></div>
-                    <div class="stat-card purple"><div class="stat-number">${grade1}</div><div class="stat-label">📘 أولى</div></div>
-                    <div class="stat-card blue"><div class="stat-number">${grade2}</div><div class="stat-label">📗 تانية</div></div>
-                    <div class="stat-card red"><div class="stat-number">${grade3}</div><div class="stat-label">📕 تالتة</div></div>
-                `;
-
-            document.getElementById('statsDetail').innerHTML = `
-                    <div class="stat-box"><div class="num">${totalBooks}</div><div class="label">📚 إجمالي الكتب</div><div class="sub">${pendingBooks} قيد المراجعة</div></div>
-                    <div class="stat-box"><div class="num">${totalHandwritten}</div><div class="label">✍️ إجمالي الملخصات</div><div class="sub">${pendingHandwritten} في الانتظار</div></div>
-                    <div class="stat-box"><div class="num">${totalYoutube}</div><div class="label">🎥 قنوات يوتيوب</div><div class="sub">${allYoutube.length} قناة</div></div>
-                    <div class="stat-box"><div class="num">${totalUsers}</div><div class="label">👤 إجمالي المستخدمين</div><div class="sub">${bannedUsers} محظور</div></div>
-                    <div class="stat-box"><div class="num">${totalComments}</div><div class="label">💬 إجمالي التعليقات</div><div class="sub">${pendingComments} في الانتظار</div></div>
-                    <div class="stat-box"><div class="num">${totalDownloads}</div><div class="label">📥 إجمالي التحميلات</div><div class="sub">${totalViews} مشاهدات</div></div>
-                    <div class="stat-box"><div class="num">${totalReports}</div><div class="label">🚨 إجمالي البلاغات</div><div class="sub">${allReports.filter(r=>r.status==='pending').length} في الانتظار</div></div>
-                    <div class="stat-box"><div class="num">${activeAds}</div><div class="label">📢 إعلانات نشطة</div><div class="sub">${allAds.length} إجمالي</div></div>
-                `;
-
-            const container = document.getElementById('recentActivities');
-            if (allActivities.length === 0) {
-                container.innerHTML =
-                    `<div class="empty-state"><div class="icon">📭</div><p>لا توجد أنشطة</p></div>`;
-                return;
-            }
-            let html = '<table><thead><tr><th>النشاط</th><th>الوقت</th><th>الحالة</th></tr></thead><tbody>';
-            allActivities.slice(0, 15).forEach(a => {
-                const cls = a.status === 'approved' ? 'approved' : a.status === 'pending' ? 'pending' : a.status ===
-                    'نشط' ? 'approved' : 'rejected';
-                const txt = a.status === 'approved' ? '✅ مقبول' : a.status === 'pending' ? '⏳ في الانتظار' : a
-                    .status === 'نشط' ? '✅ نشط' : '❌ مرفوض';
-                html +=
-                    `<tr><td>${a.text}</td><td>${a.time}</td><td><span class="status-badge ${cls}">${txt}</span></td></tr>`;
+            // أكثر منشور حصل على إعجابات
+            let topPost = null;
+            let maxLikes = 0;
+            allForumPosts.forEach(p => {
+                if ((p.likesCount || 0) > maxLikes) {
+                    maxLikes = p.likesCount || 0;
+                    topPost = p;
+                }
             });
-            html += '</tbody></table>';
-            container.innerHTML = html;
 
-            const quickStats = document.getElementById('quickStats');
-            const officialReplies = allComments.reduce((sum, c) => sum + (c.adminReplies ? c.adminReplies.length : 0), 0);
-            const activeOnline = allOnlineUsers.filter(u => u.status === 'online').length;
-            quickStats.innerHTML = `
-                    <table>
-                        <thead><tr><th>المؤشر</th><th>القيمة</th></tr></thead>
-                        <tbody>
-                            <tr><td>🟢 المتصلون الآن</td><td>${activeOnline}</td></tr>
-                            <tr><td>📌 ردود الإدارة الرسمية</td><td>${officialReplies}</td></tr>
-                            <tr><td>❤️ إعجابات الإدارة</td><td>${allComments.filter(c=>c.adminLiked).length}</td></tr>
-                            <tr><td>📢 منشورات الفريق</td><td>${totalTeam}</td></tr>
-                            <tr><td>📚 الكتب المضافة</td><td>${totalBooks}</td></tr>
-                            <tr><td>✍️ الملخصات المرفوعة</td><td>${totalHandwritten}</td></tr>
-                            <tr><td>🎥 قنوات يوتيوب</td><td>${totalYoutube}</td></tr>
-                            <tr><td>👤 المستخدمين الجدد</td><td>${allUsers.filter(u=>u.createdAt).length}</td></tr>
-                            <tr><td>📢 الإعلانات النشطة</td><td>${activeAds}</td></tr>
-                        </tbody>
-                    </table>
+            // أكثر طالب نشاطاً
+            const studentActivity = {};
+            allForumPosts.forEach(p => {
+                if (p.userId) {
+                    studentActivity[p.userId] = studentActivity[p.userId] || { posts: 0, comments: 0, likes: 0 };
+                    studentActivity[p.userId].posts++;
+                    studentActivity[p.userId].likes += p.likesCount || 0;
+                }
+            });
+            allComments.forEach(c => {
+                if (c.userId) {
+                    studentActivity[c.userId] = studentActivity[c.userId] || { posts: 0, comments: 0, likes: 0 };
+                    studentActivity[c.userId].comments++;
+                }
+            });
+            let mostActiveStudent = null;
+            let maxActivity = 0;
+            Object.keys(studentActivity).forEach(uid => {
+                const total = studentActivity[uid].posts + studentActivity[uid].comments;
+                if (total > maxActivity) {
+                    maxActivity = total;
+                    mostActiveStudent = uid;
+                }
+            });
+            const mostActiveUser = allUsers.find(u => u.id === mostActiveStudent);
+
+            // إحصائيات إضافية
+            const totalNotifs = allNotifications.length;
+            const totalAds = allAds.length;
+            const totalBooks = allBooks.length;
+            const totalVideos = allYoutube.length;
+            const totalFiles = allHandwritten.length + allBooks.length;
+
+            // مساحة التخزين
+            const totalSize = allBooks.reduce((s, b) => s + (b.fileSize || 0), 0) +
+                allHandwritten.reduce((s, h) => s + (h.fileSize || 0), 0);
+            const sizeMB = (totalSize / (1024 * 1024)).toFixed(2);
+
+            // عرض الإحصائيات
+            document.getElementById('statsGrid').innerHTML = `
+                    <div class="stat-card green"><div class="stat-number">${totalUsers}</div><div class="stat-label">👤 إجمالي المستخدمين</div></div>
+                    <div class="stat-card blue"><div class="stat-number">${activeUsers}</div><div class="stat-label">✅ نشطون</div></div>
+                    <div class="stat-card red"><div class="stat-number">${bannedUsers}</div><div class="stat-label">⛔ محظورين</div></div>
+                    <div class="stat-card orange"><div class="stat-number">${suspendedUsers}</div><div class="stat-label">⏸️ معلقين</div></div>
+                    <div class="stat-card teal"><div class="stat-number">${onlineCount}</div><div class="stat-label">🟢 متصلون الآن</div></div>
+                    <div class="stat-card purple"><div class="stat-number">${newToday.length}</div><div class="stat-label">📅 حسابات جديدة اليوم</div></div>
+                    <div class="stat-card blue"><div class="stat-number">${newWeek.length}</div><div class="stat-label">📅 حسابات جديدة هذا الأسبوع</div></div>
+                    <div class="stat-card green"><div class="stat-number">${newMonth.length}</div><div class="stat-label">📅 حسابات جديدة هذا الشهر</div></div>
+                    <div class="stat-card blue"><div class="stat-number">${totalPosts}</div><div class="stat-label">💬 منشورات</div></div>
+                    <div class="stat-card orange"><div class="stat-number">${pendingPosts}</div><div class="stat-label">⏳ منشورات معلقة</div></div>
+                    <div class="stat-card green"><div class="stat-number">${approvedPosts}</div><div class="stat-label">✅ منشورات مقبولة</div></div>
+                    <div class="stat-card red"><div class="stat-number">${rejectedPosts}</div><div class="stat-label">❌ منشورات مرفوضة</div></div>
+                    <div class="stat-card purple"><div class="stat-number">${totalComments}</div><div class="stat-label">💬 تعليقات</div></div>
+                    <div class="stat-card teal"><div class="stat-number">${totalReplies}</div><div class="stat-label">📌 ردود الإدارة</div></div>
+                    <div class="stat-card orange"><div class="stat-number">${pendingComments}</div><div class="stat-label">⏳ تعليقات في الانتظار</div></div>
+                    <div class="stat-card blue"><div class="stat-number">${totalLikes}</div><div class="stat-label">❤️ إجمالي الإعجابات</div></div>
+                    <div class="stat-card green"><div class="stat-number">${todayLikes}</div><div class="stat-label">❤️ إعجابات اليوم</div></div>
+                    <div class="stat-card purple"><div class="stat-number">${totalNotifs}</div><div class="stat-label">🔔 إشعارات مرسلة</div></div>
+                    <div class="stat-card teal"><div class="stat-number">${totalAds}</div><div class="stat-label">📢 إعلانات منشورة</div></div>
+                    <div class="stat-card blue"><div class="stat-number">${totalBooks}</div><div class="stat-label">📚 كتب</div></div>
+                    <div class="stat-card red"><div class="stat-number">${totalVideos}</div><div class="stat-label">🎥 فيديوهات</div></div>
+                    <div class="stat-card orange"><div class="stat-number">${totalFiles}</div><div class="stat-label">📂 ملفات</div></div>
+                    <div class="stat-card purple"><div class="stat-number">${sizeMB}</div><div class="stat-label">💾 مساحة التخزين</div></div>
                 `;
+
+            // بطاقات الإحصائيات التفصيلية
+            document.getElementById('statsDetail').innerHTML = `
+                    <div class="stat-box"><div class="num">${inactiveDay.length}</div><div class="label">⏳ غير نشطين منذ يوم</div></div>
+                    <div class="stat-box"><div class="num">${inactiveWeek.length}</div><div class="label">⏳ غير نشطين منذ أسبوع</div></div>
+                    <div class="stat-box"><div class="num">${inactiveMonth.length}</div><div class="label">⏳ غير نشطين منذ شهر</div></div>
+                    <div class="stat-box"><div class="num">${lastActiveStudent ? safeText(lastActiveStudent.name || 'مجهول') : '-'}</div><div class="label">🕐 آخر طالب دخل</div></div>
+                    <div class="stat-box"><div class="num">${newestStudent ? safeText(newestStudent.name || 'مجهول') : '-'}</div><div class="label">🆕 آخر طالب سجل</div></div>
+                    <div class="stat-box"><div class="num">${topPost ? safeText(topPost.title || 'بدون عنوان') : '-'}</div><div class="label">🏆 أكثر منشور إعجاباً (${maxLikes})</div></div>
+                    <div class="stat-box"><div class="num">${mostActiveUser ? safeText(mostActiveUser.name || 'مجهول') : '-'}</div><div class="label">⭐ أكثر طالب نشاطاً</div></div>
+                `;
+
+            // عرض المتصلين
+            renderOnlineUsers();
+
+            // عرض أهم الطلاب
+            renderTopStudents();
+
+            // عرض الطلاب غير النشطين
+            renderInactiveStudents(inactiveDay);
         }
 
         function loadDashboard() { updateDashboard(); }
+
+        // ============================================================
+        // عرض أهم الطلاب
+        // ============================================================
+        function renderTopStudents() {
+            const container = document.getElementById('topStudents');
+            const sorted = [...allUsers].filter(u => !u.isBanned).sort((a, b) => {
+                const postsA = allForumPosts.filter(p => p.userId === a.id).length;
+                const postsB = allForumPosts.filter(p => p.userId === b.id).length;
+                return postsB - postsA;
+            }).slice(0, 5);
+
+            if (sorted.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">🏆</div><p>لا يوجد طلاب نشطاء</p></div>`;
+                return;
+            }
+
+            let html = '<table><thead><tr><th>#</th><th>👤 الاسم</th><th>📚 المنشورات</th><th>💬 التعليقات</th><th>❤️ الإعجابات</th></tr></thead><tbody>';
+            sorted.forEach((u, i) => {
+                const posts = allForumPosts.filter(p => p.userId === u.id).length;
+                const comments = allComments.filter(c => c.userId === u.id).length;
+                const likes = allForumPosts.filter(p => p.userId === u.id).reduce((s, p) => s + (p.likesCount || 0),
+                0);
+                const photo = u.photoURL || '';
+                const initial = u.name ? u.name.charAt(0).toUpperCase() : '?';
+                html += `
+                        <tr>
+                            <td>${i+1}</td>
+                            <td>
+                                ${photo ? `<img src="${photo}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-left:6px;">` : `<span style="display:inline-block;width:24px;height:24px;border-radius:50%;background:#3498db;color:white;text-align:center;line-height:24px;font-size:12px;font-weight:700;margin-left:6px;">${initial}</span>`}
+                                ${safeText(u.name || 'مجهول')}
+                            </td>
+                            <td>${posts}</td>
+                            <td>${comments}</td>
+                            <td>${likes}</td>
+                        </tr>
+                    `;
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // عرض الطلاب غير النشطين
+        // ============================================================
+        function renderInactiveStudents(inactiveList) {
+            const container = document.getElementById('inactiveStudents');
+            const sorted = inactiveList.sort((a, b) => {
+                const tA = a.lastActive?.toMillis?.() || 0;
+                const tB = b.lastActive?.toMillis?.() || 0;
+                return tA - tB;
+            }).slice(0, 10);
+
+            if (sorted.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">✅</div><p>جميع الطلاب نشطون</p></div>`;
+                return;
+            }
+
+            let html = '<table><thead><tr><th>#</th><th>👤 الاسم</th><th>🕐 آخر نشاط</th><th>📧 البريد</th></tr></thead><tbody>';
+            sorted.forEach((u, i) => {
+                const lastActive = u.lastActive ? getRelativeTime(u.lastActive) : 'غير معروف';
+                const photo = u.photoURL || '';
+                const initial = u.name ? u.name.charAt(0).toUpperCase() : '?';
+                html += `
+                        <tr>
+                            <td>${i+1}</td>
+                            <td>
+                                ${photo ? `<img src="${photo}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-left:6px;">` : `<span style="display:inline-block;width:24px;height:24px;border-radius:50%;background:#e74c3c;color:white;text-align:center;line-height:24px;font-size:12px;font-weight:700;margin-left:6px;">${initial}</span>`}
+                                ${safeText(u.name || 'مجهول')}
+                            </td>
+                            <td><span style="color:#e74c3c;">${lastActive}</span></td>
+                            <td style="font-size:10px;">${safeText(u.email || '-')}</td>
+                        </tr>
+                    `;
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
 
         // ============================================================
         // 7. Online Users - متطور وفوري
@@ -2570,7 +3020,6 @@
             const activeThreshold = now - 3 * 60 * 1000; // 3 دقائق
 
             try {
-                // جلب المستخدمين النشطين من قاعدة البيانات
                 const snap = await db.collection('users')
                     .where('lastActive', '>', new Date(activeThreshold))
                     .get();
@@ -2578,7 +3027,7 @@
                 allOnlineUsers = [];
                 snap.forEach(doc => {
                     const data = doc.data();
-                    if (!data.isBanned && data.role !== 'admin' && data.role !== 'superAdmin') {
+                    if (!data.isBanned) {
                         allOnlineUsers.push({
                             id: doc.id,
                             ...data,
@@ -2588,12 +3037,10 @@
                     }
                 });
 
-                // تحديث الأعداد
                 document.getElementById('onlineBadge').textContent = allOnlineUsers.length;
                 document.getElementById('onlineCountHeader').textContent = allOnlineUsers.length;
                 document.getElementById('onlineUsersCount').textContent = allOnlineUsers.length;
 
-                // عرض القائمة
                 renderOnlineUsers();
             } catch (err) {
                 console.warn('❌ فشل تحديث المتصلين:', err);
@@ -2618,9 +3065,6 @@
                 const gradeNames = { '1': 'أولى', '2': 'تانية', '3': 'تالتة' };
                 const grade = gradeNames[u.grade] || '-';
                 const lastActive = u.lastActive ? new Date(u.lastActive).toLocaleString('ar') : 'الآن';
-                const device = u.device || 'غير معروف';
-                const browser = u.browser || 'غير معروف';
-                const country = u.country || 'غير معروف';
 
                 html += `
                         <div class="online-user-item">
@@ -2631,9 +3075,9 @@
                                 </div>
                                 <div class="details">
                                     ${grade} • ${safeText(u.system || 'عام')}
-                                    ${device !== 'غير معروف' ? ` • ${safeText(device)}` : ''}
-                                    ${browser !== 'غير معروف' ? ` • ${safeText(browser)}` : ''}
-                                    ${country !== 'غير معروف' ? ` • ${safeText(country)}` : ''}
+                                    ${u.device ? ` • ${safeText(u.device)}` : ''}
+                                    ${u.browser ? ` • ${safeText(u.browser)}` : ''}
+                                    ${u.country ? ` • ${safeText(u.country)}` : ''}
                                     • آخر نشاط: ${lastActive}
                                 </div>
                             </div>
@@ -2782,9 +3226,6 @@
 
             const dailyReads = allBooks.length + allUsers.length + allForumPosts.length;
             const dailyWrites = allActivities.length;
-            document.getElementById('dailyReads').textContent = dailyReads;
-            document.getElementById('dailyWrites').textContent = dailyWrites;
-
             document.getElementById('monitorReads').textContent = dailyReads;
             document.getElementById('monitorWrites').textContent = dailyWrites;
             document.getElementById('monitorStorage').textContent = (totalSize / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
@@ -2792,7 +3233,7 @@
         }
 
         // ============================================================
-        // 10. Security - مختصر
+        // 10. Security
         // ============================================================
         function loadSecurity() {
             if (!requireAdmin()) return;
@@ -2931,9 +3372,8 @@
         }
 
         // ============================================================
-        // 13-26. باقي الدوال (مختصرة ولكن كاملة)
+        // 13. Users Management (كامل)
         // ============================================================
-        // Users Management
         function renderUsers() {
             if (!requireAdmin()) return;
             const container = document.getElementById('usersTable');
@@ -2941,48 +3381,72 @@
             const search = document.getElementById('userSearch')?.value?.toLowerCase() || '';
 
             let filtered = allUsers;
-            if (filter === 'active') filtered = filtered.filter(u => !u.isBanned);
+            if (filter === 'active') filtered = filtered.filter(u => !u.isBanned && !u.isSuspended);
             if (filter === 'banned') filtered = filtered.filter(u => u.isBanned);
+            if (filter === 'suspended') filtered = filtered.filter(u => u.isSuspended);
             if (search) filtered = filtered.filter(u =>
                 (u.name || '').toLowerCase().includes(search) ||
                 (u.email || '').toLowerCase().includes(search) ||
                 (u.phone || '').toLowerCase().includes(search)
             );
 
+            // Pagination
+            const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+            const page = currentPage.users || 1;
+            const start = (page - 1) * PAGE_SIZE;
+            const end = start + PAGE_SIZE;
+            const pageItems = filtered.slice(start, end);
+
             if (filtered.length === 0) {
                 container.innerHTML =
-                    `<div class="empty-state"><div class="icon">👤</div><p>لا يوجد مستخدمين</p><button class="btn btn-primary" onclick="openModal('addUserModal')">➕ إضافة مستخدم</button></div>`;
+                    `<div class="empty-state"><div class="icon">👤</div><p>لا يوجد طلاب</p><button class="btn btn-primary" onclick="openModal('addUserModal')">➕ إضافة طالب</button></div>`;
                 return;
             }
 
             let html =
-                `<table><thead><tr><th>#</th><th>👤 الاسم</th><th>📧 البريد</th><th>📱 الهاتف</th><th>📅 السنة</th><th>📚 النظام</th><th>🏫 الصف</th><th>📌 الدور</th><th>⚡ الحالة</th><th>🛠️ الإجراءات</th></tr></thead><tbody>`;
+                `<table><thead><tr><th>#</th><th>👤 الاسم</th><th>📧 البريد</th><th>📱 الهاتف</th><th>🏫 الصف</th><th>📌 الدور</th><th>🕐 آخر دخول</th><th>⚡ الحالة</th><th>🛠️ الإجراءات</th></tr></thead><tbody>`;
 
-            filtered.slice(0, 50).forEach((u, i) => {
-                const cls = u.isBanned ? 'banned' : 'active';
-                const txt = u.isBanned ? '⛔ محظور' : '✅ نشط';
+            pageItems.forEach((u, i) => {
+                const cls = u.isBanned ? 'banned' : u.isSuspended ? 'pending' : 'active';
+                const txt = u.isBanned ? '⛔ محظور' : u.isSuspended ? '⏸️ معلق' : '✅ نشط';
                 const role = u.role || 'طالب';
                 const grade = u.grade === '1' ? 'أولى' : u.grade === '2' ? 'تانية' : u.grade === '3' ? 'تالتة' : '-';
-                const system = u.system || 'عام';
-                const year = u.year || '-';
+                const lastActive = u.lastActive ? getRelativeTime(u.lastActive) : 'غير معروف';
+                const photo = u.photoURL || '';
+                const initial = u.name ? u.name.charAt(0).toUpperCase() : '?';
+
+                const postCount = allForumPosts.filter(p => p.userId === u.id).length;
+                const commentCount = allComments.filter(c => c.userId === u.id).length;
+                const likeCount = allForumPosts.filter(p => p.userId === u.id).reduce((s, p) => s + (p.likesCount ||
+                    0), 0);
 
                 html += `
                         <tr>
-                            <td>${i+1}</td>
-                            <td><strong>${safeText(u.name || 'مجهول')}</strong></td>
+                            <td>${start + i + 1}</td>
+                            <td>
+                                ${photo ? `<img src="${photo}" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;margin-left:6px;object-fit:cover;">` : `<span style="display:inline-block;width:28px;height:28px;border-radius:50%;background:#3498db;color:white;text-align:center;line-height:28px;font-size:12px;font-weight:700;margin-left:6px;">${initial}</span>`}
+                                <strong>${safeText(u.name || 'مجهول')}</strong>
+                                <div style="font-size:8px;color:#888;">${u.uid ? u.uid.substring(0,10)+'...' : ''}</div>
+                            </td>
                             <td style="font-size:10px;">${safeText(u.email || '-')}</td>
                             <td>${safeText(u.phone || '-')}</td>
-                            <td>${year}</td>
-                            <td><span class="status-badge ${system === 'أزهر' ? 'pending' : 'approved'}">${system}</span></td>
                             <td>${grade}</td>
                             <td>${role}</td>
+                            <td style="font-size:10px;">${lastActive}</td>
                             <td><span class="status-badge ${cls}">${txt}</span></td>
                             <td>
-                                <button class="btn btn-primary btn-xs" onclick="editUser('${u.id}')">✏️</button>
+                                <button class="btn btn-primary btn-xs" onclick="viewStudentProfile('${u.id}')">👁️</button>
+                                <button class="btn btn-warning btn-xs" onclick="editUser('${u.id}')">✏️</button>
                                 ${u.isBanned ? 
                                     `<button class="btn btn-success btn-xs" onclick="unbanUser('${u.id}')">✅</button>` :
-                                    `<button class="btn btn-warning btn-xs" onclick="banUser('${u.id}')">🚫</button>`
+                                    `<button class="btn btn-danger btn-xs" onclick="banUser('${u.id}')">🚫</button>`
                                 }
+                                ${!u.isBanned && !u.isSuspended ? 
+                                    `<button class="btn btn-warning btn-xs" onclick="suspendUser('${u.id}')">⏸️</button>` : 
+                                    u.isSuspended ? 
+                                    `<button class="btn btn-success btn-xs" onclick="unsuspendUser('${u.id}')">✅</button>` : ''
+                                }
+                                <button class="btn btn-purple btn-xs" onclick="sendUserNotification('${u.id}')">🔔</button>
                                 <button class="btn btn-danger btn-xs" onclick="deleteUser('${u.id}')">🗑️</button>
                             </td>
                         </tr>
@@ -2990,10 +3454,131 @@
             });
             html += '</tbody></table>';
             container.innerHTML = html;
+
+            // Pagination
+            renderPagination('usersPagination', totalPages, page, 'users');
         }
 
-        function filterUsers() { renderUsers(); }
+        function renderPagination(containerId, totalPages, currentPage, type) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            if (totalPages <= 1) { container.innerHTML = ''; return; }
 
+            let html = '';
+            for (let i = 1; i <= Math.min(totalPages, 10); i++) {
+                html += `<button class="${i === currentPage ? 'active' : ''}" onclick="goToPage('${type}', ${i})">${i}</button>`;
+            }
+            if (totalPages > 10) {
+                html += `<button onclick="goToPage('${type}', ${totalPages})">${totalPages}</button>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function goToPage(type, page) {
+            currentPage[type] = page;
+            if (type === 'users') renderUsers();
+            if (type === 'forum') renderForum();
+            if (type === 'comments') renderComments();
+            if (type === 'books') renderBooks();
+        }
+
+        function filterUsers() { currentPage.users = 1;
+            renderUsers(); }
+
+        // ============================================================
+        // عرض ملف الطالب
+        // ============================================================
+        async function viewStudentProfile(userId) {
+            if (!requireAdmin()) return;
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) { showToast('❌ الطالب غير موجود', 'error'); return; }
+
+            const posts = allForumPosts.filter(p => p.userId === userId);
+            const comments = allComments.filter(c => c.userId === userId);
+            const likes = posts.reduce((s, p) => s + (p.likesCount || 0), 0);
+            const reports = allReports.filter(r => r.targetUserId === userId);
+
+            const content = document.getElementById('studentProfileContent');
+            const photo = user.photoURL || '';
+            const initial = user.name ? user.name.charAt(0).toUpperCase() : '?';
+            const gradeNames = { '1': 'أولى', '2': 'تانية', '3': 'تالتة' };
+            const grade = gradeNames[user.grade] || '-';
+            const status = user.isBanned ? '⛔ محظور' : user.isSuspended ? '⏸️ معلق' : '✅ نشط';
+
+            content.innerHTML = `
+                    <div class="student-profile-card">
+                        ${photo ? `<img src="${photo}" class="profile-avatar">` : `<div class="profile-avatar-placeholder">${initial}</div>`}
+                        <div class="profile-info">
+                            <div class="name">${safeText(user.name || 'مجهول')}</div>
+                            <div class="detail"><strong>📧 البريد:</strong> ${safeText(user.email || '-')}</div>
+                            <div class="detail"><strong>📱 الهاتف:</strong> ${safeText(user.phone || '-')}</div>
+                            <div class="detail"><strong>🏫 الصف:</strong> ${grade}</div>
+                            <div class="detail"><strong>📌 الدور:</strong> ${user.role || 'طالب'}</div>
+                            <div class="detail"><strong>🆔 UID:</strong> <span style="font-size:10px;">${user.id}</span></div>
+                            <div class="detail"><strong>📅 تاريخ التسجيل:</strong> ${user.createdAt ? formatDate(user.createdAt) : 'غير معروف'}</div>
+                            <div class="detail"><strong>🕐 آخر نشاط:</strong> ${user.lastActive ? formatDate(user.lastActive) : 'غير معروف'}</div>
+                            ${user.ip ? `<div class="detail"><strong>🌐 IP:</strong> ${safeText(user.ip)}</div>` : ''}
+                            ${user.device ? `<div class="detail"><strong>📱 الجهاز:</strong> ${safeText(user.device)}</div>` : ''}
+                            <div class="detail"><strong>⚡ الحالة:</strong> <span class="status-badge ${user.isBanned ? 'banned' : user.isSuspended ? 'pending' : 'active'}">${status}</span></div>
+                            <div class="detail"><strong>📊 الإحصائيات:</strong> ${posts.length} منشور • ${comments.length} تعليق • ${likes} إعجاب • ${reports.length} بلاغ</div>
+                        </div>
+                    </div>
+                    <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
+                        <button class="btn btn-primary" onclick="editUser('${user.id}');closeModal('studentProfileModal')">✏️ تعديل</button>
+                        ${user.isBanned ? 
+                            `<button class="btn btn-success" onclick="unbanUser('${user.id}');closeModal('studentProfileModal')">✅ فك الحظر</button>` :
+                            `<button class="btn btn-danger" onclick="banUser('${user.id}');closeModal('studentProfileModal')">🚫 حظر</button>`
+                        }
+                        <button class="btn btn-warning" onclick="sendUserNotification('${user.id}');closeModal('studentProfileModal')">🔔 إشعار</button>
+                        <button class="btn btn-danger" onclick="deleteAllUserPosts('${user.id}')">🗑️ حذف المنشورات</button>
+                        <button class="btn btn-danger" onclick="deleteAllUserComments('${user.id}')">🗑️ حذف التعليقات</button>
+                    </div>
+                `;
+
+            openModal('studentProfileModal');
+        }
+
+        async function deleteAllUserPosts(userId) {
+            if (!requireAdmin()) return;
+            if (!confirm('⚠️ هل تريد حذف جميع منشورات هذا الطالب؟')) return;
+            try {
+                const posts = allForumPosts.filter(p => p.userId === userId);
+                const batch = db.batch();
+                posts.forEach(p => {
+                    batch.delete(db.collection('forum_posts').doc(p.id));
+                });
+                await batch.commit();
+                showToast(`🗑️ تم حذف ${posts.length} منشور`);
+                await loadAllData();
+                renderForum();
+                updateDashboard();
+            } catch (err) {
+                showToast('❌ ' + err.message, 'error');
+            }
+        }
+
+        async function deleteAllUserComments(userId) {
+            if (!requireAdmin()) return;
+            if (!confirm('⚠️ هل تريد حذف جميع تعليقات هذا الطالب؟')) return;
+            try {
+                const comments = allComments.filter(c => c.userId === userId && !c.isInternal);
+                const batch = db.batch();
+                comments.forEach(c => {
+                    batch.delete(db.collection(c.collection).doc(c.id));
+                });
+                await batch.commit();
+                showToast(`🗑️ تم حذف ${comments.length} تعليق`);
+                await loadAllData();
+                renderComments();
+                updateDashboard();
+            } catch (err) {
+                showToast('❌ ' + err.message, 'error');
+            }
+        }
+
+        // ============================================================
+        // تعديل المستخدم
+        // ============================================================
         function editUser(id) {
             if (!requireAdmin()) return;
             const user = allUsers.find(u => u.id === id);
@@ -3006,7 +3591,8 @@
             document.getElementById('editUserSystem').value = user.system || 'عام';
             document.getElementById('editUserGrade').value = user.grade || '1';
             document.getElementById('editUserRole').value = user.role || 'طالب';
-            document.getElementById('editUserStatus').value = user.isBanned ? 'banned' : 'active';
+            document.getElementById('editUserStatus').value = user.isBanned ? 'banned' : user.isSuspended ? 'suspended' :
+                'active';
             openModal('editUserModal');
         }
 
@@ -3033,30 +3619,36 @@
                     grade,
                     role,
                     isBanned: status === 'banned',
+                    isSuspended: status === 'suspended',
                     isActive: status === 'active',
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 showToast('✅ تم التحديث');
                 closeModal('editUserModal');
-                await loadUsers();
+                await loadAllData();
                 renderUsers();
                 updateDashboard();
                 updateBadges();
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         });
 
+        // ============================================================
+        // حظر وفك الحظر وتعليق
+        // ============================================================
         async function banUser(userId) {
             if (!requireAdmin()) return;
             if (!confirm('⚠️ حظر هذا المستخدم؟')) return;
             try {
                 await db.collection('users').doc(userId).update({
                     isBanned: true,
+                    isSuspended: false,
                     isActive: false,
                     banReason: 'تم الحظر بواسطة الإدارة',
                     banDate: firebase.firestore.FieldValue.serverTimestamp()
                 });
+                await addAuditLog('ban', 'حظر مستخدم', userId);
                 showToast('✅ تم الحظر');
-                await loadUsers();
+                await loadAllData();
                 renderUsers();
                 updateDashboard();
                 updateBadges();
@@ -3069,12 +3661,48 @@
             try {
                 await db.collection('users').doc(userId).update({
                     isBanned: false,
+                    isSuspended: false,
                     isActive: true,
                     banReason: null,
                     banDate: null
                 });
+                await addAuditLog('update', 'فك حظر مستخدم', userId);
                 showToast('✅ تم فك الحظر');
-                await loadUsers();
+                await loadAllData();
+                renderUsers();
+                updateDashboard();
+                updateBadges();
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
+        }
+
+        async function suspendUser(userId) {
+            if (!requireAdmin()) return;
+            if (!confirm('⚠️ تعليق حساب هذا المستخدم؟')) return;
+            try {
+                await db.collection('users').doc(userId).update({
+                    isSuspended: true,
+                    isActive: false
+                });
+                await addAuditLog('update', 'تعليق حساب مستخدم', userId);
+                showToast('⏸️ تم تعليق الحساب');
+                await loadAllData();
+                renderUsers();
+                updateDashboard();
+                updateBadges();
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
+        }
+
+        async function unsuspendUser(userId) {
+            if (!requireAdmin()) return;
+            if (!confirm('⚠️ إلغاء تعليق الحساب؟')) return;
+            try {
+                await db.collection('users').doc(userId).update({
+                    isSuspended: false,
+                    isActive: true
+                });
+                await addAuditLog('update', 'إلغاء تعليق حساب', userId);
+                showToast('✅ تم إلغاء التعليق');
+                await loadAllData();
                 renderUsers();
                 updateDashboard();
                 updateBadges();
@@ -3083,32 +3711,353 @@
 
         async function deleteUser(userId) {
             if (!requireAdmin()) return;
-            if (!confirm('⚠️ حذف المستخدم نهائياً؟')) return;
+            if (!confirm('⚠️ حذف المستخدم نهائياً؟ هذا لا يمكن التراجع عنه!')) return;
             try {
                 await db.collection('users').doc(userId).delete();
+                await addAuditLog('delete', 'حذف مستخدم', userId);
                 showToast('🗑️ تم الحذف');
-                await loadUsers();
+                await loadAllData();
                 renderUsers();
                 updateDashboard();
                 updateBadges();
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
 
-        async function banUserFromModal() {
+        function banUserFromModal() {
             const id = document.getElementById('editUserId').value;
             if (!id) return;
-            await banUser(id);
+            banUser(id);
             closeModal('editUserModal');
         }
 
-        async function unbanUserFromModal() {
+        function unbanUserFromModal() {
             const id = document.getElementById('editUserId').value;
             if (!id) return;
-            await unbanUser(id);
+            unbanUser(id);
             closeModal('editUserModal');
         }
 
-        // Comments
+        function suspendUserFromModal() {
+            const id = document.getElementById('editUserId').value;
+            if (!id) return;
+            suspendUser(id);
+            closeModal('editUserModal');
+        }
+
+        function deleteUserFromModal() {
+            const id = document.getElementById('editUserId').value;
+            if (!id) return;
+            deleteUser(id);
+            closeModal('editUserModal');
+        }
+
+        // ============================================================
+        // إرسال إشعار لطالب
+        // ============================================================
+        function sendUserNotification(userId) {
+            if (!requireAdmin()) return;
+            document.getElementById('notifUserId').value = userId;
+            document.getElementById('notifUserTitle').value = '';
+            document.getElementById('notifUserBody').value = '';
+            document.getElementById('notifUserLink').value = '';
+            openModal('sendUserNotificationModal');
+        }
+
+        document.getElementById('sendUserNotificationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!requireAdmin()) return;
+            const userId = document.getElementById('notifUserId').value;
+            const title = document.getElementById('notifUserTitle').value.trim();
+            const body = document.getElementById('notifUserBody').value.trim();
+            const link = document.getElementById('notifUserLink').value.trim();
+
+            if (!title || !body) {
+                showToast('❌ يرجى ملء الحقول', 'error');
+                return;
+            }
+
+            try {
+                await db.collection('notifications').add({
+                    title,
+                    body,
+                    target: userId,
+                    link: link || null,
+                    isOfficial: true,
+                    read: false,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await addAuditLog('create', 'إرسال إشعار لطالب', userId);
+                showToast('✅ تم إرسال الإشعار');
+                closeModal('sendUserNotificationModal');
+                await loadAllData();
+                renderNotifications();
+                updateBadges();
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
+        });
+
+        // ============================================================
+        // إضافة مستخدم جديد
+        // ============================================================
+        document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!requireAdmin()) return;
+            const name = document.getElementById('newUserName').value.trim();
+            const email = document.getElementById('newUserEmail').value.trim();
+            const phone = document.getElementById('newUserPhone').value.trim();
+            const year = document.getElementById('newUserYear').value;
+            const system = document.getElementById('newUserSystem').value;
+            const grade = document.getElementById('newUserGrade').value;
+            const role = document.getElementById('newUserRole').value;
+            const password = document.getElementById('newUserPassword').value;
+
+            if (!name || !email || !password) {
+                showToast('❌ يرجى ملء الحقول المطلوبة', 'error');
+                return;
+            }
+
+            try {
+                // إنشاء حساب Firebase
+                const userCred = await auth.createUserWithEmailAndPassword(email, password);
+                const uid = userCred.user.uid;
+
+                await db.collection('users').doc(uid).set({
+                    name,
+                    email,
+                    phone: phone || null,
+                    year,
+                    system,
+                    grade,
+                    role,
+                    isBanned: false,
+                    isSuspended: false,
+                    isActive: true,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await addAuditLog('create', 'إضافة مستخدم جديد', uid);
+                showToast('✅ تم إضافة الطالب');
+                closeModal('addUserModal');
+                document.getElementById('addUserForm').reset();
+                await loadAllData();
+                renderUsers();
+                updateDashboard();
+                updateBadges();
+            } catch (err) {
+                showToast('❌ ' + err.message, 'error');
+            }
+        });
+
+        // ============================================================
+        // 14. Forum Management (كامل)
+        // ============================================================
+        function renderForum() {
+            if (!requireAdmin()) return;
+            const container = document.getElementById('forumTable');
+            const filter = document.getElementById('forumFilter')?.value || 'all';
+            const search = document.getElementById('forumSearch')?.value?.toLowerCase() || '';
+
+            let filtered = allForumPosts;
+            if (filter === 'approved') filtered = filtered.filter(p => p.status === 'approved');
+            if (filter === 'pending') filtered = filtered.filter(p => p.status === 'pending');
+            if (filter === 'rejected') filtered = filtered.filter(p => p.status === 'rejected');
+            if (filter === 'pinned') filtered = filtered.filter(p => p.isPinned);
+            if (filter === 'hidden') filtered = filtered.filter(p => p.isHidden);
+            if (search) filtered = filtered.filter(p =>
+                (p.title || '').toLowerCase().includes(search) ||
+                (p.author || '').toLowerCase().includes(search) ||
+                (p.content || '').toLowerCase().includes(search)
+            );
+
+            const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+            const page = currentPage.forum || 1;
+            const start = (page - 1) * PAGE_SIZE;
+            const end = start + PAGE_SIZE;
+            const pageItems = filtered.slice(start, end);
+
+            if (filtered.length === 0) {
+                container.innerHTML =
+                    `<div class="empty-state"><div class="icon">💬</div><p>لا توجد منشورات</p></div>`;
+                return;
+            }
+
+            let html =
+                `<table><thead><tr><th>#</th><th>📝 المنشور</th><th>👤 المؤلف</th><th>❤️</th><th>💬</th><th>الحالة</th><th>🛠️ الإجراءات</th></tr></thead><tbody>`;
+
+            pageItems.forEach((p, i) => {
+                const cls = p.status === 'approved' ? 'approved' : p.status === 'pending' ? 'pending' : 'rejected';
+                const txt = p.status === 'approved' ? '✅ مقبول' : p.status === 'pending' ? '⏳ في الانتظار' :
+                    '❌ مرفوض';
+                const photo = p.authorPhoto || '';
+                const initial = p.author ? p.author.charAt(0).toUpperCase() : '?';
+                let badges = '';
+                if (p.isPinned) badges += `<span class="status-badge approved">📌</span>`;
+                if (p.isUrgent) badges += `<span class="status-badge pending">🔥</span>`;
+                if (p.isHidden) badges += `<span class="status-badge rejected">👻</span>`;
+                if (p.isOfficial) badges += `<span class="status-badge official">📢</span>`;
+
+                const likesCount = p.likesCount || 0;
+                const commentsCount = p.comments ? p.comments.length : 0;
+
+                html += `
+                        <tr>
+                            <td>${start + i + 1}</td>
+                            <td>
+                                <strong>${safeText(p.title || 'بدون عنوان')}</strong>
+                                <div style="font-size:9px;color:#888;max-width:200px;word-wrap:break-word;">${safeText((p.content || '').substring(0, 50))}${(p.content||'').length > 50 ? '...' : ''}</div>
+                                ${p.image ? `<img src="${p.image}" style="width:30px;height:30px;object-fit:cover;border-radius:4px;margin-top:2px;">` : ''}
+                                <div style="font-size:8px;color:#aaa;margin-top:2px;">${p.createdAt ? formatDate(p.createdAt) : ''}</div>
+                            </td>
+                            <td>
+                                ${photo ? `<img src="${photo}" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-left:4px;">` : `<span style="display:inline-block;width:20px;height:20px;border-radius:50%;background:#3498db;color:white;text-align:center;line-height:20px;font-size:10px;font-weight:700;margin-left:4px;">${initial}</span>`}
+                                ${safeText(p.author || 'مجهول')}
+                            </td>
+                            <td>${likesCount}</td>
+                            <td>${commentsCount}</td>
+                            <td>
+                                <span class="status-badge ${cls}">${txt}</span>
+                                ${badges}
+                            </td>
+                            <td>
+                                ${p.status === 'pending' ? `
+                                    <button class="btn btn-success btn-xs" onclick="approveForumPost('${p.id}')">✅</button>
+                                    <button class="btn btn-danger btn-xs" onclick="rejectForumPost('${p.id}')">❌</button>
+                                ` : ''}
+                                ${!p.isPinned ? `<button class="btn btn-warning btn-xs" onclick="togglePinForumPost('${p.id}')">📌</button>` : `<button class="btn btn-primary btn-xs" onclick="togglePinForumPost('${p.id}')">📌</button>`}
+                                ${!p.isHidden ? `<button class="btn btn-warning btn-xs" onclick="toggleHideForumPost('${p.id}')">👻</button>` : `<button class="btn btn-primary btn-xs" onclick="toggleHideForumPost('${p.id}')">👁️</button>`}
+                                <button class="btn btn-primary btn-xs" onclick="officialReplyForumPost('${p.id}')">📢 رد</button>
+                                <button class="btn btn-danger btn-xs" onclick="deleteForumPost('${p.id}')">🗑️</button>
+                            </td>
+                        </tr>
+                    `;
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+            renderPagination('forumPagination', totalPages, page, 'forum');
+        }
+
+        function filterForum() { currentPage.forum = 1;
+            renderForum(); }
+
+        // ============================================================
+        // عمليات المنتدى
+        // ============================================================
+        async function approveForumPost(id) {
+            if (!requireAdmin()) return;
+            try {
+                await db.collection('forum_posts').doc(id).update({
+                    status: 'approved',
+                    approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await addAuditLog('update', 'قبول منشور', id);
+                // إرسال إشعار لصاحب المنشور
+                const post = allForumPosts.find(p => p.id === id);
+                if (post && post.userId) {
+                    await db.collection('notifications').add({
+                        title: '✅ تم قبول منشورك',
+                        body: `تم قبول منشورك "${post.title || ''}" من قبل الإدارة`,
+                        target: post.userId,
+                        isOfficial: true,
+                        read: false,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+                showToast('✅ تم القبول');
+                await loadAllData();
+                renderForum();
+                updateDashboard();
+                updateBadges();
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
+        }
+
+        async function rejectForumPost(id) {
+            if (!requireAdmin()) return;
+            try {
+                await db.collection('forum_posts').doc(id).update({
+                    status: 'rejected',
+                    rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await addAuditLog('update', 'رفض منشور', id);
+                showToast('❌ تم الرفض');
+                await loadAllData();
+                renderForum();
+                updateDashboard();
+                updateBadges();
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
+        }
+
+        async function togglePinForumPost(id) {
+            if (!requireAdmin()) return;
+            const post = allForumPosts.find(p => p.id === id);
+            if (!post) { showToast('❌ المنشور غير موجود', 'error'); return; }
+            try {
+                await db.collection('forum_posts').doc(id).update({
+                    isPinned: !post.isPinned
+                });
+                await addAuditLog('update', post.isPinned ? 'إلغاء تثبيت' : 'تثبيت منشور', id);
+                showToast(post.isPinned ? '📌 تم إلغاء التثبيت' : '📌 تم التثبيت');
+                await loadAllData();
+                renderForum();
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
+        }
+
+        async function toggleHideForumPost(id) {
+            if (!requireAdmin()) return;
+            const post = allForumPosts.find(p => p.id === id);
+            if (!post) { showToast('❌ المنشور غير موجود', 'error'); return; }
+            try {
+                await db.collection('forum_posts').doc(id).update({
+                    isHidden: !post.isHidden
+                });
+                await addAuditLog('update', post.isHidden ? 'إظهار منشور' : 'إخفاء منشور', id);
+                showToast(post.isHidden ? '👁️ تم الإظهار' : '👻 تم الإخفاء');
+                await loadAllData();
+                renderForum();
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
+        }
+
+        async function deleteForumPost(id) {
+            if (!requireAdmin()) return;
+            if (!confirm('⚠️ حذف المنشور؟')) return;
+            try {
+                await db.collection('forum_posts').doc(id).delete();
+                await addAuditLog('delete', 'حذف منشور', id);
+                showToast('🗑️ تم الحذف');
+                await loadAllData();
+                renderForum();
+                updateDashboard();
+                updateBadges();
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
+        }
+
+        // ============================================================
+        // الرد الرسمي من الحساب الموثق
+        // ============================================================
+        function officialReplyForumPost(postId) {
+            if (!requireAdmin()) return;
+            const reply = prompt('📢 اكتب الرد الرسمي:');
+            if (reply && reply.trim()) {
+                submitOfficialReply(postId, reply.trim(), 'forum_posts');
+            }
+        }
+
+        async function submitOfficialReply(postId, reply, collection) {
+            try {
+                const ref = db.collection(collection).doc(postId);
+                await ref.update({
+                    officialReply: reply,
+                    officialReplyDate: firebase.firestore.FieldValue.serverTimestamp(),
+                    hasOfficialReply: true
+                });
+                await addAuditLog('create', 'رد رسمي', postId);
+                showToast('✅ تم إرسال الرد الرسمي');
+                await loadAllData();
+                renderForum();
+                renderComments();
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
+        }
+
+        // ============================================================
+        // 15. Comments Management (كامل)
+        // ============================================================
         function renderComments() {
             if (!requireAdmin()) return;
             const container = document.getElementById('commentsTable');
@@ -3122,6 +4071,12 @@
                 (c.userName || '').toLowerCase().includes(search)
             );
 
+            const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+            const page = currentPage.comments || 1;
+            const start = (page - 1) * PAGE_SIZE;
+            const end = start + PAGE_SIZE;
+            const pageItems = filtered.slice(start, end);
+
             if (filtered.length === 0) {
                 container.innerHTML =
                     `<div class="empty-state"><div class="icon">💬</div><p>لا توجد تعليقات</p></div>`;
@@ -3129,32 +4084,61 @@
             }
 
             let html =
-                '<table><thead><tr><th>#</th><th>التعليق</th><th>المستخدم</th><th>المصدر</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody>';
+                `<table><thead><tr><th>#</th><th>التعليق</th><th>المستخدم</th><th>المصدر</th><th>الحالة</th><th>🛠️ الإجراءات</th></tr></thead><tbody>`;
 
-            filtered.slice(0, 50).forEach((c, i) => {
-                const statusClass = c.status === 'approved' ? 'approved' :
-                    c.status === 'pending' ? 'pending' : 'rejected';
-                const statusText = c.status === 'approved' ? '✅ مقبول' :
-                    c.status === 'pending' ? '⏳ في الانتظار' : '❌ مرفوض';
-
-                let userName = c.userName || 'مجهول';
+            pageItems.forEach((c, i) => {
+                const cls = c.status === 'approved' ? 'approved' : c.status === 'pending' ? 'pending' : 'rejected';
+                const txt = c.status === 'approved' ? '✅ مقبول' : c.status === 'pending' ? '⏳ في الانتظار' :
+                    '❌ مرفوض';
                 const sourceLabel = c.source === 'forum' ? '💬 المنتدى' :
                     c.source === 'team' ? '📢 الفريق' :
                     c.source === 'forum_internal' ? '📝 داخل المنتدى' :
                     c.source === 'team_internal' ? '📝 داخل الفريق' : '-';
 
+                // عرض الردود الرسمية
+                let repliesHtml = '';
+                if (c.adminReplies && c.adminReplies.length > 0) {
+                    c.adminReplies.forEach(r => {
+                        repliesHtml += `
+                                <div class="admin-reply">
+                                    <div class="reply-header">
+                                        <img src="https://cdn.phototourl.com/free/2026-07-21-1dd4b984-ed08-4a40-aead-9ef086ebbd45.jpg">
+                                        <span>📢 فريق الثانوية الرسمية بلس</span>
+                                    </div>
+                                    <div class="reply-body">${safeText(r)}</div>
+                                </div>
+                            `;
+                    });
+                }
+
+                const userPhoto = c.userPhoto || '';
+                const initial = c.userName ? c.userName.charAt(0).toUpperCase() : '?';
+
                 html += `
                         <tr>
-                            <td>${i+1}</td>
-                            <td style="max-width:150px;word-wrap:break-word;font-size:10px;">${safeText(c.text || '')}</td>
-                            <td>${safeText(userName)}</td>
+                            <td>${start + i + 1}</td>
+                            <td style="max-width:200px;word-wrap:break-word;font-size:10px;">
+                                ${safeText(c.text || '')}
+                                ${repliesHtml}
+                                ${c.adminLiked ? `<div class="official-like"><img src="https://cdn.phototourl.com/free/2026-07-21-1dd4b984-ed08-4a40-aead-9ef086ebbd45.jpg">❤️ إعجاب من الإدارة</div>` : ''}
+                                <div class="quick-reply">
+                                    <input type="text" placeholder="رد رسمي..." id="replyInput_${c.id}" class="reply-input">
+                                    <button onclick="submitQuickReply('${c.id}')">📢 رد</button>
+                                    <button class="like-btn ${c.adminLiked ? 'liked' : ''}" onclick="toggleOfficialLike('${c.id}')">${c.adminLiked ? '❤️' : '🤍'}</button>
+                                </div>
+                            </td>
+                            <td>
+                                ${userPhoto ? `<img src="${userPhoto}" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-left:4px;">` : `<span style="display:inline-block;width:20px;height:20px;border-radius:50%;background:#3498db;color:white;text-align:center;line-height:20px;font-size:10px;font-weight:700;margin-left:4px;">${initial}</span>`}
+                                ${safeText(c.userName || 'مجهول')}
+                            </td>
                             <td>${sourceLabel}</td>
-                            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                            <td><span class="status-badge ${cls}">${txt}</span></td>
                             <td>
                                 ${c.status === 'pending' ? `
                                     <button class="btn btn-success btn-xs" onclick="approveComment('${c.id}')">✅</button>
                                     <button class="btn btn-danger btn-xs" onclick="rejectComment('${c.id}')">❌</button>
                                 ` : ''}
+                                ${c.adminLiked ? `<button class="btn btn-warning btn-xs" onclick="toggleOfficialLike('${c.id}')">❤️</button>` : `<button class="btn btn-primary btn-xs" onclick="toggleOfficialLike('${c.id}')">🤍</button>`}
                                 <button class="btn btn-danger btn-xs" onclick="deleteComment('${c.id}')">🗑️</button>
                             </td>
                         </tr>
@@ -3162,69 +4146,171 @@
             });
             html += '</tbody></table>';
             container.innerHTML = html;
+            renderPagination('commentsPagination', totalPages, page, 'comments');
         }
 
-        function filterComments() { renderComments(); }
+        function filterComments() { currentPage.comments = 1;
+            renderComments(); }
 
+        // ============================================================
+        // الردود السريعة والإعجاب الرسمي
+        // ============================================================
+        async function submitQuickReply(commentId) {
+            if (!requireAdmin()) return;
+            const input = document.getElementById('replyInput_' + commentId);
+            const reply = input.value.trim();
+            if (!reply) { showToast('❌ اكتب الرد أولاً', 'error'); return; }
+
+            const comment = allComments.find(c => c.id === commentId);
+            if (!comment) { showToast('❌ التعليق غير موجود', 'error'); return; }
+
+            try {
+                if (comment.isInternal) {
+                    // تعليق داخل منشور
+                    const postRef = db.collection(comment.collection).doc(comment.postId);
+                    const postDoc = await postRef.get();
+                    const data = postDoc.data();
+                    if (data && data.comments && data.comments[comment.internalIndex]) {
+                        const comments = data.comments;
+                        comments[comment.internalIndex].adminReplies = comments[comment.internalIndex]
+                            .adminReplies || [];
+                        comments[comment.internalIndex].adminReplies.push(reply);
+                        comments[comment.internalIndex].adminLiked = comments[comment.internalIndex]
+                            .adminLiked || false;
+                        await postRef.update({ comments });
+                    }
+                } else {
+                    // تعليق مستقل
+                    const ref = db.collection(comment.collection).doc(commentId);
+                    await ref.update({
+                        adminReplies: firebase.firestore.FieldValue.arrayUnion(reply),
+                        adminLiked: comment.adminLiked || false
+                    });
+                }
+                await addAuditLog('create', 'رد رسمي على تعليق', commentId);
+                showToast('✅ تم إرسال الرد الرسمي');
+                input.value = '';
+                await loadAllData();
+                renderComments();
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
+        }
+
+        async function toggleOfficialLike(commentId) {
+            if (!requireAdmin()) return;
+            const comment = allComments.find(c => c.id === commentId);
+            if (!comment) { showToast('❌ التعليق غير موجود', 'error'); return; }
+
+            try {
+                const newState = !comment.adminLiked;
+
+                if (comment.isInternal) {
+                    const postRef = db.collection(comment.collection).doc(comment.postId);
+                    const postDoc = await postRef.get();
+                    const data = postDoc.data();
+                    if (data && data.comments && data.comments[comment.internalIndex]) {
+                        const comments = data.comments;
+                        comments[comment.internalIndex].adminLiked = newState;
+                        await postRef.update({ comments });
+                    }
+                } else {
+                    const ref = db.collection(comment.collection).doc(commentId);
+                    await ref.update({ adminLiked: newState });
+                }
+                await addAuditLog('update', newState ? 'إعجاب رسمي' : 'إلغاء إعجاب رسمي', commentId);
+                showToast(newState ? '❤️ إعجاب من الإدارة' : '🤍 إلغاء الإعجاب');
+                await loadAllData();
+                renderComments();
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
+        }
+
+        // ============================================================
+        // عمليات التعليقات
+        // ============================================================
         async function approveComment(commentId) {
             if (!requireAdmin()) return;
-            try {
-                const comment = allComments.find(c => c.id === commentId);
-                if (!comment) { showToast('❌ التعليق غير موجود', 'error'); return; }
+            const comment = allComments.find(c => c.id === commentId);
+            if (!comment) { showToast('❌ التعليق غير موجود', 'error'); return; }
 
-                if (comment.source === 'forum' || comment.source === 'team') {
+            try {
+                if (comment.isInternal) {
+                    const postRef = db.collection(comment.collection).doc(comment.postId);
+                    const postDoc = await postRef.get();
+                    const data = postDoc.data();
+                    if (data && data.comments && data.comments[comment.internalIndex]) {
+                        const comments = data.comments;
+                        comments[comment.internalIndex].status = 'approved';
+                        await postRef.update({ comments });
+                    }
+                } else {
                     const ref = db.collection(comment.collection).doc(commentId);
                     await ref.update({ status: 'approved' });
                 }
-                showToast('✅ تم قبول التعليق');
-                await loadAllComments();
+                await addAuditLog('update', 'قبول تعليق', commentId);
+                showToast('✅ تم القبول');
+                await loadAllData();
                 renderComments();
                 updateBadges();
-            } catch (err) {
-                showToast('❌ ' + err.message, 'error');
-            }
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
 
         async function rejectComment(commentId) {
             if (!requireAdmin()) return;
-            try {
-                const comment = allComments.find(c => c.id === commentId);
-                if (!comment) { showToast('❌ التعليق غير موجود', 'error'); return; }
+            const comment = allComments.find(c => c.id === commentId);
+            if (!comment) { showToast('❌ التعليق غير موجود', 'error'); return; }
 
-                if (comment.source === 'forum' || comment.source === 'team') {
+            try {
+                if (comment.isInternal) {
+                    const postRef = db.collection(comment.collection).doc(comment.postId);
+                    const postDoc = await postRef.get();
+                    const data = postDoc.data();
+                    if (data && data.comments && data.comments[comment.internalIndex]) {
+                        const comments = data.comments;
+                        comments[comment.internalIndex].status = 'rejected';
+                        await postRef.update({ comments });
+                    }
+                } else {
                     const ref = db.collection(comment.collection).doc(commentId);
                     await ref.update({ status: 'rejected' });
                 }
-                showToast('❌ تم رفض التعليق');
-                await loadAllComments();
+                await addAuditLog('update', 'رفض تعليق', commentId);
+                showToast('❌ تم الرفض');
+                await loadAllData();
                 renderComments();
                 updateBadges();
-            } catch (err) {
-                showToast('❌ ' + err.message, 'error');
-            }
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
 
         async function deleteComment(commentId) {
             if (!requireAdmin()) return;
             if (!confirm('⚠️ حذف التعليق؟')) return;
-            try {
-                const comment = allComments.find(c => c.id === commentId);
-                if (!comment) { showToast('❌ التعليق غير موجود', 'error'); return; }
+            const comment = allComments.find(c => c.id === commentId);
+            if (!comment) { showToast('❌ التعليق غير موجود', 'error'); return; }
 
-                if (comment.source === 'forum' || comment.source === 'team') {
+            try {
+                if (comment.isInternal) {
+                    const postRef = db.collection(comment.collection).doc(comment.postId);
+                    const postDoc = await postRef.get();
+                    const data = postDoc.data();
+                    if (data && data.comments && data.comments[comment.internalIndex]) {
+                        const comments = data.comments;
+                        comments.splice(comment.internalIndex, 1);
+                        await postRef.update({ comments });
+                    }
+                } else {
                     const ref = db.collection(comment.collection).doc(commentId);
                     await ref.delete();
                 }
+                await addAuditLog('delete', 'حذف تعليق', commentId);
                 showToast('🗑️ تم الحذف');
-                await loadAllComments();
+                await loadAllData();
                 renderComments();
                 updateBadges();
-            } catch (err) {
-                showToast('❌ ' + err.message, 'error');
-            }
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
 
-        // Books
+        // ============================================================
+        // 16. Books Management
+        // ============================================================
         function renderBooks() {
             if (!requireAdmin()) return;
             const container = document.getElementById('booksTable');
@@ -3238,6 +4324,12 @@
                 (b.author || '').toLowerCase().includes(search)
             );
 
+            const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+            const page = currentPage.books || 1;
+            const start = (page - 1) * PAGE_SIZE;
+            const end = start + PAGE_SIZE;
+            const pageItems = filtered.slice(start, end);
+
             if (filtered.length === 0) {
                 container.innerHTML =
                     `<div class="empty-state"><div class="icon">📚</div><p>لا توجد كتب</p></div>`;
@@ -3245,16 +4337,22 @@
             }
 
             let html =
-                '<table><thead><tr><th>#</th><th>العنوان</th><th>المؤلف</th><th>الصف</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody>';
-            filtered.slice(0, 50).forEach((b, i) => {
+                `<table><thead><tr><th>#</th><th>العنوان</th><th>المؤلف</th><th>الصف</th><th>الحالة</th><th>🛠️ الإجراءات</th></tr></thead><tbody>`;
+            pageItems.forEach((b, i) => {
                 const cls = b.status === 'approved' ? 'approved' : b.status === 'pending' ? 'pending' : 'rejected';
                 const txt = b.status === 'approved' ? '✅ مقبول' : b.status === 'pending' ? '⏳ في الانتظار' :
                     '❌ مرفوض';
-                const grade = b.grade === '1' ? 'أولى' : b.grade === '2' ? 'تانية' : b.grade === '3' ? 'تالتة' : '-';
+                const grade = b.grade === '1' ? 'أولى' : b.grade === '2' ? 'تانية' : b.grade === '3' ? 'تالتة' :
+                '-';
+                const cover = b.coverUrl || '';
                 html += `
                         <tr>
-                            <td>${i+1}</td>
-                            <td>${safeText(b.title || 'بدون عنوان')}</td>
+                            <td>${start + i + 1}</td>
+                            <td>
+                                ${cover ? `<img src="${cover}" style="width:30px;height:40px;object-fit:cover;border-radius:4px;vertical-align:middle;margin-left:6px;">` : ''}
+                                ${safeText(b.title || 'بدون عنوان')}
+                                <div style="font-size:8px;color:#888;">${b.subject || ''}</div>
+                            </td>
                             <td>${safeText(b.author || 'مجهول')}</td>
                             <td>${grade}</td>
                             <td><span class="status-badge ${cls}">${txt}</span></td>
@@ -3263,6 +4361,7 @@
                                     <button class="btn btn-success btn-xs" onclick="approveBook('${b.id}')">✅</button>
                                     <button class="btn btn-danger btn-xs" onclick="rejectBook('${b.id}')">❌</button>
                                 ` : ''}
+                                <button class="btn btn-primary btn-xs" onclick="editBook('${b.id}')">✏️</button>
                                 <button class="btn btn-danger btn-xs" onclick="deleteBook('${b.id}')">🗑️</button>
                             </td>
                         </tr>
@@ -3270,16 +4369,19 @@
             });
             html += '</tbody></table>';
             container.innerHTML = html;
+            renderPagination('booksPagination', totalPages, page, 'books');
         }
 
-        function filterBooks() { renderBooks(); }
+        function filterBooks() { currentPage.books = 1;
+            renderBooks(); }
 
         async function approveBook(id) {
             if (!requireAdmin()) return;
             try {
                 await db.collection('books').doc(id).update({ status: 'approved' });
+                await addAuditLog('update', 'قبول كتاب', id);
                 showToast('✅ تم القبول');
-                await loadBooks();
+                await loadAllData();
                 renderBooks();
                 updateDashboard();
                 updateBadges();
@@ -3290,8 +4392,9 @@
             if (!requireAdmin()) return;
             try {
                 await db.collection('books').doc(id).update({ status: 'rejected' });
+                await addAuditLog('update', 'رفض كتاب', id);
                 showToast('❌ تم الرفض');
-                await loadBooks();
+                await loadAllData();
                 renderBooks();
                 updateDashboard();
                 updateBadges();
@@ -3303,13 +4406,68 @@
             if (!confirm('⚠️ حذف الكتاب؟')) return;
             try {
                 await db.collection('books').doc(id).delete();
+                await addAuditLog('delete', 'حذف كتاب', id);
                 showToast('🗑️ تم الحذف');
-                await loadBooks();
+                await loadAllData();
                 renderBooks();
                 updateDashboard();
                 updateBadges();
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
+
+        function editBook(id) {
+            if (!requireAdmin()) return;
+            const book = allBooks.find(b => b.id === id);
+            if (!book) { showToast('❌ الكتاب غير موجود', 'error'); return; }
+            document.getElementById('editBookId').value = id;
+            document.getElementById('editBookTitle').value = book.title || '';
+            document.getElementById('editBookAuthor').value = book.author || '';
+            document.getElementById('editBookSubject').value = book.subject || '';
+            document.getElementById('editBookGrade').value = book.grade || '1';
+            document.getElementById('editBookCategory').value = book.category || 'teachers';
+            document.getElementById('editBookFileUrl').value = book.fileUrl || '';
+            document.getElementById('editBookCoverUrl').value = book.coverUrl || '';
+            openModal('editBookModal');
+        }
+
+        document.getElementById('editBookForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!requireAdmin()) return;
+            const id = document.getElementById('editBookId').value;
+            const title = document.getElementById('editBookTitle').value.trim();
+            const author = document.getElementById('editBookAuthor').value.trim();
+            const subject = document.getElementById('editBookSubject').value.trim();
+            const grade = document.getElementById('editBookGrade').value;
+            const category = document.getElementById('editBookCategory').value;
+            const fileUrl = document.getElementById('editBookFileUrl').value.trim();
+            const coverUrl = document.getElementById('editBookCoverUrl').value.trim();
+
+            if (!title || !author) {
+                showToast('❌ يرجى ملء الحقول المطلوبة', 'error');
+                return;
+            }
+
+            try {
+                const updateData = {
+                    title,
+                    author,
+                    subject: subject || null,
+                    grade,
+                    category,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                if (fileUrl) updateData.fileUrl = fileUrl;
+                if (coverUrl) updateData.coverUrl = coverUrl;
+
+                await db.collection('books').doc(id).update(updateData);
+                await addAuditLog('update', 'تعديل كتاب', id);
+                showToast('✅ تم التعديل');
+                closeModal('editBookModal');
+                await loadAllData();
+                renderBooks();
+                updateDashboard();
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
+        });
 
         document.getElementById('addBookForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -3342,102 +4500,20 @@
                     favorites: 0,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+                await addAuditLog('create', 'إضافة كتاب', '-');
                 showToast('✅ تم الإضافة');
                 closeModal('addBookModal');
                 document.getElementById('addBookForm').reset();
-                await loadBooks();
+                await loadAllData();
                 renderBooks();
                 updateDashboard();
                 updateBadges();
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         });
 
-        // Forum
-        function renderForum() {
-            if (!requireAdmin()) return;
-            const container = document.getElementById('forumTable');
-            const filter = document.getElementById('forumFilter')?.value || 'all';
-            const search = document.getElementById('forumSearch')?.value?.toLowerCase() || '';
-
-            let filtered = allForumPosts;
-            if (filter !== 'all') filtered = filtered.filter(p => p.status === filter);
-            if (search) filtered = filtered.filter(p =>
-                (p.title || '').toLowerCase().includes(search) ||
-                (p.author || '').toLowerCase().includes(search)
-            );
-
-            if (filtered.length === 0) {
-                container.innerHTML =
-                    `<div class="empty-state"><div class="icon">💬</div><p>لا توجد منشورات</p></div>`;
-                return;
-            }
-
-            let html =
-                '<table><thead><tr><th>#</th><th>العنوان</th><th>المؤلف</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody>';
-            filtered.slice(0, 50).forEach((p, i) => {
-                const cls = p.status === 'approved' ? 'approved' : p.status === 'pending' ? 'pending' : 'rejected';
-                const txt = p.status === 'approved' ? '✅ مقبول' : p.status === 'pending' ? '⏳ في الانتظار' :
-                    '❌ مرفوض';
-                html += `
-                        <tr>
-                            <td>${i+1}</td>
-                            <td>${safeText(p.title || 'بدون عنوان')}</td>
-                            <td>${safeText(p.author || 'مجهول')}</td>
-                            <td><span class="status-badge ${cls}">${txt}</span></td>
-                            <td>
-                                ${p.status === 'pending' ? `
-                                    <button class="btn btn-success btn-xs" onclick="approveForumPost('${p.id}')">✅</button>
-                                    <button class="btn btn-danger btn-xs" onclick="rejectForumPost('${p.id}')">❌</button>
-                                ` : ''}
-                                <button class="btn btn-danger btn-xs" onclick="deleteForumPost('${p.id}')">🗑️</button>
-                            </td>
-                        </tr>
-                    `;
-            });
-            html += '</tbody></table>';
-            container.innerHTML = html;
-        }
-
-        function filterForum() { renderForum(); }
-
-        async function approveForumPost(id) {
-            if (!requireAdmin()) return;
-            try {
-                await db.collection('forum_posts').doc(id).update({ status: 'approved' });
-                showToast('✅ تم القبول');
-                await loadForumPosts();
-                renderForum();
-                updateDashboard();
-                updateBadges();
-            } catch (err) { showToast('❌ ' + err.message, 'error'); }
-        }
-
-        async function rejectForumPost(id) {
-            if (!requireAdmin()) return;
-            try {
-                await db.collection('forum_posts').doc(id).update({ status: 'rejected' });
-                showToast('❌ تم الرفض');
-                await loadForumPosts();
-                renderForum();
-                updateDashboard();
-                updateBadges();
-            } catch (err) { showToast('❌ ' + err.message, 'error'); }
-        }
-
-        async function deleteForumPost(id) {
-            if (!requireAdmin()) return;
-            if (!confirm('⚠️ حذف المنشور؟')) return;
-            try {
-                await db.collection('forum_posts').doc(id).delete();
-                showToast('🗑️ تم الحذف');
-                await loadForumPosts();
-                renderForum();
-                updateDashboard();
-                updateBadges();
-            } catch (err) { showToast('❌ ' + err.message, 'error'); }
-        }
-
-        // Team Posts
+        // ============================================================
+        // 17. Team Posts
+        // ============================================================
         function renderTeamPosts() {
             if (!requireAdmin()) return;
             const container = document.getElementById('teamPostsTable');
@@ -3448,9 +4524,9 @@
             }
 
             let html =
-                '<table><thead><tr><th>#</th><th>العنوان</th><th>التاريخ</th><th>العلامات</th><th>الإجراءات</th></tr></thead><tbody>';
+                `<table><thead><tr><th>#</th><th>العنوان</th><th>التاريخ</th><th>العلامات</th><th>🛠️ الإجراءات</th></tr></thead><tbody>`;
             allTeamPosts.slice(0, 50).forEach((p, i) => {
-                const date = p.createdAt ? p.createdAt.toDate().toLocaleString('ar') : '-';
+                const date = p.createdAt ? formatDate(p.createdAt) : '-';
                 let tags = '';
                 if (p.isPinned) tags += `<span class="status-badge approved">📌 مثبت</span>`;
                 if (p.isUrgent) tags += `<span class="status-badge pending">🔥 عاجل</span>`;
@@ -3476,8 +4552,9 @@
             if (!confirm('⚠️ حذف المنشور؟')) return;
             try {
                 await db.collection('team_posts').doc(id).delete();
+                await addAuditLog('delete', 'حذف منشور فريق', id);
                 showToast('🗑️ تم الحذف');
-                await loadTeamPosts();
+                await loadAllData();
                 renderTeamPosts();
                 updateDashboard();
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
@@ -3511,17 +4588,20 @@
                     comments: [],
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+                await addAuditLog('create', 'إضافة منشور فريق', '-');
                 showToast('✅ تم النشر');
                 closeModal('addTeamPostModal');
                 document.getElementById('addTeamPostForm').reset();
-                await loadTeamPosts();
+                await loadAllData();
                 renderTeamPosts();
                 updateDashboard();
                 updateBadges();
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         });
 
-        // Uploads
+        // ============================================================
+        // 18. Uploads, Handwritten, Youtube (مختصرة ولكن كاملة)
+        // ============================================================
         function renderUploads() {
             if (!requireAdmin()) return;
             const container = document.getElementById('uploadsTable');
@@ -3537,7 +4617,7 @@
             }
 
             let html =
-                '<table><thead><tr><th>#</th><th>العنوان</th><th>المؤلف</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody>';
+                `<table><thead><tr><th>#</th><th>العنوان</th><th>المؤلف</th><th>الحالة</th><th>🛠️ الإجراءات</th></tr></thead><tbody>`;
             filtered.slice(0, 50).forEach((u, i) => {
                 const cls = u.status === 'pending' ? 'pending' : u.status === 'approved' ? 'approved' : 'rejected';
                 const txt = u.status === 'pending' ? '⏳ في الانتظار' : u.status === 'approved' ? '✅ مقبول' :
@@ -3568,8 +4648,9 @@
             if (!requireAdmin()) return;
             try {
                 await db.collection('books').doc(id).update({ status: 'approved' });
+                await addAuditLog('update', 'قبول رفع', id);
                 showToast('✅ تم القبول');
-                await loadUploads();
+                await loadAllData();
                 renderUploads();
                 updateDashboard();
                 updateBadges();
@@ -3580,8 +4661,9 @@
             if (!requireAdmin()) return;
             try {
                 await db.collection('books').doc(id).update({ status: 'rejected' });
+                await addAuditLog('update', 'رفض رفع', id);
                 showToast('❌ تم الرفض');
-                await loadUploads();
+                await loadAllData();
                 renderUploads();
                 updateDashboard();
                 updateBadges();
@@ -3593,8 +4675,9 @@
             if (!confirm('⚠️ حذف الملف؟')) return;
             try {
                 await db.collection('books').doc(id).delete();
+                await addAuditLog('delete', 'حذف رفع', id);
                 showToast('🗑️ تم الحذف');
-                await loadUploads();
+                await loadAllData();
                 renderUploads();
                 updateDashboard();
                 updateBadges();
@@ -3623,13 +4706,14 @@
             }
 
             let html =
-                '<table><thead><tr><th>#</th><th>العنوان</th><th>المؤلف</th><th>المادة</th><th>الصف</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody>';
+                `<table><thead><tr><th>#</th><th>العنوان</th><th>المؤلف</th><th>المادة</th><th>الصف</th><th>الحالة</th><th>🛠️ الإجراءات</th></tr></thead><tbody>`;
 
             filtered.slice(0, 50).forEach((h, i) => {
                 const cls = h.status === 'approved' ? 'approved' : h.status === 'pending' ? 'pending' : 'rejected';
                 const txt = h.status === 'approved' ? '✅ مقبول' : h.status === 'pending' ? '⏳ في الانتظار' :
                     '❌ مرفوض';
-                const grade = h.grade === '1' ? 'أولى' : h.grade === '2' ? 'تانية' : h.grade === '3' ? 'تالتة' : '-';
+                const grade = h.grade === '1' ? 'أولى' : h.grade === '2' ? 'تانية' : h.grade === '3' ? 'تالتة' :
+                '-';
                 const userType = h.userType || 'طالب';
                 const link = h.link || '#';
 
@@ -3665,14 +4749,13 @@
                     status: 'approved',
                     approvedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+                await addAuditLog('update', 'قبول ملخص', id);
                 showToast('✅ تم قبول الملخص');
-                await loadHandwritten();
+                await loadAllData();
                 renderHandwritten();
                 updateDashboard();
                 updateBadges();
-            } catch (err) {
-                showToast('❌ ' + err.message, 'error');
-            }
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
 
         async function rejectHandwritten(id) {
@@ -3682,14 +4765,13 @@
                     status: 'rejected',
                     rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+                await addAuditLog('update', 'رفض ملخص', id);
                 showToast('❌ تم رفض الملخص');
-                await loadHandwritten();
+                await loadAllData();
                 renderHandwritten();
                 updateDashboard();
                 updateBadges();
-            } catch (err) {
-                showToast('❌ ' + err.message, 'error');
-            }
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
 
         async function deleteHandwritten(id) {
@@ -3697,14 +4779,13 @@
             if (!confirm('⚠️ حذف الملخص نهائياً؟')) return;
             try {
                 await db.collection('handwritten_notes').doc(id).delete();
+                await addAuditLog('delete', 'حذف ملخص', id);
                 showToast('🗑️ تم الحذف');
-                await loadHandwritten();
+                await loadAllData();
                 renderHandwritten();
                 updateDashboard();
                 updateBadges();
-            } catch (err) {
-                showToast('❌ ' + err.message, 'error');
-            }
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
 
         // Youtube
@@ -3748,14 +4829,13 @@
             if (!confirm('⚠️ حذف القناة؟')) return;
             try {
                 await db.collection('youtube_channels').doc(id).delete();
+                await addAuditLog('delete', 'حذف قناة يوتيوب', id);
                 showToast('🗑️ تم الحذف');
-                await loadYoutube();
+                await loadAllData();
                 renderYoutube();
                 updateDashboard();
                 updateBadges();
-            } catch (err) {
-                showToast('❌ ' + err.message, 'error');
-            }
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
 
         document.getElementById('addYoutubeForm').addEventListener('submit', async (e) => {
@@ -3783,43 +4863,43 @@
                     desc: desc || null,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+                await addAuditLog('create', 'إضافة قناة يوتيوب', '-');
                 showToast('✅ تم إضافة القناة');
                 closeModal('addYoutubeModal');
                 document.getElementById('addYoutubeForm').reset();
-                await loadYoutube();
+                await loadAllData();
                 renderYoutube();
                 updateDashboard();
                 updateBadges();
-            } catch (err) {
-                showToast('❌ ' + err.message, 'error');
-            }
+            } catch (err) { showToast('❌ ' + err.message, 'error'); }
         });
 
-        // Ads
-        document.getElementById('adImagesInput').addEventListener('change', function(e) {
-            const files = e.target.files;
-            const preview = document.getElementById('adImagesPreview');
-            preview.innerHTML = '';
-            adImages = [];
+        // ============================================================
+        // 19. Ads Management (كامل مع رفع الصور)
+        // ============================================================
+        let adImageFile = null;
 
-            for (let file of files) {
-                if (file.size > 5 * 1024 * 1024) {
-                    showToast('❌ حجم الصورة ' + file.name + ' يتجاوز 5 ميجابايت', 'error');
-                    continue;
-                }
-                if (!file.type.startsWith('image/')) {
-                    showToast('❌ يرجى رفع صور فقط', 'error');
-                    continue;
-                }
-                adImages.push(file);
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    preview.appendChild(img);
-                };
-                reader.readAsDataURL(file);
+        document.getElementById('adImageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('❌ حجم الصورة يتجاوز 5 ميجابايت', 'error');
+                return;
             }
+            if (!file.type.startsWith('image/')) {
+                showToast('❌ يرجى رفع صورة فقط', 'error');
+                return;
+            }
+            adImageFile = file;
+            const preview = document.getElementById('adImagePreview');
+            preview.innerHTML = '';
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
         });
 
         function renderAds() {
@@ -3835,17 +4915,21 @@
             allAds.slice(0, 50).forEach((ad) => {
                 const status = ad.active ? '✅ نشط' : '❌ غير نشط';
                 const cls = ad.active ? 'approved' : 'rejected';
+                const colorClass = ad.btnColor || 'green';
+                const target = ad.target || 'الجميع';
+                const gradeTarget = ad.targetGrade || 'جميع الصفوف';
+                const startDate = ad.startDate ? formatDate(ad.startDate) : 'غير محدد';
+                const endDate = ad.endDate ? formatDate(ad.endDate) : 'غير محدد';
+
                 html += `
                         <div class="ad-item">
                             <div class="ad-title">${safeText(ad.title || 'بدون عنوان')}</div>
                             <div class="ad-desc">${safeText(ad.desc || '')}</div>
-                            ${ad.images && ad.images.length > 0 ? `
-                                <div class="ad-images-grid">
-                                    ${ad.images.map(img => `<img src="${img}" alt="صورة الإعلان" onclick="window.open('${img}','_blank')">`).join('')}
-                                </div>
-                            ` : ''}
+                            ${ad.image ? `<div class="ad-images-grid"><img src="${ad.image}" alt="صورة الإعلان" onclick="window.open('${ad.image}','_blank')"></div>` : ''}
                             ${ad.link ? `<div class="ad-meta">🔗 <a href="${ad.link}" target="_blank">${ad.link}</a></div>` : ''}
-                            <div class="ad-meta">📌 المستهدف: ${ad.target || 'الجميع'} | الحالة: <span class="status-badge ${cls}">${status}</span></div>
+                            <div class="ad-meta">🎨 لون الزر: ${colorClass} | 🎯 المستهدف: ${target} | 📚 الصف: ${gradeTarget}</div>
+                            <div class="ad-meta">📅 البداية: ${startDate} | النهاية: ${endDate}</div>
+                            <div class="ad-meta">${ad.showOnce ? '🔁 يظهر مرة واحدة' : '🔁 يظهر كل مرة'} | ${ad.showOnFirst ? '🚀 يظهر عند أول دخول' : '🚀 لا يظهر عند أول دخول'}</div>
                             <div class="ad-meta">📅 ${formatDate(ad.createdAt)}</div>
                             <div style="margin-top:6px;">
                                 <button class="btn btn-success btn-xs" onclick="toggleAd('${ad.id}')">${ad.active ? '⏸️ إيقاف' : '▶️ تفعيل'}</button>
@@ -3863,8 +4947,9 @@
                 const ad = allAds.find(a => a.id === id);
                 if (!ad) { showToast('❌ الإعلان غير موجود', 'error'); return; }
                 await db.collection('ads').doc(id).update({ active: !ad.active });
+                await addAuditLog('update', ad.active ? 'إيقاف إعلان' : 'تفعيل إعلان', id);
                 showToast(ad.active ? '⏸️ تم إيقاف الإعلان' : '▶️ تم تفعيل الإعلان');
-                await loadAds();
+                await loadAllData();
                 renderAds();
                 updateBadges();
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
@@ -3875,8 +4960,9 @@
             if (!confirm('⚠️ حذف الإعلان؟')) return;
             try {
                 await db.collection('ads').doc(id).delete();
+                await addAuditLog('delete', 'حذف إعلان', id);
                 showToast('🗑️ تم الحذف');
-                await loadAds();
+                await loadAllData();
                 renderAds();
                 updateBadges();
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
@@ -3888,8 +4974,14 @@
             const title = document.getElementById('adTitle').value.trim();
             const desc = document.getElementById('adDesc').value.trim();
             const link = document.getElementById('adLink').value.trim();
+            const color = document.getElementById('adColor').value;
             const target = document.getElementById('adTarget').value;
+            const targetGrade = document.getElementById('adTargetGrade').value;
+            const showOnce = document.getElementById('adShowOnce').value === 'true';
+            const showOnFirst = document.getElementById('adShowOnFirst').value === 'true';
             const active = document.getElementById('adActive').value === 'true';
+            const startDate = document.getElementById('adStartDate').value;
+            const endDate = document.getElementById('adEndDate').value;
 
             if (!title) {
                 showToast('❌ يرجى إدخال عنوان الإعلان', 'error');
@@ -3897,31 +4989,35 @@
             }
 
             try {
-                let imageUrls = [];
-                if (adImages.length > 0) {
-                    const uploadPromises = adImages.map(file => {
-                        const ref = storage.ref(`ads/${Date.now()}_${file.name}`);
-                        return ref.put(file).then(snapshot => ref.getDownloadURL());
-                    });
-                    imageUrls = await Promise.all(uploadPromises);
+                let imageUrl = null;
+                if (adImageFile) {
+                    const ref = storage.ref(`ads/${Date.now()}_${adImageFile.name}`);
+                    await ref.put(adImageFile);
+                    imageUrl = await ref.getDownloadURL();
                 }
 
                 await db.collection('ads').add({
                     title,
                     desc: desc || null,
                     link: link || null,
+                    btnColor: color,
                     target,
+                    targetGrade,
+                    showOnce,
+                    showOnFirst,
                     active,
-                    images: imageUrls,
+                    image: imageUrl,
+                    startDate: startDate ? new Date(startDate) : null,
+                    endDate: endDate ? new Date(endDate) : null,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
-
+                await addAuditLog('create', 'إضافة إعلان', '-');
                 showToast('✅ تم نشر الإعلان');
                 closeModal('addAdModal');
                 document.getElementById('addAdForm').reset();
-                document.getElementById('adImagesPreview').innerHTML = '';
-                adImages = [];
-                await loadAds();
+                document.getElementById('adImagePreview').innerHTML = '';
+                adImageFile = null;
+                await loadAllData();
                 renderAds();
                 updateBadges();
             } catch (err) {
@@ -3929,7 +5025,9 @@
             }
         });
 
-        // Reports
+        // ============================================================
+        // 20. Reports
+        // ============================================================
         function renderReports() {
             if (!requireAdmin()) return;
             const container = document.getElementById('reportsTable');
@@ -3945,7 +5043,7 @@
             }
 
             let html =
-                '<table><thead><tr><th>#</th><th>السبب</th><th>المبلغ</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody>';
+                `<table><thead><tr><th>#</th><th>السبب</th><th>المبلغ</th><th>الحالة</th><th>🛠️ الإجراءات</th></tr></thead><tbody>`;
             filtered.slice(0, 50).forEach((r, i) => {
                 const cls = r.status === 'resolved' ? 'resolved' : r.status === 'pending' ? 'pending' : 'rejected';
                 const txt = r.status === 'resolved' ? '✅ تم الحل' : r.status === 'pending' ? '⏳ قيد المراجعة' :
@@ -3973,9 +5071,13 @@
         async function resolveReport(id) {
             if (!requireAdmin()) return;
             try {
-                await db.collection('reports').doc(id).update({ status: 'resolved' });
+                await db.collection('reports').doc(id).update({
+                    status: 'resolved',
+                    resolvedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await addAuditLog('update', 'حل بلاغ', id);
                 showToast('✅ تم حل البلاغ');
-                await loadReports();
+                await loadAllData();
                 renderReports();
                 updateDashboard();
                 updateBadges();
@@ -3985,9 +5087,13 @@
         async function rejectReport(id) {
             if (!requireAdmin()) return;
             try {
-                await db.collection('reports').doc(id).update({ status: 'rejected' });
+                await db.collection('reports').doc(id).update({
+                    status: 'rejected',
+                    rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await addAuditLog('update', 'رفض بلاغ', id);
                 showToast('❌ تم رفض البلاغ');
-                await loadReports();
+                await loadAllData();
                 renderReports();
                 updateDashboard();
                 updateBadges();
@@ -4010,7 +5116,9 @@
             openModal('reportDetailModal');
         }
 
-        // Notifications
+        // ============================================================
+        // 21. Notifications
+        // ============================================================
         function renderNotifications() {
             if (!requireAdmin()) return;
             const container = document.getElementById('notificationsTable');
@@ -4021,15 +5129,20 @@
             }
 
             let html =
-                '<table><thead><tr><th>#</th><th>العنوان</th><th>النوع</th><th>التاريخ</th><th>الإجراءات</th></tr></thead><tbody>';
+                `<table><thead><tr><th>#</th><th>العنوان</th><th>النوع</th><th>إلى</th><th>التاريخ</th><th>🛠️ الإجراءات</th></tr></thead><tbody>`;
             allNotifications.slice(0, 50).forEach((n, i) => {
-                const date = n.createdAt ? n.createdAt.toDate().toLocaleString('ar') : '-';
-                const type = n.isOfficial ? '📌 رسمي' : '📩 عادي';
+                const date = n.createdAt ? formatDate(n.createdAt) : '-';
+                const type = n.type === 'official' ? '📌 رسمي' : n.type === 'urgent' ? '🚨 عاجل' : n.type ===
+                    'important' ? '⭐ مهم' : '📩 عادي';
+                const target = n.target === 'all' ? 'الجميع' : n.target === 'students' ? 'الطلاب' : n.target ===
+                    'teachers' ? 'المعلمين' : n.target || 'محدد';
+                const typeClass = n.type === 'official' ? 'official' : n.type === 'urgent' ? 'pending' : 'approved';
                 html += `
                         <tr>
                             <td>${i+1}</td>
-                            <td>${safeText(n.title || 'بدون عنوان')}</td>
-                            <td><span class="status-badge ${n.isOfficial ? 'official' : 'pending'}">${type}</span></td>
+                            <td><strong>${safeText(n.title || 'بدون عنوان')}</strong><div style="font-size:9px;color:#888;">${safeText((n.body||'').substring(0, 30))}${(n.body||'').length > 30 ? '...' : ''}</div></td>
+                            <td><span class="status-badge ${typeClass}">${type}</span></td>
+                            <td>${target}</td>
                             <td>${date}</td>
                             <td>
                                 <button class="btn btn-danger btn-xs" onclick="deleteNotification('${n.id}')">🗑️</button>
@@ -4046,8 +5159,9 @@
             if (!confirm('⚠️ حذف الإشعار؟')) return;
             try {
                 await db.collection('notifications').doc(id).delete();
+                await addAuditLog('delete', 'حذف إشعار', id);
                 showToast('🗑️ تم الحذف');
-                await loadNotifications();
+                await loadAllData();
                 renderNotifications();
                 updateBadges();
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
@@ -4058,8 +5172,10 @@
             if (!requireAdmin()) return;
             const title = document.getElementById('notifTitle').value.trim();
             const body = document.getElementById('notifBody').value.trim();
+            const link = document.getElementById('notifLink').value.trim();
             const target = document.getElementById('notifTarget').value;
-            const isOfficial = document.getElementById('notifOfficial').value === 'true';
+            const type = document.getElementById('notifType').value;
+            const image = document.getElementById('notifImage').value.trim();
 
             if (!title || !body) {
                 showToast('❌ يرجى ملء الحقول', 'error');
@@ -4067,24 +5183,48 @@
             }
 
             try {
-                await db.collection('notifications').add({
+                const notifData = {
                     title,
                     body,
                     target,
-                    isOfficial,
+                    type,
+                    link: link || null,
+                    image: image || null,
+                    isOfficial: type === 'official',
                     read: false,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                showToast('✅ تم الإرسال');
+                };
+
+                // إذا كان المستهدف هو طالب محدد
+                if (target.startsWith('grade')) {
+                    const grade = target.replace('grade', '');
+                    const students = allUsers.filter(u => u.grade === grade && !u.isBanned);
+                    for (const student of students) {
+                        await db.collection('notifications').add({
+                            ...notifData,
+                            target: student.id,
+                            targetType: 'student'
+                        });
+                    }
+                    await addAuditLog('create', `إرسال إشعار للصف ${grade}`, '-');
+                    showToast(`✅ تم إرسال الإشعار لـ ${students.length} طالب`);
+                } else {
+                    await db.collection('notifications').add(notifData);
+                    await addAuditLog('create', 'إرسال إشعار', '-');
+                    showToast('✅ تم الإرسال');
+                }
+
                 closeModal('addNotificationModal');
                 document.getElementById('addNotificationForm').reset();
-                await loadNotifications();
+                await loadAllData();
                 renderNotifications();
                 updateBadges();
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         });
 
-        // Analytics
+        // ============================================================
+        // 22. Analytics
+        // ============================================================
         function loadAnalytics() {
             if (!requireAdmin()) return;
             const totalDownloads = allBooks.reduce((s, b) => s + (b.downloads || 0), 0);
@@ -4130,24 +5270,156 @@
                         </tbody>
                     </table>
                 `;
-
-            document.getElementById('generalStats').innerHTML = `
-                    <table>
-                        <thead><tr><th>الإحصائية</th><th>القيمة</th><th>النسبة</th></tr></thead>
-                        <tbody>
-                            <tr><td>👤 المستخدمين النشطين</td><td>${allUsers.filter(u=>!u.isBanned).length}</td><td>${totalUsers > 0 ? Math.round((allUsers.filter(u=>!u.isBanned).length/totalUsers)*100) : 0}%</td></tr>
-                            <tr><td>📚 الكتب المقبولة</td><td>${allBooks.filter(b=>b.status==='approved').length}</td><td>${totalBooks > 0 ? Math.round((allBooks.filter(b=>b.status==='approved').length/totalBooks)*100) : 0}%</td></tr>
-                            <tr><td>✍️ الملخصات المقبولة</td><td>${allHandwritten.filter(h=>h.status==='approved').length}</td><td>${totalHandwritten > 0 ? Math.round((allHandwritten.filter(h=>h.status==='approved').length/totalHandwritten)*100) : 0}%</td></tr>
-                            <tr><td>💬 منشورات المنتدى المقبولة</td><td>${allForumPosts.filter(p=>p.status==='approved').length}</td><td>${totalForum > 0 ? Math.round((allForumPosts.filter(p=>p.status==='approved').length/totalForum)*100) : 0}%</td></tr>
-                            <tr><td>✅ التعليقات المقبولة</td><td>${allComments.filter(c=>c.status==='approved').length}</td><td>${allComments.length > 0 ? Math.round((allComments.filter(c=>c.status==='approved').length/allComments.length)*100) : 0}%</td></tr>
-                            <tr><td>📢 الإعلانات النشطة</td><td>${activeAds}</td><td>${allAds.length > 0 ? Math.round((activeAds/allAds.length)*100) : 0}%</td></tr>
-                            <tr><td>⛔ نسبة المحظورين</td><td>${bannedUsers}</td><td>${totalUsers > 0 ? Math.round((bannedUsers/totalUsers)*100) : 0}%</td></tr>
-                        </tbody>
-                    </table>
-                `;
         }
 
-        // Settings
+        // ============================================================
+        // 23. Audit Log - إضافة سجل
+        // ============================================================
+        async function addAuditLog(action, description, targetId) {
+            try {
+                await db.collection('audit_logs').add({
+                    action,
+                    description,
+                    targetId: targetId || null,
+                    performedBy: currentUser?.uid || 'unknown',
+                    performedByName: userData?.name || 'المدير',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    details: {
+                        userAgent: navigator.userAgent,
+                        ip: '0.0.0.0'
+                    }
+                });
+            } catch (err) {
+                console.warn('⚠️ فشل في تسجيل سجل العمليات:', err);
+            }
+        }
+
+        // ============================================================
+        // 24. Search
+        // ============================================================
+        function performGlobalSearch() {
+            const query = document.getElementById('globalSearchInput').value.toLowerCase().trim();
+            const container = document.getElementById('globalSearchResults');
+
+            if (!query) {
+                container.innerHTML =
+                    `<div class="empty-state"><div class="icon">🔍</div><p>ابحث عن طلاب، منشورات، تعليقات، كتب، فيديوهات، إعلانات، إشعارات</p></div>`;
+                return;
+            }
+
+            let results = [];
+
+            // بحث في الطلاب
+            allUsers.forEach(u => {
+                if ((u.name || '').toLowerCase().includes(query) || (u.email || '').toLowerCase().includes(
+                    query)) {
+                    results.push({ type: '👤 طالب', name: u.name || 'مجهول', id: u.id, link: 'viewStudentProfile',
+                        data: u });
+                }
+            });
+
+            // بحث في المنشورات
+            allForumPosts.forEach(p => {
+                if ((p.title || '').toLowerCase().includes(query) || (p.content || '').toLowerCase().includes(
+                    query) || (p.author || '').toLowerCase().includes(query)) {
+                    results.push({ type: '💬 منشور', name: p.title || 'بدون عنوان', id: p.id,
+                        link: 'viewForumPost', data: p });
+                }
+            });
+
+            // بحث في التعليقات
+            allComments.forEach(c => {
+                if ((c.text || '').toLowerCase().includes(query) || (c.userName || '').toLowerCase().includes(
+                    query)) {
+                    results.push({ type: '💬 تعليق', name: (c.text || '').substring(0, 30) + '...', id: c.id,
+                        link: 'viewComment', data: c });
+                }
+            });
+
+            // بحث في الكتب
+            allBooks.forEach(b => {
+                if ((b.title || '').toLowerCase().includes(query) || (b.author || '').toLowerCase().includes(
+                    query)) {
+                    results.push({ type: '📚 كتاب', name: b.title || 'بدون عنوان', id: b.id,
+                        link: 'viewBook', data: b });
+                }
+            });
+
+            // بحث في قنوات يوتيوب
+            allYoutube.forEach(y => {
+                if ((y.name || '').toLowerCase().includes(query) || (y.subject || '').toLowerCase().includes(
+                    query)) {
+                    results.push({ type: '🎥 قناة يوتيوب', name: y.name || 'بدون عنوان', id: y.id,
+                        link: 'viewYoutube', data: y });
+                }
+            });
+
+            // بحث في الإعلانات
+            allAds.forEach(a => {
+                if ((a.title || '').toLowerCase().includes(query) || (a.desc || '').toLowerCase().includes(
+                    query)) {
+                    results.push({ type: '📢 إعلان', name: a.title || 'بدون عنوان', id: a.id,
+                        link: 'viewAd', data: a });
+                }
+            });
+
+            // بحث في الإشعارات
+            allNotifications.forEach(n => {
+                if ((n.title || '').toLowerCase().includes(query) || (n.body || '').toLowerCase().includes(
+                    query)) {
+                    results.push({ type: '🔔 إشعار', name: n.title || 'بدون عنوان', id: n.id,
+                        link: 'viewNotification', data: n });
+                }
+            });
+
+            if (results.length === 0) {
+                container.innerHTML =
+                    `<div class="empty-state"><div class="icon">🔍</div><p>لا توجد نتائج لـ "${query}"</p></div>`;
+                return;
+            }
+
+            let html = `<div style="padding:8px;font-weight:700;color:#888;">${results.length} نتيجة</div>`;
+            results.slice(0, 30).forEach(r => {
+                html += `
+                        <div class="search-result-item" onclick="openSearchResult('${r.link}', '${r.id}')">
+                            <span>${r.type}: ${safeText(r.name)}</span>
+                            <span class="result-type">${r.type}</span>
+                        </div>
+                    `;
+            });
+            container.innerHTML = html;
+        }
+
+        function openSearchResult(link, id) {
+            if (link === 'viewStudentProfile') {
+                viewStudentProfile(id);
+            } else if (link === 'viewForumPost') {
+                showPage('forum');
+                // Highlight the post
+                showToast('📌 تم العثور على المنشور');
+            } else if (link === 'viewComment') {
+                showPage('comments');
+                showToast('📌 تم العثور على التعليق');
+            } else if (link === 'viewBook') {
+                showPage('books');
+                showToast('📌 تم العثور على الكتاب');
+            } else if (link === 'viewYoutube') {
+                showPage('youtube');
+                showToast('📌 تم العثور على القناة');
+            } else if (link === 'viewAd') {
+                showPage('ads');
+                showToast('📌 تم العثور على الإعلان');
+            } else if (link === 'viewNotification') {
+                showPage('notifications');
+                showToast('📌 تم العثور على الإشعار');
+            } else {
+                showToast('📌 تم العثور على: ' + id);
+            }
+        }
+
+        // ============================================================
+        // 25. Settings
+        // ============================================================
         async function saveSettings() {
             if (!requireAdmin()) return;
             const siteName = document.getElementById('siteName').value.trim();
@@ -4166,11 +5438,14 @@
                     lang,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
+                await addAuditLog('update', 'تعديل الإعدادات', '-');
                 showToast('✅ تم الحفظ');
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
 
-        // Badges
+        // ============================================================
+        // 26. Badges
+        // ============================================================
         function updateBadges() {
             if (!requireAdmin()) return;
             const pendingComments = allComments.filter(c => c.status === 'pending').length;
@@ -4196,7 +5471,9 @@
             document.getElementById('onlineBadge').textContent = onlineCount > 0 ? onlineCount : '';
         }
 
+        // ============================================================
         // Refresh
+        // ============================================================
         async function refreshAll() {
             if (!requireAdmin()) return;
             showToast('🔄 جاري التحديث...');
@@ -4212,10 +5489,11 @@
             document.querySelector('.btn-dark').textContent = '☀️';
         }
 
-        console.log('✅ لوحة التحكم الخارقة - الثانوية الرسمية بلس');
+        console.log('✅ لوحة التحكم الخارقة - الثانوية الرسمية بلس (الإصدار المحترف)');
         console.log('🟢 يتم تحديث المتصلين كل 3 ثوانٍ');
-        console.log('📊 تم إضافة: المتصلون الآن، منحنيات النمو، مركز الأمان، سجل العمليات، مراقبة النظام');
+        console.log('📊 تم إضافة: Dashboard متطور، إدارة طلاب كاملة، إدارة منتدى، إدارة تعليقات، إعلانات، إشعارات، بحث شامل، سجل عمليات، مراقبة نظام');
+        console.log('🔒 نظام أمان صارم مع التحقق من صلاحية الأدمن');
+        console.log('📌 الحساب الرسمي الموثق مع إعجابات وردود رسمية');
     </script>
-
 </body>
 </html>
