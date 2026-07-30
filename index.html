@@ -15,7 +15,7 @@
     </script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js">
     </script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js">
     </script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js">
     </script>
@@ -1499,7 +1499,7 @@
 
             <!-- System Status -->
             <div class="system-status" id="systemStatus">
-                <div class="status-item online"><div class="status-icon">✅</div><div class="status-label">Firestore</div><div class="status-value" id="firestoreStatus">جاري التحقق...</div></div>
+                <div class="status-item online"><div class="status-icon">✅</div><div class="status-label">Realtime DB</div><div class="status-value" id="dbStatus">جاري التحقق...</div></div>
                 <div class="status-item online"><div class="status-icon">✅</div><div class="status-label">Storage</div><div class="status-value" id="storageStatus">جاري التحقق...</div></div>
                 <div class="status-item online"><div class="status-icon">✅</div><div class="status-label">Authentication</div><div class="status-value" id="authStatus">جاري التحقق...</div></div>
                 <div class="status-item online"><div class="status-icon">💾</div><div class="status-label">استهلاك التخزين</div><div class="status-value" id="storageUsage">0 MB</div></div>
@@ -2059,11 +2059,11 @@
     <div class="toast" id="toast"></div>
 
     <!-- ============================================================ -->
-    <!-- JavaScript - النظام الكامل -->
+    <!-- JavaScript - النظام الكامل على Realtime Database -->
     <!-- ============================================================ -->
     <script>
         // ============================================================
-        // 🔑 Firebase Configuration
+        // 🔑 Firebase Configuration - Realtime Database
         // ============================================================
         const firebaseConfig = {
             apiKey: "AIzaSyAz9BfG1INB3shlCiMtK395SEo6sCkaZSI",
@@ -2071,12 +2071,13 @@
             projectId: "thanawya-official-plus",
             storageBucket: "thanawya-official-plus.firebasestorage.app",
             messagingSenderId: "883728724353",
-            appId: "1:883728724353:web:3f611e29d556d03c61b880"
+            appId: "1:883728724353:web:3f611e29d556d03c61b880",
+            databaseURL: "https://thanawya-official-plus-default-rtdb.europe-west1.firebasedatabase.app"
         };
 
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const db = firebase.firestore();
+        const db = firebase.database();
         const storage = firebase.storage();
 
         // ============================================================
@@ -2138,14 +2139,15 @@
             }
 
             try {
-                const userDoc = await db.collection('users').doc(user.uid).get();
-                if (!userDoc.exists) {
+                // ✅ استخدام Realtime Database للتحقق
+                const userSnapshot = await db.ref('users/' + user.uid).once('value');
+                const userData = userSnapshot.val();
+
+                if (!userData) {
                     showAccessDenied('لم يتم العثور على بيانات المستخدم');
                     await auth.signOut();
                     return false;
                 }
-
-                userData = userDoc.data();
 
                 // التحقق من الحظر
                 if (userData.isBanned === true) {
@@ -2169,11 +2171,12 @@
                     return false;
                 }
 
-                isAdmin = role === 'admin';
-                isSuperAdmin = role === 'superAdmin';
+                isAdmin = true;
+                isSuperAdmin = (role === 'superAdmin');
                 isBanned = false;
                 isActive = true;
                 currentUser = user;
+                window.currentUserData = userData;
 
                 // تحديث معلومات الأدمن في الشريط الجانبي
                 const adminName = document.getElementById('adminName');
@@ -2235,10 +2238,11 @@
             if (user) {
                 const verified = await verifyUser(user);
                 if (verified) {
-                    console.log('✅ مرحباً بك في لوحة التحكم الخارقة');
+                    console.log('✅ مرحباً بك في لوحة التحكم الخارقة - Realtime Database');
                     loadAllData();
                     updateBadges();
                     startLiveUpdates();
+                    startOnlineUsersListener();
                     // تحديث كل 5 ثواني
                     setInterval(() => {
                         if (isAdmin || isSuperAdmin) {
@@ -2322,23 +2326,13 @@
 
         function formatDate(timestamp) {
             if (!timestamp) return '-';
-            if (timestamp.toDate) {
-                return timestamp.toDate().toLocaleString('ar');
-            }
-            if (timestamp.seconds) {
-                return new Date(timestamp.seconds * 1000).toLocaleString('ar');
-            }
-            if (typeof timestamp === 'number') {
-                return new Date(timestamp).toLocaleString('ar');
-            }
             return new Date(timestamp).toLocaleString('ar');
         }
 
         function getRelativeTime(timestamp) {
             if (!timestamp) return 'غير معروف';
-            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-            const now = new Date();
-            const diff = now - date;
+            const now = Date.now();
+            const diff = now - timestamp;
             const minutes = Math.floor(diff / 60000);
             const hours = Math.floor(diff / 3600000);
             const days = Math.floor(diff / 86400000);
@@ -2347,7 +2341,7 @@
             if (minutes < 60) return `${minutes} دقيقة`;
             if (hours < 24) return `${hours} ساعة`;
             if (days < 7) return `${days} يوم`;
-            return date.toLocaleDateString('ar');
+            return new Date(timestamp).toLocaleDateString('ar');
         }
 
         function toggleLiveUpdates() {
@@ -2383,6 +2377,34 @@
                     updateDashboardRealtime();
                 }
             }, 3000);
+        }
+
+        // ============================================================
+        // تحديث المتصلون الآن - Realtime
+        // ============================================================
+        function startOnlineUsersListener() {
+            const onlineRef = db.ref('online_users');
+            onlineRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                allOnlineUsers = [];
+                if (data) {
+                    const now = Date.now();
+                    const activeThreshold = now - 3 * 60 * 1000; // 3 دقائق
+                    
+                    Object.keys(data).forEach(key => {
+                        const user = data[key];
+                        if (user.lastActive && user.lastActive > activeThreshold - 1000) {
+                            allOnlineUsers.push({ id: key, ...user });
+                        }
+                    });
+                }
+                
+                // تحديث الواجهة
+                document.getElementById('onlineBadge').textContent = allOnlineUsers.length;
+                document.getElementById('onlineCountHeader').textContent = allOnlineUsers.length;
+                document.getElementById('onlineUsersCount').textContent = allOnlineUsers.length;
+                renderOnlineUsers();
+            });
         }
 
         // ============================================================
@@ -2460,18 +2482,11 @@
         // تحديث Dashboard في الوقت الفعلي
         // ============================================================
         function updateDashboardRealtime() {
-            // تحديث الإحصائيات السريعة
-            const onlineCount = allOnlineUsers.length;
-            const activeUsers = allUsers.filter(u => !u.isBanned && !u.isSuspended).length;
-            const bannedUsers = allUsers.filter(u => u.isBanned).length;
-            const suspendedUsers = allUsers.filter(u => u.isSuspended).length;
-
-            // تحديث بطاقات الـ Dashboard
             updateDashboard();
         }
 
         // ============================================================
-        // 5. تحميل البيانات
+        // تحميل البيانات من Realtime Database
         // ============================================================
         async function loadAllData() {
             if (!requireAdmin()) return;
@@ -2502,171 +2517,276 @@
             }
         }
 
+        // ============================================================
+        // تحميل المستخدمين
+        // ============================================================
         async function loadUsers() {
             try {
-                const snap = await db.collection('users').get();
+                const snapshot = await db.ref('users').once('value');
+                const data = snapshot.val();
                 allUsers = [];
-                snap.forEach(d => allUsers.push({ id: d.id, ...d.data() }));
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        allUsers.push({ id: key, ...data[key] });
+                    });
+                }
                 document.getElementById('userCountDisplay').textContent = `(${allUsers.length})`;
             } catch (err) { allUsers = []; }
         }
 
+        // ============================================================
+        // تحميل الكتب
+        // ============================================================
         async function loadBooks() {
             try {
-                const snap = await db.collection('books').orderBy('createdAt', 'desc').get();
+                const snapshot = await db.ref('books').orderByChild('createdAt').once('value');
+                const data = snapshot.val();
                 allBooks = [];
-                snap.forEach(d => allBooks.push({ id: d.id, ...d.data() }));
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        allBooks.push({ id: key, ...data[key] });
+                    });
+                    allBooks.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                }
             } catch (err) { allBooks = []; }
         }
 
+        // ============================================================
+        // تحميل منشورات المنتدى
+        // ============================================================
         async function loadForumPosts() {
             try {
-                const snap = await db.collection('forum_posts').orderBy('createdAt', 'desc').get();
+                const snapshot = await db.ref('forum_posts').orderByChild('createdAt').once('value');
+                const data = snapshot.val();
                 allForumPosts = [];
-                snap.forEach(d => allForumPosts.push({ id: d.id, ...d.data() }));
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        allForumPosts.push({ id: key, ...data[key] });
+                    });
+                    allForumPosts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                }
             } catch (err) { allForumPosts = []; }
         }
 
+        // ============================================================
+        // تحميل منشورات الفريق
+        // ============================================================
         async function loadTeamPosts() {
             try {
-                const snap = await db.collection('team_posts').orderBy('createdAt', 'desc').get();
+                const snapshot = await db.ref('team_posts').orderByChild('createdAt').once('value');
+                const data = snapshot.val();
                 allTeamPosts = [];
-                snap.forEach(d => allTeamPosts.push({ id: d.id, ...d.data() }));
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        allTeamPosts.push({ id: key, ...data[key] });
+                    });
+                    allTeamPosts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                }
             } catch (err) { allTeamPosts = []; }
         }
 
+        // ============================================================
+        // تحميل الإشعارات
+        // ============================================================
         async function loadNotifications() {
             try {
-                const snap = await db.collection('notifications').orderBy('createdAt', 'desc').limit(100).get();
+                const snapshot = await db.ref('notifications').orderByChild('createdAt').limitToLast(100).once('value');
+                const data = snapshot.val();
                 allNotifications = [];
-                snap.forEach(d => allNotifications.push({ id: d.id, ...d.data() }));
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        allNotifications.push({ id: key, ...data[key] });
+                    });
+                    allNotifications.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                }
             } catch (err) { allNotifications = []; }
         }
 
+        // ============================================================
+        // تحميل المرفوعات
+        // ============================================================
         async function loadUploads() {
             try {
-                const snap = await db.collection('books').where('status', '==', 'pending').get();
+                const snapshot = await db.ref('books').orderByChild('status').equalTo('pending').once('value');
+                const data = snapshot.val();
                 allUploads = [];
-                snap.forEach(d => allUploads.push({ id: d.id, ...d.data() }));
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        allUploads.push({ id: key, ...data[key] });
+                    });
+                }
             } catch (err) { allUploads = []; }
         }
 
+        // ============================================================
+        // تحميل البلاغات
+        // ============================================================
         async function loadReports() {
             try {
-                const snap = await db.collection('reports').orderBy('createdAt', 'desc').get();
+                const snapshot = await db.ref('reports').orderByChild('createdAt').once('value');
+                const data = snapshot.val();
                 allReports = [];
-                snap.forEach(d => allReports.push({ id: d.id, ...d.data() }));
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        allReports.push({ id: key, ...data[key] });
+                    });
+                    allReports.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                }
             } catch (err) { allReports = []; }
         }
 
+        // ============================================================
+        // تحميل الإعلانات
+        // ============================================================
         async function loadAds() {
             try {
-                const snap = await db.collection('ads').orderBy('createdAt', 'desc').get();
+                const snapshot = await db.ref('ads').orderByChild('createdAt').once('value');
+                const data = snapshot.val();
                 allAds = [];
-                snap.forEach(d => allAds.push({ id: d.id, ...d.data() }));
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        allAds.push({ id: key, ...data[key] });
+                    });
+                    allAds.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                }
             } catch (err) { allAds = []; }
         }
 
+        // ============================================================
+        // تحميل الملخصات
+        // ============================================================
         async function loadHandwritten() {
             try {
-                const snap = await db.collection('handwritten_notes').orderBy('createdAt', 'desc').get();
+                const snapshot = await db.ref('handwritten_notes').orderByChild('createdAt').once('value');
+                const data = snapshot.val();
                 allHandwritten = [];
-                snap.forEach(d => allHandwritten.push({ id: d.id, ...d.data() }));
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        allHandwritten.push({ id: key, ...data[key] });
+                    });
+                    allHandwritten.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                }
             } catch (err) { allHandwritten = []; }
         }
 
+        // ============================================================
+        // تحميل قنوات يوتيوب
+        // ============================================================
         async function loadYoutube() {
             try {
-                const snap = await db.collection('youtube_channels').get();
+                const snapshot = await db.ref('youtube_channels').once('value');
+                const data = snapshot.val();
                 allYoutube = [];
-                snap.forEach(d => allYoutube.push({ id: d.id, ...d.data() }));
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        allYoutube.push({ id: key, ...data[key] });
+                    });
+                }
             } catch (err) { allYoutube = []; }
         }
 
+        // ============================================================
+        // تحميل جميع التعليقات
+        // ============================================================
         async function loadAllComments() {
             allComments = [];
             try {
-                const forumSnap = await db.collection('forum_comments').orderBy('createdAt', 'desc').get();
-                forumSnap.forEach(doc => {
-                    const data = doc.data();
-                    allComments.push({ id: doc.id, ...data, source: 'forum', collection: 'forum_comments' });
-                });
+                // تعليقات المنتدى المستقلة
+                const forumSnap = await db.ref('forum_comments').orderByChild('createdAt').once('value');
+                const forumData = forumSnap.val();
+                if (forumData) {
+                    Object.keys(forumData).forEach(key => {
+                        allComments.push({ id: key, ...forumData[key], source: 'forum', collection: 'forum_comments' });
+                    });
+                }
             } catch (err) {}
+            
             try {
-                const teamSnap = await db.collection('team_comments').orderBy('createdAt', 'desc').get();
-                teamSnap.forEach(doc => {
-                    const data = doc.data();
-                    allComments.push({ id: doc.id, ...data, source: 'team', collection: 'team_comments' });
-                });
+                // تعليقات منشورات الفريق المستقلة
+                const teamSnap = await db.ref('team_comments').orderByChild('createdAt').once('value');
+                const teamData = teamSnap.val();
+                if (teamData) {
+                    Object.keys(teamData).forEach(key => {
+                        allComments.push({ id: key, ...teamData[key], source: 'team', collection: 'team_comments' });
+                    });
+                }
             } catch (err) {}
+            
             try {
-                const forumPostsSnap = await db.collection('forum_posts').get();
-                forumPostsSnap.forEach(doc => {
-                    const data = doc.data();
-                    if (data.comments && data.comments.length > 0) {
-                        data.comments.forEach((comment, index) => {
-                            if (comment.status !== 'rejected') {
-                                allComments.push({
-                                    id: doc.id + '_c' + index,
-                                    text: comment.text || '',
-                                    userName: comment.user || 'مجهول',
-                                    userId: comment.userId || null,
-                                    postId: doc.id,
-                                    source: 'forum_internal',
-                                    collection: 'forum_posts',
-                                    status: comment.status || 'pending',
-                                    createdAt: comment.createdAt ? new Date(comment.createdAt) :
-                                        new Date(),
-                                    adminReplies: comment.adminReplies || [],
-                                    adminLiked: comment.adminLiked || false,
-                                    isInternal: true,
-                                    internalIndex: index,
-                                    postData: data
-                                });
-                            }
-                        });
-                    }
-                });
+                // تعليقات داخل منشورات المنتدى
+                const forumPostsSnap = await db.ref('forum_posts').once('value');
+                const postsData = forumPostsSnap.val();
+                if (postsData) {
+                    Object.keys(postsData).forEach(postKey => {
+                        const post = postsData[postKey];
+                        if (post.comments && post.comments.length > 0) {
+                            post.comments.forEach((comment, index) => {
+                                if (comment.status !== 'rejected') {
+                                    allComments.push({
+                                        id: postKey + '_c' + index,
+                                        text: comment.text || '',
+                                        userName: comment.user || 'مجهول',
+                                        userId: comment.userId || null,
+                                        postId: postKey,
+                                        source: 'forum_internal',
+                                        collection: 'forum_posts',
+                                        status: comment.status || 'pending',
+                                        createdAt: comment.createdAt || Date.now(),
+                                        adminReplies: comment.adminReplies || [],
+                                        adminLiked: comment.adminLiked || false,
+                                        isInternal: true,
+                                        internalIndex: index,
+                                        postData: post
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
             } catch (err) {}
+            
             try {
-                const teamPostsSnap = await db.collection('team_posts').get();
-                teamPostsSnap.forEach(doc => {
-                    const data = doc.data();
-                    if (data.comments && data.comments.length > 0) {
-                        data.comments.forEach((comment, index) => {
-                            if (comment.status !== 'rejected') {
-                                allComments.push({
-                                    id: doc.id + '_c' + index,
-                                    text: comment.text || '',
-                                    userName: comment.user || 'مجهول',
-                                    userId: comment.userId || null,
-                                    postId: doc.id,
-                                    source: 'team_internal',
-                                    collection: 'team_posts',
-                                    status: comment.status || 'pending',
-                                    createdAt: comment.createdAt ? new Date(comment.createdAt) :
-                                        new Date(),
-                                    adminReplies: comment.adminReplies || [],
-                                    adminLiked: comment.adminLiked || false,
-                                    isInternal: true,
-                                    internalIndex: index,
-                                    postData: data
-                                });
-                            }
-                        });
-                    }
-                });
+                // تعليقات داخل منشورات الفريق
+                const teamPostsSnap = await db.ref('team_posts').once('value');
+                const teamPostsData = teamPostsSnap.val();
+                if (teamPostsData) {
+                    Object.keys(teamPostsData).forEach(postKey => {
+                        const post = teamPostsData[postKey];
+                        if (post.comments && post.comments.length > 0) {
+                            post.comments.forEach((comment, index) => {
+                                if (comment.status !== 'rejected') {
+                                    allComments.push({
+                                        id: postKey + '_c' + index,
+                                        text: comment.text || '',
+                                        userName: comment.user || 'مجهول',
+                                        userId: comment.userId || null,
+                                        postId: postKey,
+                                        source: 'team_internal',
+                                        collection: 'team_posts',
+                                        status: comment.status || 'pending',
+                                        createdAt: comment.createdAt || Date.now(),
+                                        adminReplies: comment.adminReplies || [],
+                                        adminLiked: comment.adminLiked || false,
+                                        isInternal: true,
+                                        internalIndex: index,
+                                        postData: post
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
             } catch (err) {}
-            allComments.sort((a, b) => {
-                const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-                const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-                return timeB - timeA;
-            });
+            
+            allComments.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
         }
 
+        // ============================================================
+        // تحميل الأنشطة
+        // ============================================================
         async function loadActivities() {
             allActivities = [];
-            // منشورات المنتدى
+            
             allForumPosts.slice(0, 5).forEach(p => {
                 allActivities.push({
                     text: `💬 منشور: "${p.title || 'بدون عنوان'}"`,
@@ -2676,7 +2796,7 @@
                     id: p.id
                 });
             });
-            // الكتب
+            
             allBooks.slice(0, 3).forEach(b => {
                 allActivities.push({
                     text: `📚 كتاب: "${b.title || 'بدون عنوان'}"`,
@@ -2686,12 +2806,8 @@
                     id: b.id
                 });
             });
-            // المستخدمين الجدد
-            const newUsers = allUsers.filter(u => u.createdAt).sort((a, b) => {
-                const tA = a.createdAt?.toMillis?.() || 0;
-                const tB = b.createdAt?.toMillis?.() || 0;
-                return tB - tA;
-            }).slice(0, 3);
+            
+            const newUsers = allUsers.filter(u => u.createdAt).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 3);
             newUsers.forEach(u => {
                 allActivities.push({
                     text: `👤 مستخدم جديد: "${u.name || 'مجهول'}"`,
@@ -2701,7 +2817,7 @@
                     id: u.id
                 });
             });
-            // البلاغات
+            
             allReports.slice(0, 2).forEach(r => {
                 allActivities.push({
                     text: `🚨 بلاغ: "${r.reason || 'بدون سبب'}"`,
@@ -2711,7 +2827,7 @@
                     id: r.id
                 });
             });
-            // الإعلانات
+            
             allAds.slice(0, 2).forEach(a => {
                 allActivities.push({
                     text: `📢 إعلان: "${a.title || 'بدون عنوان'}"`,
@@ -2721,42 +2837,70 @@
                     id: a.id
                 });
             });
+            
             allActivities.sort((a, b) => b.time.localeCompare(a.time));
         }
 
+        // ============================================================
+        // تحميل سجل العمليات
+        // ============================================================
         async function loadAuditLog() {
             try {
-                const snap = await db.collection('audit_logs').orderBy('timestamp', 'desc').limit(100).get();
+                const snapshot = await db.ref('audit_logs').orderByChild('timestamp').limitToLast(100).once('value');
+                const data = snapshot.val();
                 allAuditLogs = [];
-                snap.forEach(d => allAuditLogs.push({ id: d.id, ...d.data() }));
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        allAuditLogs.push({ id: key, ...data[key] });
+                    });
+                    allAuditLogs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                }
             } catch (err) { allAuditLogs = []; }
         }
 
+        // ============================================================
+        // تحميل الأمان
+        // ============================================================
         async function loadSecurity() {
             try {
-                const failedSnap = await db.collection('audit_logs')
-                    .where('action', '==', 'login_failed')
-                    .where('timestamp', '>', new Date(Date.now() - 24 * 60 * 60 * 1000))
-                    .get();
-                document.getElementById('failedLogins').textContent = failedSnap.size;
+                const now = Date.now();
+                const dayAgo = now - 24 * 60 * 60 * 1000;
+                
+                const failedSnap = await db.ref('audit_logs').orderByChild('timestamp').startAt(dayAgo).once('value');
+                const failedData = failedSnap.val();
+                let failedCount = 0;
+                if (failedData) {
+                    Object.keys(failedData).forEach(key => {
+                        if (failedData[key].action === 'login_failed') failedCount++;
+                    });
+                }
+                document.getElementById('failedLogins').textContent = failedCount;
 
-                const suspiciousSnap = await db.collection('audit_logs')
-                    .where('severity', '==', 'WARNING')
-                    .where('timestamp', '>', new Date(Date.now() - 24 * 60 * 60 * 1000))
-                    .get();
-                document.getElementById('suspiciousAttempts').textContent = suspiciousSnap.size;
+                const suspiciousSnap = await db.ref('audit_logs').orderByChild('timestamp').startAt(dayAgo).once('value');
+                const suspiciousData = suspiciousSnap.val();
+                let suspiciousCount = 0;
+                if (suspiciousData) {
+                    Object.keys(suspiciousData).forEach(key => {
+                        if (suspiciousData[key].severity === 'WARNING') suspiciousCount++;
+                    });
+                }
+                document.getElementById('suspiciousAttempts').textContent = suspiciousCount;
 
-                const adminAttemptsSnap = await db.collection('audit_logs')
-                    .where('action', '==', 'admin_access_attempt')
-                    .where('timestamp', '>', new Date(Date.now() - 24 * 60 * 60 * 1000))
-                    .get();
-                document.getElementById('adminAccessAttempts').textContent = adminAttemptsSnap.size;
+                const adminAttemptsSnap = await db.ref('audit_logs').orderByChild('timestamp').startAt(dayAgo).once('value');
+                const adminData = adminAttemptsSnap.val();
+                let adminCount = 0;
+                if (adminData) {
+                    Object.keys(adminData).forEach(key => {
+                        if (adminData[key].action === 'admin_access_attempt') adminCount++;
+                    });
+                }
+                document.getElementById('adminAccessAttempts').textContent = adminCount;
 
             } catch (err) {}
         }
 
         // ============================================================
-        // 6. Dashboard المتطور
+        // Dashboard المتطور
         // ============================================================
         function updateDashboard() {
             if (!requireAdmin()) return;
@@ -2766,75 +2910,60 @@
             const suspendedUsers = allUsers.filter(u => u.isSuspended).length;
             const onlineCount = allOnlineUsers.length;
 
-            // المستخدمين غير النشطين
             const now = Date.now();
             const dayAgo = now - 24 * 60 * 60 * 1000;
             const weekAgo = now - 7 * 24 * 60 * 60 * 1000;
             const monthAgo = now - 30 * 24 * 60 * 60 * 1000;
 
             const inactiveDay = allUsers.filter(u => {
-                const last = u.lastActive?.toMillis?.() || 0;
+                const last = u.lastActive || 0;
                 return last < dayAgo && !u.isBanned;
             });
             const inactiveWeek = allUsers.filter(u => {
-                const last = u.lastActive?.toMillis?.() || 0;
+                const last = u.lastActive || 0;
                 return last < weekAgo && !u.isBanned;
             });
             const inactiveMonth = allUsers.filter(u => {
-                const last = u.lastActive?.toMillis?.() || 0;
+                const last = u.lastActive || 0;
                 return last < monthAgo && !u.isBanned;
             });
 
-            // الحسابات الجديدة
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             const newToday = allUsers.filter(u => {
-                const created = u.createdAt?.toMillis?.() || 0;
+                const created = u.createdAt || 0;
                 return created > today.getTime();
             });
             const newWeek = allUsers.filter(u => {
-                const created = u.createdAt?.toMillis?.() || 0;
+                const created = u.createdAt || 0;
                 return created > weekAgo;
             });
             const newMonth = allUsers.filter(u => {
-                const created = u.createdAt?.toMillis?.() || 0;
+                const created = u.createdAt || 0;
                 return created > monthAgo;
             });
 
-            // آخر طالب دخل
-            const sortedByLastActive = [...allUsers].filter(u => u.lastActive).sort((a, b) => {
-                const tA = a.lastActive?.toMillis?.() || 0;
-                const tB = b.lastActive?.toMillis?.() || 0;
-                return tB - tA;
-            });
+            const sortedByLastActive = [...allUsers].filter(u => u.lastActive).sort((a, b) => (b.lastActive || 0) - (a.lastActive || 0));
             const lastActiveStudent = sortedByLastActive[0];
-            const sortedByCreated = [...allUsers].filter(u => u.createdAt).sort((a, b) => {
-                const tA = a.createdAt?.toMillis?.() || 0;
-                const tB = b.createdAt?.toMillis?.() || 0;
-                return tB - tA;
-            });
+            const sortedByCreated = [...allUsers].filter(u => u.createdAt).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
             const newestStudent = sortedByCreated[0];
 
-            // إحصائيات المنشورات
             const totalPosts = allForumPosts.length;
             const pendingPosts = allForumPosts.filter(p => p.status === 'pending').length;
             const approvedPosts = allForumPosts.filter(p => p.status === 'approved').length;
             const rejectedPosts = allForumPosts.filter(p => p.status === 'rejected').length;
 
-            // إحصائيات التعليقات
             const totalComments = allComments.length;
             const pendingComments = allComments.filter(c => c.status === 'pending').length;
             const totalReplies = allComments.reduce((sum, c) => sum + (c.adminReplies ? c.adminReplies.length : 0), 0);
 
-            // الإعجابات
             const totalLikes = allForumPosts.reduce((sum, p) => sum + (p.likesCount || 0), 0) +
                 allComments.reduce((sum, c) => sum + (c.likes || 0), 0);
             const todayLikes = allForumPosts.filter(p => {
-                const date = p.createdAt?.toDate?.() || new Date();
-                return date.toDateString() === new Date().toDateString();
+                const date = p.createdAt || 0;
+                return new Date(date).toDateString() === new Date().toDateString();
             }).reduce((sum, p) => sum + (p.likesCount || 0), 0);
 
-            // أكثر منشور حصل على إعجابات
             let topPost = null;
             let maxLikes = 0;
             allForumPosts.forEach(p => {
@@ -2844,7 +2973,6 @@
                 }
             });
 
-            // أكثر طالب نشاطاً
             const studentActivity = {};
             allForumPosts.forEach(p => {
                 if (p.userId) {
@@ -2870,19 +2998,16 @@
             });
             const mostActiveUser = allUsers.find(u => u.id === mostActiveStudent);
 
-            // إحصائيات إضافية
             const totalNotifs = allNotifications.length;
             const totalAds = allAds.length;
             const totalBooks = allBooks.length;
             const totalVideos = allYoutube.length;
             const totalFiles = allHandwritten.length + allBooks.length;
 
-            // مساحة التخزين
             const totalSize = allBooks.reduce((s, b) => s + (b.fileSize || 0), 0) +
                 allHandwritten.reduce((s, h) => s + (h.fileSize || 0), 0);
             const sizeMB = (totalSize / (1024 * 1024)).toFixed(2);
 
-            // عرض الإحصائيات
             document.getElementById('statsGrid').innerHTML = `
                     <div class="stat-card green"><div class="stat-number">${totalUsers}</div><div class="stat-label">👤 إجمالي المستخدمين</div></div>
                     <div class="stat-card blue"><div class="stat-number">${activeUsers}</div><div class="stat-label">✅ نشطون</div></div>
@@ -2909,7 +3034,6 @@
                     <div class="stat-card purple"><div class="stat-number">${sizeMB}</div><div class="stat-label">💾 مساحة التخزين</div></div>
                 `;
 
-            // بطاقات الإحصائيات التفصيلية
             document.getElementById('statsDetail').innerHTML = `
                     <div class="stat-box"><div class="num">${inactiveDay.length}</div><div class="label">⏳ غير نشطين منذ يوم</div></div>
                     <div class="stat-box"><div class="num">${inactiveWeek.length}</div><div class="label">⏳ غير نشطين منذ أسبوع</div></div>
@@ -2920,13 +3044,8 @@
                     <div class="stat-box"><div class="num">${mostActiveUser ? safeText(mostActiveUser.name || 'مجهول') : '-'}</div><div class="label">⭐ أكثر طالب نشاطاً</div></div>
                 `;
 
-            // عرض المتصلين
             renderOnlineUsers();
-
-            // عرض أهم الطلاب
             renderTopStudents();
-
-            // عرض الطلاب غير النشطين
             renderInactiveStudents(inactiveDay);
         }
 
@@ -2952,8 +3071,7 @@
             sorted.forEach((u, i) => {
                 const posts = allForumPosts.filter(p => p.userId === u.id).length;
                 const comments = allComments.filter(c => c.userId === u.id).length;
-                const likes = allForumPosts.filter(p => p.userId === u.id).reduce((s, p) => s + (p.likesCount || 0),
-                0);
+                const likes = allForumPosts.filter(p => p.userId === u.id).reduce((s, p) => s + (p.likesCount || 0), 0);
                 const photo = u.photoURL || '';
                 const initial = u.name ? u.name.charAt(0).toUpperCase() : '?';
                 html += `
@@ -2979,8 +3097,8 @@
         function renderInactiveStudents(inactiveList) {
             const container = document.getElementById('inactiveStudents');
             const sorted = inactiveList.sort((a, b) => {
-                const tA = a.lastActive?.toMillis?.() || 0;
-                const tB = b.lastActive?.toMillis?.() || 0;
+                const tA = a.lastActive || 0;
+                const tB = b.lastActive || 0;
                 return tA - tB;
             }).slice(0, 10);
 
@@ -3011,40 +3129,10 @@
         }
 
         // ============================================================
-        // 7. Online Users - متطور وفوري
+        // المتصلون الآن
         // ============================================================
-        async function updateOnlineUsers() {
-            if (!requireAdmin()) return;
-
-            const now = Date.now();
-            const activeThreshold = now - 3 * 60 * 1000; // 3 دقائق
-
-            try {
-                const snap = await db.collection('users')
-                    .where('lastActive', '>', new Date(activeThreshold))
-                    .get();
-
-                allOnlineUsers = [];
-                snap.forEach(doc => {
-                    const data = doc.data();
-                    if (!data.isBanned) {
-                        allOnlineUsers.push({
-                            id: doc.id,
-                            ...data,
-                            status: 'online',
-                            lastActive: data.lastActive?.toMillis?.() || now
-                        });
-                    }
-                });
-
-                document.getElementById('onlineBadge').textContent = allOnlineUsers.length;
-                document.getElementById('onlineCountHeader').textContent = allOnlineUsers.length;
-                document.getElementById('onlineUsersCount').textContent = allOnlineUsers.length;
-
-                renderOnlineUsers();
-            } catch (err) {
-                console.warn('❌ فشل تحديث المتصلين:', err);
-            }
+        function updateOnlineUsers() {
+            // يتم التحديث عبر startOnlineUsersListener
         }
 
         function renderOnlineUsers() {
@@ -3097,7 +3185,7 @@
             if (!requireAdmin()) return;
             if (!confirm(`⚠️ هل تريد إنهاء جلسة المستخدم؟`)) return;
             try {
-                await db.collection('users').doc(userId).update({
+                await db.ref('users/' + userId).update({
                     lastActive: null,
                     sessionId: null
                 });
@@ -3112,12 +3200,12 @@
             if (!requireAdmin()) return;
             if (!confirm('⚠️ هل تريد إنهاء جميع الجلسات النشطة؟')) return;
             try {
-                const batch = db.batch();
+                const updates = {};
                 allOnlineUsers.forEach(u => {
-                    const ref = db.collection('users').doc(u.id);
-                    batch.update(ref, { lastActive: null, sessionId: null });
+                    updates[u.id + '/lastActive'] = null;
+                    updates[u.id + '/sessionId'] = null;
                 });
-                await batch.commit();
+                await db.ref('users').update(updates);
                 showToast('✅ تم إنهاء جميع الجلسات');
                 updateOnlineUsers();
             } catch (err) {
@@ -3126,7 +3214,7 @@
         }
 
         // ============================================================
-        // 8. Growth Chart
+        // Growth Chart
         // ============================================================
         function updateGrowthChart() {
             const ctx = document.getElementById('growthChart').getContext('2d');
@@ -3138,7 +3226,7 @@
                 const date = new Date(now - i * 24 * 60 * 60 * 1000);
                 labels.push(date.toLocaleDateString('ar'));
                 const count = allUsers.filter(u => {
-                    const created = u.createdAt?.toMillis?.() || 0;
+                    const created = u.createdAt || 0;
                     return created < date.getTime();
                 }).length;
                 data.push(count);
@@ -3188,17 +3276,17 @@
         }
 
         // ============================================================
-        // 9. System Status
+        // System Status
         // ============================================================
         function updateSystemStatus() {
-            db.collection('settings').doc('site').get()
+            db.ref('settings/site').once('value')
                 .then(() => {
-                    document.getElementById('firestoreStatus').textContent = '✅ شغال';
-                    document.getElementById('firestoreStatus').style.color = '#2ecc71';
+                    document.getElementById('dbStatus').textContent = '✅ شغال';
+                    document.getElementById('dbStatus').style.color = '#2ecc71';
                 })
                 .catch(() => {
-                    document.getElementById('firestoreStatus').textContent = '❌ غير متاح';
-                    document.getElementById('firestoreStatus').style.color = '#e74c3c';
+                    document.getElementById('dbStatus').textContent = '❌ غير متاح';
+                    document.getElementById('dbStatus').style.color = '#e74c3c';
                 });
 
             storage.ref().listAll()
@@ -3233,7 +3321,7 @@
         }
 
         // ============================================================
-        // 10. Security
+        // Security
         // ============================================================
         function loadSecurity() {
             if (!requireAdmin()) return;
@@ -3242,7 +3330,7 @@
 
             allAuditLogs.slice(0, 20).forEach(log => {
                 const action = log.action || 'unknown';
-                const time = log.timestamp?.toDate?.()?.toLocaleString('ar') || 'الآن';
+                const time = log.timestamp ? formatDate(log.timestamp) : 'الآن';
                 let severity = 'INFO';
                 let icon = 'ℹ️';
 
@@ -3280,7 +3368,7 @@
         }
 
         // ============================================================
-        // 11. Audit Log
+        // Audit Log
         // ============================================================
         function renderAuditLog() {
             const container = document.getElementById('auditLog');
@@ -3313,7 +3401,7 @@
                     log.action === 'login' ? 'login' :
                     log.action === 'logout' ? 'logout' :
                     log.action === 'report' ? 'report' : '';
-                const time = log.timestamp?.toDate?.()?.toLocaleString('ar') || 'الآن';
+                const time = log.timestamp ? formatDate(log.timestamp) : 'الآن';
                 const details = log.details ? JSON.stringify(log.details).substring(0, 100) : '';
 
                 html += `
@@ -3331,7 +3419,30 @@
         function filterAudit() { renderAuditLog(); }
 
         // ============================================================
-        // 12. Monitoring
+        // إضافة سجل العمليات
+        // ============================================================
+        async function addAuditLog(action, description, targetId) {
+            try {
+                const newRef = db.ref('audit_logs').push();
+                await newRef.set({
+                    action,
+                    description,
+                    targetId: targetId || null,
+                    performedBy: currentUser?.uid || 'unknown',
+                    performedByName: window.currentUserData?.name || 'المدير',
+                    timestamp: Date.now(),
+                    details: {
+                        userAgent: navigator.userAgent || 'unknown',
+                        ip: '0.0.0.0'
+                    }
+                });
+            } catch (err) {
+                console.warn('⚠️ فشل في تسجيل سجل العمليات:', err);
+            }
+        }
+
+        // ============================================================
+        // Monitoring
         // ============================================================
         function loadMonitoring() {
             if (!requireAdmin()) return;
@@ -3372,7 +3483,7 @@
         }
 
         // ============================================================
-        // 13. Users Management (كامل)
+        // Users Management
         // ============================================================
         function renderUsers() {
             if (!requireAdmin()) return;
@@ -3390,7 +3501,6 @@
                 (u.phone || '').toLowerCase().includes(search)
             );
 
-            // Pagination
             const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
             const page = currentPage.users || 1;
             const start = (page - 1) * PAGE_SIZE;
@@ -3426,7 +3536,7 @@
                             <td>
                                 ${photo ? `<img src="${photo}" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;margin-left:6px;object-fit:cover;">` : `<span style="display:inline-block;width:28px;height:28px;border-radius:50%;background:#3498db;color:white;text-align:center;line-height:28px;font-size:12px;font-weight:700;margin-left:6px;">${initial}</span>`}
                                 <strong>${safeText(u.name || 'مجهول')}</strong>
-                                <div style="font-size:8px;color:#888;">${u.uid ? u.uid.substring(0,10)+'...' : ''}</div>
+                                <div style="font-size:8px;color:#888;">${u.id ? u.id.substring(0,10)+'...' : ''}</div>
                             </td>
                             <td style="font-size:10px;">${safeText(u.email || '-')}</td>
                             <td>${safeText(u.phone || '-')}</td>
@@ -3455,7 +3565,6 @@
             html += '</tbody></table>';
             container.innerHTML = html;
 
-            // Pagination
             renderPagination('usersPagination', totalPages, page, 'users');
         }
 
@@ -3543,11 +3652,12 @@
             if (!confirm('⚠️ هل تريد حذف جميع منشورات هذا الطالب؟')) return;
             try {
                 const posts = allForumPosts.filter(p => p.userId === userId);
-                const batch = db.batch();
+                const updates = {};
                 posts.forEach(p => {
-                    batch.delete(db.collection('forum_posts').doc(p.id));
+                    updates[p.id] = null;
                 });
-                await batch.commit();
+                await db.ref('forum_posts').update(updates);
+                await addAuditLog('delete', `حذف جميع منشورات الطالب ${userId}`, userId);
                 showToast(`🗑️ تم حذف ${posts.length} منشور`);
                 await loadAllData();
                 renderForum();
@@ -3562,11 +3672,13 @@
             if (!confirm('⚠️ هل تريد حذف جميع تعليقات هذا الطالب؟')) return;
             try {
                 const comments = allComments.filter(c => c.userId === userId && !c.isInternal);
-                const batch = db.batch();
+                const updates = {};
                 comments.forEach(c => {
-                    batch.delete(db.collection(c.collection).doc(c.id));
+                    updates[c.id] = null;
                 });
-                await batch.commit();
+                await db.ref('forum_comments').update(updates);
+                await db.ref('team_comments').update(updates);
+                await addAuditLog('delete', `حذف جميع تعليقات الطالب ${userId}`, userId);
                 showToast(`🗑️ تم حذف ${comments.length} تعليق`);
                 await loadAllData();
                 renderComments();
@@ -3610,7 +3722,7 @@
             const status = document.getElementById('editUserStatus').value;
 
             try {
-                await db.collection('users').doc(id).update({
+                await db.ref('users/' + id).update({
                     name,
                     email,
                     phone: phone || null,
@@ -3621,8 +3733,9 @@
                     isBanned: status === 'banned',
                     isSuspended: status === 'suspended',
                     isActive: status === 'active',
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    updatedAt: Date.now()
                 });
+                await addAuditLog('update', `تعديل مستخدم ${id}`, id);
                 showToast('✅ تم التحديث');
                 closeModal('editUserModal');
                 await loadAllData();
@@ -3639,14 +3752,14 @@
             if (!requireAdmin()) return;
             if (!confirm('⚠️ حظر هذا المستخدم؟')) return;
             try {
-                await db.collection('users').doc(userId).update({
+                await db.ref('users/' + userId).update({
                     isBanned: true,
                     isSuspended: false,
                     isActive: false,
                     banReason: 'تم الحظر بواسطة الإدارة',
-                    banDate: firebase.firestore.FieldValue.serverTimestamp()
+                    banDate: Date.now()
                 });
-                await addAuditLog('ban', 'حظر مستخدم', userId);
+                await addAuditLog('ban', `حظر مستخدم ${userId}`, userId);
                 showToast('✅ تم الحظر');
                 await loadAllData();
                 renderUsers();
@@ -3659,14 +3772,14 @@
             if (!requireAdmin()) return;
             if (!confirm('⚠️ فك الحظر؟')) return;
             try {
-                await db.collection('users').doc(userId).update({
+                await db.ref('users/' + userId).update({
                     isBanned: false,
                     isSuspended: false,
                     isActive: true,
                     banReason: null,
                     banDate: null
                 });
-                await addAuditLog('update', 'فك حظر مستخدم', userId);
+                await addAuditLog('update', `فك حظر مستخدم ${userId}`, userId);
                 showToast('✅ تم فك الحظر');
                 await loadAllData();
                 renderUsers();
@@ -3679,11 +3792,11 @@
             if (!requireAdmin()) return;
             if (!confirm('⚠️ تعليق حساب هذا المستخدم؟')) return;
             try {
-                await db.collection('users').doc(userId).update({
+                await db.ref('users/' + userId).update({
                     isSuspended: true,
                     isActive: false
                 });
-                await addAuditLog('update', 'تعليق حساب مستخدم', userId);
+                await addAuditLog('update', `تعليق حساب مستخدم ${userId}`, userId);
                 showToast('⏸️ تم تعليق الحساب');
                 await loadAllData();
                 renderUsers();
@@ -3696,11 +3809,11 @@
             if (!requireAdmin()) return;
             if (!confirm('⚠️ إلغاء تعليق الحساب؟')) return;
             try {
-                await db.collection('users').doc(userId).update({
+                await db.ref('users/' + userId).update({
                     isSuspended: false,
                     isActive: true
                 });
-                await addAuditLog('update', 'إلغاء تعليق حساب', userId);
+                await addAuditLog('update', `إلغاء تعليق حساب ${userId}`, userId);
                 showToast('✅ تم إلغاء التعليق');
                 await loadAllData();
                 renderUsers();
@@ -3713,8 +3826,8 @@
             if (!requireAdmin()) return;
             if (!confirm('⚠️ حذف المستخدم نهائياً؟ هذا لا يمكن التراجع عنه!')) return;
             try {
-                await db.collection('users').doc(userId).delete();
-                await addAuditLog('delete', 'حذف مستخدم', userId);
+                await db.ref('users/' + userId).remove();
+                await addAuditLog('delete', `حذف مستخدم ${userId}`, userId);
                 showToast('🗑️ تم الحذف');
                 await loadAllData();
                 renderUsers();
@@ -3777,16 +3890,17 @@
             }
 
             try {
-                await db.collection('notifications').add({
+                const newRef = db.ref('notifications').push();
+                await newRef.set({
                     title,
                     body,
                     target: userId,
                     link: link || null,
                     isOfficial: true,
                     read: false,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    createdAt: Date.now()
                 });
-                await addAuditLog('create', 'إرسال إشعار لطالب', userId);
+                await addAuditLog('create', `إرسال إشعار لطالب ${userId}`, userId);
                 showToast('✅ تم إرسال الإشعار');
                 closeModal('sendUserNotificationModal');
                 await loadAllData();
@@ -3816,11 +3930,10 @@
             }
 
             try {
-                // إنشاء حساب Firebase
                 const userCred = await auth.createUserWithEmailAndPassword(email, password);
                 const uid = userCred.user.uid;
 
-                await db.collection('users').doc(uid).set({
+                await db.ref('users/' + uid).set({
                     name,
                     email,
                     phone: phone || null,
@@ -3831,9 +3944,9 @@
                     isBanned: false,
                     isSuspended: false,
                     isActive: true,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    createdAt: Date.now()
                 });
-                await addAuditLog('create', 'إضافة مستخدم جديد', uid);
+                await addAuditLog('create', `إضافة مستخدم جديد ${uid}`, uid);
                 showToast('✅ تم إضافة الطالب');
                 closeModal('addUserModal');
                 document.getElementById('addUserForm').reset();
@@ -3847,7 +3960,7 @@
         });
 
         // ============================================================
-        // 14. Forum Management (كامل)
+        // Forum Management
         // ============================================================
         function renderForum() {
             if (!requireAdmin()) return;
@@ -3943,21 +4056,21 @@
         async function approveForumPost(id) {
             if (!requireAdmin()) return;
             try {
-                await db.collection('forum_posts').doc(id).update({
+                await db.ref('forum_posts/' + id).update({
                     status: 'approved',
-                    approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    approvedAt: Date.now()
                 });
-                await addAuditLog('update', 'قبول منشور', id);
-                // إرسال إشعار لصاحب المنشور
+                await addAuditLog('update', `قبول منشور ${id}`, id);
                 const post = allForumPosts.find(p => p.id === id);
                 if (post && post.userId) {
-                    await db.collection('notifications').add({
+                    const newRef = db.ref('notifications').push();
+                    await newRef.set({
                         title: '✅ تم قبول منشورك',
                         body: `تم قبول منشورك "${post.title || ''}" من قبل الإدارة`,
                         target: post.userId,
                         isOfficial: true,
                         read: false,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        createdAt: Date.now()
                     });
                 }
                 showToast('✅ تم القبول');
@@ -3971,11 +4084,11 @@
         async function rejectForumPost(id) {
             if (!requireAdmin()) return;
             try {
-                await db.collection('forum_posts').doc(id).update({
+                await db.ref('forum_posts/' + id).update({
                     status: 'rejected',
-                    rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    rejectedAt: Date.now()
                 });
-                await addAuditLog('update', 'رفض منشور', id);
+                await addAuditLog('update', `رفض منشور ${id}`, id);
                 showToast('❌ تم الرفض');
                 await loadAllData();
                 renderForum();
@@ -3989,10 +4102,10 @@
             const post = allForumPosts.find(p => p.id === id);
             if (!post) { showToast('❌ المنشور غير موجود', 'error'); return; }
             try {
-                await db.collection('forum_posts').doc(id).update({
+                await db.ref('forum_posts/' + id).update({
                     isPinned: !post.isPinned
                 });
-                await addAuditLog('update', post.isPinned ? 'إلغاء تثبيت' : 'تثبيت منشور', id);
+                await addAuditLog('update', post.isPinned ? 'إلغاء تثبيت منشور' : 'تثبيت منشور', id);
                 showToast(post.isPinned ? '📌 تم إلغاء التثبيت' : '📌 تم التثبيت');
                 await loadAllData();
                 renderForum();
@@ -4004,7 +4117,7 @@
             const post = allForumPosts.find(p => p.id === id);
             if (!post) { showToast('❌ المنشور غير موجود', 'error'); return; }
             try {
-                await db.collection('forum_posts').doc(id).update({
+                await db.ref('forum_posts/' + id).update({
                     isHidden: !post.isHidden
                 });
                 await addAuditLog('update', post.isHidden ? 'إظهار منشور' : 'إخفاء منشور', id);
@@ -4018,8 +4131,8 @@
             if (!requireAdmin()) return;
             if (!confirm('⚠️ حذف المنشور؟')) return;
             try {
-                await db.collection('forum_posts').doc(id).delete();
-                await addAuditLog('delete', 'حذف منشور', id);
+                await db.ref('forum_posts/' + id).remove();
+                await addAuditLog('delete', `حذف منشور ${id}`, id);
                 showToast('🗑️ تم الحذف');
                 await loadAllData();
                 renderForum();
@@ -4041,13 +4154,12 @@
 
         async function submitOfficialReply(postId, reply, collection) {
             try {
-                const ref = db.collection(collection).doc(postId);
-                await ref.update({
+                await db.ref(collection + '/' + postId).update({
                     officialReply: reply,
-                    officialReplyDate: firebase.firestore.FieldValue.serverTimestamp(),
+                    officialReplyDate: Date.now(),
                     hasOfficialReply: true
                 });
-                await addAuditLog('create', 'رد رسمي', postId);
+                await addAuditLog('create', `رد رسمي على ${postId}`, postId);
                 showToast('✅ تم إرسال الرد الرسمي');
                 await loadAllData();
                 renderForum();
@@ -4056,7 +4168,7 @@
         }
 
         // ============================================================
-        // 15. Comments Management (كامل)
+        // Comments Management
         // ============================================================
         function renderComments() {
             if (!requireAdmin()) return;
@@ -4095,7 +4207,6 @@
                     c.source === 'forum_internal' ? '📝 داخل المنتدى' :
                     c.source === 'team_internal' ? '📝 داخل الفريق' : '-';
 
-                // عرض الردود الرسمية
                 let repliesHtml = '';
                 if (c.adminReplies && c.adminReplies.length > 0) {
                     c.adminReplies.forEach(r => {
@@ -4166,10 +4277,9 @@
 
             try {
                 if (comment.isInternal) {
-                    // تعليق داخل منشور
-                    const postRef = db.collection(comment.collection).doc(comment.postId);
-                    const postDoc = await postRef.get();
-                    const data = postDoc.data();
+                    const postRef = db.ref(comment.collection + '/' + comment.postId);
+                    const snapshot = await postRef.once('value');
+                    const data = snapshot.val();
                     if (data && data.comments && data.comments[comment.internalIndex]) {
                         const comments = data.comments;
                         comments[comment.internalIndex].adminReplies = comments[comment.internalIndex]
@@ -4180,14 +4290,13 @@
                         await postRef.update({ comments });
                     }
                 } else {
-                    // تعليق مستقل
-                    const ref = db.collection(comment.collection).doc(commentId);
-                    await ref.update({
-                        adminReplies: firebase.firestore.FieldValue.arrayUnion(reply),
-                        adminLiked: comment.adminLiked || false
+                    await db.ref(comment.collection + '/' + commentId).update({
+                        adminReplies: firebase.database.ServerValue.increment ? 
+                            { adminReplies: reply } : 
+                            { adminReplies: (comment.adminReplies || []).concat(reply) }
                     });
                 }
-                await addAuditLog('create', 'رد رسمي على تعليق', commentId);
+                await addAuditLog('create', `رد رسمي على تعليق ${commentId}`, commentId);
                 showToast('✅ تم إرسال الرد الرسمي');
                 input.value = '';
                 await loadAllData();
@@ -4204,17 +4313,18 @@
                 const newState = !comment.adminLiked;
 
                 if (comment.isInternal) {
-                    const postRef = db.collection(comment.collection).doc(comment.postId);
-                    const postDoc = await postRef.get();
-                    const data = postDoc.data();
+                    const postRef = db.ref(comment.collection + '/' + comment.postId);
+                    const snapshot = await postRef.once('value');
+                    const data = snapshot.val();
                     if (data && data.comments && data.comments[comment.internalIndex]) {
                         const comments = data.comments;
                         comments[comment.internalIndex].adminLiked = newState;
                         await postRef.update({ comments });
                     }
                 } else {
-                    const ref = db.collection(comment.collection).doc(commentId);
-                    await ref.update({ adminLiked: newState });
+                    await db.ref(comment.collection + '/' + commentId).update({
+                        adminLiked: newState
+                    });
                 }
                 await addAuditLog('update', newState ? 'إعجاب رسمي' : 'إلغاء إعجاب رسمي', commentId);
                 showToast(newState ? '❤️ إعجاب من الإدارة' : '🤍 إلغاء الإعجاب');
@@ -4233,19 +4343,20 @@
 
             try {
                 if (comment.isInternal) {
-                    const postRef = db.collection(comment.collection).doc(comment.postId);
-                    const postDoc = await postRef.get();
-                    const data = postDoc.data();
+                    const postRef = db.ref(comment.collection + '/' + comment.postId);
+                    const snapshot = await postRef.once('value');
+                    const data = snapshot.val();
                     if (data && data.comments && data.comments[comment.internalIndex]) {
                         const comments = data.comments;
                         comments[comment.internalIndex].status = 'approved';
                         await postRef.update({ comments });
                     }
                 } else {
-                    const ref = db.collection(comment.collection).doc(commentId);
-                    await ref.update({ status: 'approved' });
+                    await db.ref(comment.collection + '/' + commentId).update({
+                        status: 'approved'
+                    });
                 }
-                await addAuditLog('update', 'قبول تعليق', commentId);
+                await addAuditLog('update', `قبول تعليق ${commentId}`, commentId);
                 showToast('✅ تم القبول');
                 await loadAllData();
                 renderComments();
@@ -4260,19 +4371,20 @@
 
             try {
                 if (comment.isInternal) {
-                    const postRef = db.collection(comment.collection).doc(comment.postId);
-                    const postDoc = await postRef.get();
-                    const data = postDoc.data();
+                    const postRef = db.ref(comment.collection + '/' + comment.postId);
+                    const snapshot = await postRef.once('value');
+                    const data = snapshot.val();
                     if (data && data.comments && data.comments[comment.internalIndex]) {
                         const comments = data.comments;
                         comments[comment.internalIndex].status = 'rejected';
                         await postRef.update({ comments });
                     }
                 } else {
-                    const ref = db.collection(comment.collection).doc(commentId);
-                    await ref.update({ status: 'rejected' });
+                    await db.ref(comment.collection + '/' + commentId).update({
+                        status: 'rejected'
+                    });
                 }
-                await addAuditLog('update', 'رفض تعليق', commentId);
+                await addAuditLog('update', `رفض تعليق ${commentId}`, commentId);
                 showToast('❌ تم الرفض');
                 await loadAllData();
                 renderComments();
@@ -4288,19 +4400,18 @@
 
             try {
                 if (comment.isInternal) {
-                    const postRef = db.collection(comment.collection).doc(comment.postId);
-                    const postDoc = await postRef.get();
-                    const data = postDoc.data();
+                    const postRef = db.ref(comment.collection + '/' + comment.postId);
+                    const snapshot = await postRef.once('value');
+                    const data = snapshot.val();
                     if (data && data.comments && data.comments[comment.internalIndex]) {
                         const comments = data.comments;
                         comments.splice(comment.internalIndex, 1);
                         await postRef.update({ comments });
                     }
                 } else {
-                    const ref = db.collection(comment.collection).doc(commentId);
-                    await ref.delete();
+                    await db.ref(comment.collection + '/' + commentId).remove();
                 }
-                await addAuditLog('delete', 'حذف تعليق', commentId);
+                await addAuditLog('delete', `حذف تعليق ${commentId}`, commentId);
                 showToast('🗑️ تم الحذف');
                 await loadAllData();
                 renderComments();
@@ -4309,7 +4420,7 @@
         }
 
         // ============================================================
-        // 16. Books Management
+        // Books Management
         // ============================================================
         function renderBooks() {
             if (!requireAdmin()) return;
@@ -4378,8 +4489,11 @@
         async function approveBook(id) {
             if (!requireAdmin()) return;
             try {
-                await db.collection('books').doc(id).update({ status: 'approved' });
-                await addAuditLog('update', 'قبول كتاب', id);
+                await db.ref('books/' + id).update({
+                    status: 'approved',
+                    approvedAt: Date.now()
+                });
+                await addAuditLog('update', `قبول كتاب ${id}`, id);
                 showToast('✅ تم القبول');
                 await loadAllData();
                 renderBooks();
@@ -4391,8 +4505,11 @@
         async function rejectBook(id) {
             if (!requireAdmin()) return;
             try {
-                await db.collection('books').doc(id).update({ status: 'rejected' });
-                await addAuditLog('update', 'رفض كتاب', id);
+                await db.ref('books/' + id).update({
+                    status: 'rejected',
+                    rejectedAt: Date.now()
+                });
+                await addAuditLog('update', `رفض كتاب ${id}`, id);
                 showToast('❌ تم الرفض');
                 await loadAllData();
                 renderBooks();
@@ -4405,8 +4522,8 @@
             if (!requireAdmin()) return;
             if (!confirm('⚠️ حذف الكتاب؟')) return;
             try {
-                await db.collection('books').doc(id).delete();
-                await addAuditLog('delete', 'حذف كتاب', id);
+                await db.ref('books/' + id).remove();
+                await addAuditLog('delete', `حذف كتاب ${id}`, id);
                 showToast('🗑️ تم الحذف');
                 await loadAllData();
                 renderBooks();
@@ -4454,13 +4571,13 @@
                     subject: subject || null,
                     grade,
                     category,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    updatedAt: Date.now()
                 };
                 if (fileUrl) updateData.fileUrl = fileUrl;
                 if (coverUrl) updateData.coverUrl = coverUrl;
 
-                await db.collection('books').doc(id).update(updateData);
-                await addAuditLog('update', 'تعديل كتاب', id);
+                await db.ref('books/' + id).update(updateData);
+                await addAuditLog('update', `تعديل كتاب ${id}`, id);
                 showToast('✅ تم التعديل');
                 closeModal('editBookModal');
                 await loadAllData();
@@ -4486,7 +4603,8 @@
             }
 
             try {
-                await db.collection('books').add({
+                const newRef = db.ref('books').push();
+                await newRef.set({
                     title,
                     author,
                     subject: subject || null,
@@ -4498,9 +4616,9 @@
                     downloads: 0,
                     views: 0,
                     favorites: 0,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    createdAt: Date.now()
                 });
-                await addAuditLog('create', 'إضافة كتاب', '-');
+                await addAuditLog('create', `إضافة كتاب ${newRef.key}`, newRef.key);
                 showToast('✅ تم الإضافة');
                 closeModal('addBookModal');
                 document.getElementById('addBookForm').reset();
@@ -4512,7 +4630,7 @@
         });
 
         // ============================================================
-        // 17. Team Posts
+        // Team Posts
         // ============================================================
         function renderTeamPosts() {
             if (!requireAdmin()) return;
@@ -4551,8 +4669,8 @@
             if (!requireAdmin()) return;
             if (!confirm('⚠️ حذف المنشور؟')) return;
             try {
-                await db.collection('team_posts').doc(id).delete();
-                await addAuditLog('delete', 'حذف منشور فريق', id);
+                await db.ref('team_posts/' + id).remove();
+                await addAuditLog('delete', `حذف منشور فريق ${id}`, id);
                 showToast('🗑️ تم الحذف');
                 await loadAllData();
                 renderTeamPosts();
@@ -4575,7 +4693,8 @@
             }
 
             try {
-                await db.collection('team_posts').add({
+                const newRef = db.ref('team_posts').push();
+                await newRef.set({
                     title,
                     content,
                     image: image || null,
@@ -4586,9 +4705,9 @@
                     userId: 'admin',
                     likesCount: 0,
                     comments: [],
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    createdAt: Date.now()
                 });
-                await addAuditLog('create', 'إضافة منشور فريق', '-');
+                await addAuditLog('create', `إضافة منشور فريق ${newRef.key}`, newRef.key);
                 showToast('✅ تم النشر');
                 closeModal('addTeamPostModal');
                 document.getElementById('addTeamPostForm').reset();
@@ -4600,7 +4719,7 @@
         });
 
         // ============================================================
-        // 18. Uploads, Handwritten, Youtube (مختصرة ولكن كاملة)
+        // Uploads, Handwritten, Youtube (مختصرة ولكن كاملة)
         // ============================================================
         function renderUploads() {
             if (!requireAdmin()) return;
@@ -4647,8 +4766,8 @@
         async function approveUpload(id) {
             if (!requireAdmin()) return;
             try {
-                await db.collection('books').doc(id).update({ status: 'approved' });
-                await addAuditLog('update', 'قبول رفع', id);
+                await db.ref('books/' + id).update({ status: 'approved' });
+                await addAuditLog('update', `قبول رفع ${id}`, id);
                 showToast('✅ تم القبول');
                 await loadAllData();
                 renderUploads();
@@ -4660,8 +4779,8 @@
         async function rejectUpload(id) {
             if (!requireAdmin()) return;
             try {
-                await db.collection('books').doc(id).update({ status: 'rejected' });
-                await addAuditLog('update', 'رفض رفع', id);
+                await db.ref('books/' + id).update({ status: 'rejected' });
+                await addAuditLog('update', `رفض رفع ${id}`, id);
                 showToast('❌ تم الرفض');
                 await loadAllData();
                 renderUploads();
@@ -4674,8 +4793,8 @@
             if (!requireAdmin()) return;
             if (!confirm('⚠️ حذف الملف؟')) return;
             try {
-                await db.collection('books').doc(id).delete();
-                await addAuditLog('delete', 'حذف رفع', id);
+                await db.ref('books/' + id).remove();
+                await addAuditLog('delete', `حذف رفع ${id}`, id);
                 showToast('🗑️ تم الحذف');
                 await loadAllData();
                 renderUploads();
@@ -4745,11 +4864,11 @@
         async function approveHandwritten(id) {
             if (!requireAdmin()) return;
             try {
-                await db.collection('handwritten_notes').doc(id).update({
+                await db.ref('handwritten_notes/' + id).update({
                     status: 'approved',
-                    approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    approvedAt: Date.now()
                 });
-                await addAuditLog('update', 'قبول ملخص', id);
+                await addAuditLog('update', `قبول ملخص ${id}`, id);
                 showToast('✅ تم قبول الملخص');
                 await loadAllData();
                 renderHandwritten();
@@ -4761,11 +4880,11 @@
         async function rejectHandwritten(id) {
             if (!requireAdmin()) return;
             try {
-                await db.collection('handwritten_notes').doc(id).update({
+                await db.ref('handwritten_notes/' + id).update({
                     status: 'rejected',
-                    rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    rejectedAt: Date.now()
                 });
-                await addAuditLog('update', 'رفض ملخص', id);
+                await addAuditLog('update', `رفض ملخص ${id}`, id);
                 showToast('❌ تم رفض الملخص');
                 await loadAllData();
                 renderHandwritten();
@@ -4778,8 +4897,8 @@
             if (!requireAdmin()) return;
             if (!confirm('⚠️ حذف الملخص نهائياً؟')) return;
             try {
-                await db.collection('handwritten_notes').doc(id).delete();
-                await addAuditLog('delete', 'حذف ملخص', id);
+                await db.ref('handwritten_notes/' + id).remove();
+                await addAuditLog('delete', `حذف ملخص ${id}`, id);
                 showToast('🗑️ تم الحذف');
                 await loadAllData();
                 renderHandwritten();
@@ -4828,8 +4947,8 @@
             if (!requireAdmin()) return;
             if (!confirm('⚠️ حذف القناة؟')) return;
             try {
-                await db.collection('youtube_channels').doc(id).delete();
-                await addAuditLog('delete', 'حذف قناة يوتيوب', id);
+                await db.ref('youtube_channels/' + id).remove();
+                await addAuditLog('delete', `حذف قناة يوتيوب ${id}`, id);
                 showToast('🗑️ تم الحذف');
                 await loadAllData();
                 renderYoutube();
@@ -4854,16 +4973,17 @@
             }
 
             try {
-                await db.collection('youtube_channels').add({
+                const newRef = db.ref('youtube_channels').push();
+                await newRef.set({
                     name,
                     subject,
                     grade,
                     link,
                     image: image || null,
                     desc: desc || null,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    createdAt: Date.now()
                 });
-                await addAuditLog('create', 'إضافة قناة يوتيوب', '-');
+                await addAuditLog('create', `إضافة قناة يوتيوب ${newRef.key}`, newRef.key);
                 showToast('✅ تم إضافة القناة');
                 closeModal('addYoutubeModal');
                 document.getElementById('addYoutubeForm').reset();
@@ -4875,7 +4995,7 @@
         });
 
         // ============================================================
-        // 19. Ads Management (كامل مع رفع الصور)
+        // Ads Management (كامل مع رفع الصور)
         // ============================================================
         let adImageFile = null;
 
@@ -4946,7 +5066,7 @@
             try {
                 const ad = allAds.find(a => a.id === id);
                 if (!ad) { showToast('❌ الإعلان غير موجود', 'error'); return; }
-                await db.collection('ads').doc(id).update({ active: !ad.active });
+                await db.ref('ads/' + id).update({ active: !ad.active });
                 await addAuditLog('update', ad.active ? 'إيقاف إعلان' : 'تفعيل إعلان', id);
                 showToast(ad.active ? '⏸️ تم إيقاف الإعلان' : '▶️ تم تفعيل الإعلان');
                 await loadAllData();
@@ -4959,8 +5079,8 @@
             if (!requireAdmin()) return;
             if (!confirm('⚠️ حذف الإعلان؟')) return;
             try {
-                await db.collection('ads').doc(id).delete();
-                await addAuditLog('delete', 'حذف إعلان', id);
+                await db.ref('ads/' + id).remove();
+                await addAuditLog('delete', `حذف إعلان ${id}`, id);
                 showToast('🗑️ تم الحذف');
                 await loadAllData();
                 renderAds();
@@ -4991,12 +5111,13 @@
             try {
                 let imageUrl = null;
                 if (adImageFile) {
-                    const ref = storage.ref(`ads/${Date.now()}_${adImageFile.name}`);
+                    const ref = storage.ref('ads/' + Date.now() + '_' + adImageFile.name);
                     await ref.put(adImageFile);
                     imageUrl = await ref.getDownloadURL();
                 }
 
-                await db.collection('ads').add({
+                const newRef = db.ref('ads').push();
+                await newRef.set({
                     title,
                     desc: desc || null,
                     link: link || null,
@@ -5007,11 +5128,11 @@
                     showOnFirst,
                     active,
                     image: imageUrl,
-                    startDate: startDate ? new Date(startDate) : null,
-                    endDate: endDate ? new Date(endDate) : null,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    startDate: startDate ? new Date(startDate).getTime() : null,
+                    endDate: endDate ? new Date(endDate).getTime() : null,
+                    createdAt: Date.now()
                 });
-                await addAuditLog('create', 'إضافة إعلان', '-');
+                await addAuditLog('create', `إضافة إعلان ${newRef.key}`, newRef.key);
                 showToast('✅ تم نشر الإعلان');
                 closeModal('addAdModal');
                 document.getElementById('addAdForm').reset();
@@ -5026,7 +5147,7 @@
         });
 
         // ============================================================
-        // 20. Reports
+        // Reports
         // ============================================================
         function renderReports() {
             if (!requireAdmin()) return;
@@ -5071,11 +5192,11 @@
         async function resolveReport(id) {
             if (!requireAdmin()) return;
             try {
-                await db.collection('reports').doc(id).update({
+                await db.ref('reports/' + id).update({
                     status: 'resolved',
-                    resolvedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    resolvedAt: Date.now()
                 });
-                await addAuditLog('update', 'حل بلاغ', id);
+                await addAuditLog('update', `حل بلاغ ${id}`, id);
                 showToast('✅ تم حل البلاغ');
                 await loadAllData();
                 renderReports();
@@ -5087,11 +5208,11 @@
         async function rejectReport(id) {
             if (!requireAdmin()) return;
             try {
-                await db.collection('reports').doc(id).update({
+                await db.ref('reports/' + id).update({
                     status: 'rejected',
-                    rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    rejectedAt: Date.now()
                 });
-                await addAuditLog('update', 'رفض بلاغ', id);
+                await addAuditLog('update', `رفض بلاغ ${id}`, id);
                 showToast('❌ تم رفض البلاغ');
                 await loadAllData();
                 renderReports();
@@ -5117,7 +5238,7 @@
         }
 
         // ============================================================
-        // 21. Notifications
+        // Notifications
         // ============================================================
         function renderNotifications() {
             if (!requireAdmin()) return;
@@ -5158,8 +5279,8 @@
             if (!requireAdmin()) return;
             if (!confirm('⚠️ حذف الإشعار؟')) return;
             try {
-                await db.collection('notifications').doc(id).delete();
-                await addAuditLog('delete', 'حذف إشعار', id);
+                await db.ref('notifications/' + id).remove();
+                await addAuditLog('delete', `حذف إشعار ${id}`, id);
                 showToast('🗑️ تم الحذف');
                 await loadAllData();
                 renderNotifications();
@@ -5183,33 +5304,41 @@
             }
 
             try {
-                const notifData = {
-                    title,
-                    body,
-                    target,
-                    type,
-                    link: link || null,
-                    image: image || null,
-                    isOfficial: type === 'official',
-                    read: false,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                // إذا كان المستهدف هو طالب محدد
+                // إذا كان المستهدف هو صف معين
                 if (target.startsWith('grade')) {
                     const grade = target.replace('grade', '');
                     const students = allUsers.filter(u => u.grade === grade && !u.isBanned);
                     for (const student of students) {
-                        await db.collection('notifications').add({
-                            ...notifData,
+                        const newRef = db.ref('notifications').push();
+                        await newRef.set({
+                            title,
+                            body,
                             target: student.id,
-                            targetType: 'student'
+                            targetType: 'student',
+                            type,
+                            link: link || null,
+                            image: image || null,
+                            isOfficial: type === 'official',
+                            read: false,
+                            createdAt: Date.now()
                         });
                     }
                     await addAuditLog('create', `إرسال إشعار للصف ${grade}`, '-');
                     showToast(`✅ تم إرسال الإشعار لـ ${students.length} طالب`);
                 } else {
-                    await db.collection('notifications').add(notifData);
+                    const newRef = db.ref('notifications').push();
+                    await newRef.set({
+                        title,
+                        body,
+                        target,
+                        targetType: 'all',
+                        type,
+                        link: link || null,
+                        image: image || null,
+                        isOfficial: type === 'official',
+                        read: false,
+                        createdAt: Date.now()
+                    });
                     await addAuditLog('create', 'إرسال إشعار', '-');
                     showToast('✅ تم الإرسال');
                 }
@@ -5223,7 +5352,7 @@
         });
 
         // ============================================================
-        // 22. Analytics
+        // Analytics
         // ============================================================
         function loadAnalytics() {
             if (!requireAdmin()) return;
@@ -5273,29 +5402,7 @@
         }
 
         // ============================================================
-        // 23. Audit Log - إضافة سجل
-        // ============================================================
-        async function addAuditLog(action, description, targetId) {
-            try {
-                await db.collection('audit_logs').add({
-                    action,
-                    description,
-                    targetId: targetId || null,
-                    performedBy: currentUser?.uid || 'unknown',
-                    performedByName: userData?.name || 'المدير',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    details: {
-                        userAgent: navigator.userAgent,
-                        ip: '0.0.0.0'
-                    }
-                });
-            } catch (err) {
-                console.warn('⚠️ فشل في تسجيل سجل العمليات:', err);
-            }
-        }
-
-        // ============================================================
-        // 24. Search
+        // Search
         // ============================================================
         function performGlobalSearch() {
             const query = document.getElementById('globalSearchInput').value.toLowerCase().trim();
@@ -5309,7 +5416,6 @@
 
             let results = [];
 
-            // بحث في الطلاب
             allUsers.forEach(u => {
                 if ((u.name || '').toLowerCase().includes(query) || (u.email || '').toLowerCase().includes(
                     query)) {
@@ -5318,7 +5424,6 @@
                 }
             });
 
-            // بحث في المنشورات
             allForumPosts.forEach(p => {
                 if ((p.title || '').toLowerCase().includes(query) || (p.content || '').toLowerCase().includes(
                     query) || (p.author || '').toLowerCase().includes(query)) {
@@ -5327,7 +5432,6 @@
                 }
             });
 
-            // بحث في التعليقات
             allComments.forEach(c => {
                 if ((c.text || '').toLowerCase().includes(query) || (c.userName || '').toLowerCase().includes(
                     query)) {
@@ -5336,7 +5440,6 @@
                 }
             });
 
-            // بحث في الكتب
             allBooks.forEach(b => {
                 if ((b.title || '').toLowerCase().includes(query) || (b.author || '').toLowerCase().includes(
                     query)) {
@@ -5345,7 +5448,6 @@
                 }
             });
 
-            // بحث في قنوات يوتيوب
             allYoutube.forEach(y => {
                 if ((y.name || '').toLowerCase().includes(query) || (y.subject || '').toLowerCase().includes(
                     query)) {
@@ -5354,7 +5456,6 @@
                 }
             });
 
-            // بحث في الإعلانات
             allAds.forEach(a => {
                 if ((a.title || '').toLowerCase().includes(query) || (a.desc || '').toLowerCase().includes(
                     query)) {
@@ -5363,7 +5464,6 @@
                 }
             });
 
-            // بحث في الإشعارات
             allNotifications.forEach(n => {
                 if ((n.title || '').toLowerCase().includes(query) || (n.body || '').toLowerCase().includes(
                     query)) {
@@ -5395,7 +5495,6 @@
                 viewStudentProfile(id);
             } else if (link === 'viewForumPost') {
                 showPage('forum');
-                // Highlight the post
                 showToast('📌 تم العثور على المنشور');
             } else if (link === 'viewComment') {
                 showPage('comments');
@@ -5418,7 +5517,7 @@
         }
 
         // ============================================================
-        // 25. Settings
+        // Settings
         // ============================================================
         async function saveSettings() {
             if (!requireAdmin()) return;
@@ -5430,21 +5529,21 @@
 
             if (!siteName) { showToast('❌ يرجى إدخال اسم الموقع', 'error'); return; }
             try {
-                await db.collection('settings').doc('site').set({
+                await db.ref('settings/site').set({
                     siteName,
                     telegram,
                     logo,
                     darkMode,
                     lang,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
+                    updatedAt: Date.now()
+                });
                 await addAuditLog('update', 'تعديل الإعدادات', '-');
                 showToast('✅ تم الحفظ');
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
 
         // ============================================================
-        // 26. Badges
+        // Badges
         // ============================================================
         function updateBadges() {
             if (!requireAdmin()) return;
@@ -5489,11 +5588,12 @@
             document.querySelector('.btn-dark').textContent = '☀️';
         }
 
-        console.log('✅ لوحة التحكم الخارقة - الثانوية الرسمية بلس (الإصدار المحترف)');
+        console.log('✅ لوحة التحكم الخارقة - الثانوية الرسمية بلس (Realtime Database)');
         console.log('🟢 يتم تحديث المتصلين كل 3 ثوانٍ');
         console.log('📊 تم إضافة: Dashboard متطور، إدارة طلاب كاملة، إدارة منتدى، إدارة تعليقات، إعلانات، إشعارات، بحث شامل، سجل عمليات، مراقبة نظام');
         console.log('🔒 نظام أمان صارم مع التحقق من صلاحية الأدمن');
         console.log('📌 الحساب الرسمي الموثق مع إعجابات وردود رسمية');
+        console.log('📂 جميع البيانات من Realtime Database فقط');
     </script>
 </body>
 </html>
