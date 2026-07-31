@@ -48,19 +48,19 @@
             color: #e0e0e0;
         }
 
-        /* ===== علامة التوثيق الزرقاء - تصميم أصلي ===== */
-        .verified-badge {
+        /* ===== علامة التوثيق الرسمية ===== */
+        .official-badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             margin-inline-start: 4px;
             vertical-align: middle;
             user-select: none;
             flex-shrink: 0;
         }
-        .verified-badge svg {
+        .official-badge svg {
             width: 100%;
             height: 100%;
             filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18));
@@ -532,73 +532,46 @@
         }
 
         /* ===== الردود الرسمية ===== */
-        .admin-reply {
-            background: #e3f2fd;
-            border-right: 3px solid #1a237e;
-            padding: 6px 12px;
-            border-radius: 8px;
-            margin: 4px 0;
+        .official-reply {
+            background: #e8f0fe;
+            border-right: 4px solid #1a237e;
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin: 8px 0;
         }
-        .admin-reply .reply-header {
+        body.dark-mode .official-reply {
+            background: #1a237e30;
+            border-color: #64b5f6;
+        }
+        .official-reply .reply-header {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-weight: 700;
-            color: #1a237e;
-            font-size: 12px;
+            gap: 10px;
+            margin-bottom: 4px;
         }
-        .admin-reply .reply-header img {
-            width: 28px;
-            height: 28px;
+        .official-reply .reply-header .team-logo {
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            border: 2px solid #1a237e;
             object-fit: cover;
+            border: 2px solid #1a237e;
         }
-        .admin-reply .reply-header .team-name {
+        .official-reply .reply-header .team-name {
+            font-weight: 800;
+            font-size: 14px;
+            color: #1a237e;
             display: flex;
             align-items: center;
             gap: 4px;
-            color: #1a237e;
         }
-        .admin-reply .reply-body {
+        .official-reply .reply-body {
             font-size: 13px;
-            padding: 6px 0;
             color: #1a237e;
             line-height: 1.6;
+            padding-right: 10px;
         }
-        .dark-mode .admin-reply {
-            background: #1a237e40;
-            border-color: #64b5f6;
-        }
-        .dark-mode .admin-reply .reply-header {
-            color: #90caf9;
-        }
-        .dark-mode .admin-reply .reply-body {
+        body.dark-mode .official-reply .reply-body {
             color: #e3f2fd;
-        }
-
-        .official-like {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #e3f2fd;
-            padding: 3px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            color: #1a237e;
-            border: 1px solid #90caf9;
-        }
-        .official-like img {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            border: 1px solid #1a237e;
-        }
-        .dark-mode .official-like {
-            background: #1a237e40;
-            color: #90caf9;
-            border-color: #64b5f6;
         }
 
         /* ===== Online Users ===== */
@@ -1378,67 +1351,6 @@
             background: #1a237e;
             color: #e3f2fd;
         }
-
-        /* ===== Team Reply Style ===== */
-        .team-reply {
-            background: #e8f0fe;
-            border-right: 4px solid #1a237e;
-            padding: 10px 14px;
-            border-radius: 10px;
-            margin: 6px 0;
-        }
-        body.dark-mode .team-reply {
-            background: #1a237e30;
-            border-color: #64b5f6;
-        }
-        .team-reply .team-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 6px;
-        }
-        .team-reply .team-header .team-logo {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #1a237e;
-        }
-        .team-reply .team-header .team-name {
-            font-weight: 800;
-            font-size: 14px;
-            color: #1a237e;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .team-reply .team-body {
-            font-size: 13px;
-            color: #1a237e;
-            line-height: 1.6;
-            padding-right: 10px;
-        }
-        body.dark-mode .team-reply .team-body {
-            color: #e3f2fd;
-        }
-
-        /* ===== Verified Badge - تصميم أصلي ===== */
-        .verified-badge-team {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            margin-inline-start: 4px;
-            vertical-align: middle;
-            user-select: none;
-            flex-shrink: 0;
-        }
-        .verified-badge-team svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18));
-        }
     </style>
 </head>
 <body>
@@ -1456,10 +1368,16 @@
             <div class="avatar-placeholder">ف</div>
             <div class="name" id="adminName">
                 فريق الثانوية الرسمية
-                <span class="verified-badge-team">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="12" r="12" fill="#1D9BF0"/>
-                        <path d="M7 12L10.5 15.5L17 9" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <span class="official-badge" title="الحساب الرسمي الموثق">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="verifyBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#3DB4FF"/>
+                                <stop offset="100%" stop-color="#1D9BF0"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="12" cy="12" r="10" fill="url(#verifyBlue)"/>
+                        <path d="M7.8 12.4l2.3 2.3 6-6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </span>
             </div>
@@ -1579,7 +1497,7 @@
             </div>
         </div>
 
-        <!-- ===== باقي الصفحات (نفس الهيكل) ===== -->
+        <!-- ===== باقي الصفحات ===== -->
         <div class="page" id="page-users">
             <div class="table-container">
                 <div class="table-header">
@@ -1600,6 +1518,7 @@
             </div>
         </div>
 
+        <!-- ===== صفحة التعليقات - هنا تظهر جميع التعليقات ===== -->
         <div class="page" id="page-comments">
             <div class="table-container">
                 <div class="table-header">
@@ -2057,7 +1976,7 @@
     <div class="toast" id="toast"></div>
 
     <!-- ============================================================ -->
-    <!-- JavaScript - Realtime Database Version -->
+    <!-- JavaScript -->
     <!-- ============================================================ -->
     <script>
         // ============================================================
@@ -2112,12 +2031,18 @@
         const TEAM_NAME = "فريق الثانوية الرسمية بلس";
         const TEAM_UID = "admin_team_official";
 
-        // ===== علامة التوثيق الزرقاء - تصميم أصلي =====
-        const VERIFIED_BADGE_HTML = `
-            <span class="verified-badge" title="حساب موثق رسمي">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="12" fill="#1D9BF0"/>
-                    <path d="M7 12L10.5 15.5L17 9" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        // ===== علامة التوثيق الرسمية =====
+        const OFFICIAL_BADGE_HTML = `
+            <span class="official-badge" title="الحساب الرسمي الموثق">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="verifyBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#3DB4FF"/>
+                            <stop offset="100%" stop-color="#1D9BF0"/>
+                        </linearGradient>
+                    </defs>
+                    <circle cx="12" cy="12" r="10" fill="url(#verifyBlue)"/>
+                    <path d="M7.8 12.4l2.3 2.3 6-6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </span>
         `;
@@ -2216,13 +2141,11 @@
                 `;
         }
 
-        // دالة التحقق من الحظر - حقيقي ودائم
         async function checkUserBanStatus(userId) {
             try {
                 const snap = await db.ref('users/' + userId + '/isBanned').once('value');
                 const isBanned = snap.val();
                 if (isBanned === true) {
-                    // تسجيل محاولة دخول من محظور
                     await db.ref('audit_logs').push({
                         action: 'banned_access_attempt',
                         performedBy: userId,
@@ -2237,65 +2160,6 @@
             }
         }
 
-        // دالة حظر مستخدم - دائمة حتى فك الحظر
-        async function banUserPermanent(userId, reason = 'تم الحظر بواسطة الإدارة') {
-            try {
-                await db.ref('users/' + userId).update({
-                    isBanned: true,
-                    isActive: false,
-                    banReason: reason,
-                    banDate: Date.now(),
-                    bannedBy: currentUser?.uid || 'system',
-                    bannedByName: userData?.name || 'المدير'
-                });
-
-                // تسجيل في سجل العمليات
-                await db.ref('audit_logs').push({
-                    action: 'ban_permanent',
-                    performedBy: userData?.name || 'المدير',
-                    userId: currentUser?.uid || 'unknown',
-                    details: { target: userId, reason: reason },
-                    timestamp: Date.now()
-                });
-
-                // إنهاء جلسة المستخدم المحظور فوراً
-                await db.ref('users/' + userId + '/lastActive').set(null);
-                await db.ref('users/' + userId + '/sessionId').set(null);
-                await db.ref('online_users/' + userId).remove();
-
-                return true;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        // دالة فك الحظر
-        async function unbanUserPermanent(userId) {
-            try {
-                await db.ref('users/' + userId).update({
-                    isBanned: false,
-                    isActive: true,
-                    banReason: null,
-                    banDate: null,
-                    unbannedBy: currentUser?.uid || 'system',
-                    unbannedByName: userData?.name || 'المدير',
-                    unbannedDate: Date.now()
-                });
-
-                await db.ref('audit_logs').push({
-                    action: 'unban_permanent',
-                    performedBy: userData?.name || 'المدير',
-                    userId: currentUser?.uid || 'unknown',
-                    details: { target: userId },
-                    timestamp: Date.now()
-                });
-
-                return true;
-            } catch (err) {
-                throw err;
-            }
-        }
-
         async function verifyUser(user) {
             if (!user) {
                 showAccessDenied('يرجى تسجيل الدخول أولاً');
@@ -2303,7 +2167,6 @@
             }
 
             try {
-                // التحقق من الحظر أولاً
                 const isBanned = await checkUserBanStatus(user.uid);
                 if (isBanned) {
                     showAccessDenied('⛔ حسابك محظور بشكل دائم، يرجى التواصل مع الإدارة');
@@ -2320,7 +2183,6 @@
                     return false;
                 }
 
-                // تحقق إضافي من الحظر
                 if (userDataSnap.isBanned === true) {
                     showAccessDenied('⛔ حسابك محظور بشكل دائم، يرجى التواصل مع الإدارة');
                     await auth.signOut();
@@ -2347,11 +2209,10 @@
 
                 document.getElementById('adminName').innerHTML = `
                         ${userDataSnap.name || 'المدير'}
-                        ${VERIFIED_BADGE_HTML}
+                        ${OFFICIAL_BADGE_HTML}
                     `;
                 document.getElementById('adminEmail').textContent = userDataSnap.email || user.email;
 
-                // تحديث حالة الاتصال للأدمن
                 await db.ref('online_users/' + user.uid).set({
                     uid: user.uid,
                     name: userDataSnap.name || 'المدير',
@@ -2362,7 +2223,6 @@
                 });
                 db.ref('online_users/' + user.uid).onDisconnect().remove();
 
-                // تسجيل دخول الأدمن
                 await db.ref('audit_logs').push({
                     action: 'login',
                     performedBy: userDataSnap.name || 'المدير',
@@ -2430,7 +2290,7 @@
         });
 
         // ============================================================
-        // مراقبة المتصلين - Realtime مع الأسماء
+        // مراقبة المتصلين - Realtime
         // ============================================================
         let onlineUsersListener = null;
 
@@ -2457,14 +2317,12 @@
                         });
                     }
 
-                    // تحديث العدد
                     document.getElementById('onlineBadge').textContent = allOnlineUsers.length;
                     document.getElementById('onlineCountHeader').textContent = allOnlineUsers.length;
                     document.getElementById('onlineUsersCount').textContent = allOnlineUsers.length;
 
                     renderOnlineUsers();
 
-                    // تحديث Dashboard إذا كان مفتوحاً
                     const dashPage = document.getElementById('page-dashboard');
                     if (dashPage && dashPage.classList.contains('active')) {
                         updateDashboard();
@@ -2503,7 +2361,7 @@
                             <div class="online-info">
                                 <div class="name">
                                     ${safeText(u.name || 'مجهول')}
-                                    ${u.isVerified ? VERIFIED_BADGE_HTML : ''}
+                                    ${u.isVerified ? OFFICIAL_BADGE_HTML : ''}
                                     <span style="font-size:8px;color:#888;">${safeText(u.role || 'طالب')}</span>
                                 </div>
                                 <div class="details">
@@ -2543,10 +2401,6 @@
             if (!requireAdmin()) return;
             if (!confirm('⚠️ هل تريد إنهاء جميع الجلسات النشطة؟')) return;
             try {
-                const updates = {};
-                allOnlineUsers.forEach(u => {
-                    updates[u.id] = { lastActive: null, sessionId: null };
-                });
                 for (const u of allOnlineUsers) {
                     await db.ref('users/' + u.id).update({ lastActive: null, sessionId: null });
                     await db.ref('online_users/' + u.id).remove();
@@ -2612,7 +2466,7 @@
         }
 
         // ============================================================
-        // تحميل جميع البيانات
+        // تحميل جميع البيانات - مع جلب التعليقات من المنتدى ومنشورات الفريق
         // ============================================================
         async function loadAllData() {
             if (!requireAdmin()) return;
@@ -2643,30 +2497,142 @@
                 allAuditLogs = auditLogs || [];
                 allUploads = allBooks.filter(b => b.status === 'pending');
 
-                // تحميل التعليقات
+                // ===== جلب جميع التعليقات من المنتدى ومنشورات الفريق =====
                 allComments = [];
+
+                // 1. تعليقات المنتدى الداخلية (من forum_posts)
                 allForumPosts.forEach(post => {
                     if (post.comments && post.comments.length > 0) {
                         post.comments.forEach((comment, index) => {
+                            // تجاهل التعليقات المرفوضة
+                            if (comment.status === 'rejected') return;
+
+                            // التحقق من أن التعليق ليس رداً رسمياً (حتى لا يتكرر)
+                            const isOfficial = comment.isOfficialReply || comment.isAdminReply ||
+                                (comment.user === TEAM_NAME);
+
                             allComments.push({
                                 id: post.id + '_c' + index,
                                 text: comment.text || '',
                                 userName: comment.user || 'مجهول',
+                                userPhoto: comment.userPhoto || '',
                                 userId: comment.userId || null,
                                 postId: post.id,
-                                source: 'forum_internal',
+                                postTitle: post.title || 'بدون عنوان',
+                                source: 'منتدى',
+                                sourceType: 'forum',
                                 status: comment.status || 'pending',
                                 createdAt: comment.createdAt || Date.now(),
                                 adminReplies: comment.adminReplies || [],
                                 adminLiked: comment.adminLiked || false,
                                 isInternal: true,
                                 internalIndex: index,
-                                isOfficialReply: comment.isOfficialReply || false
+                                isOfficialReply: isOfficial,
+                                isVerified: comment.verified || false,
+                                teamLogo: comment.userPhoto || '',
+                                teamName: comment.user || ''
                             });
                         });
                     }
                 });
 
+                // 2. تعليقات منشورات الفريق الداخلية (من team_posts)
+                allTeamPosts.forEach(post => {
+                    if (post.comments && post.comments.length > 0) {
+                        post.comments.forEach((comment, index) => {
+                            if (comment.status === 'rejected') return;
+
+                            const isOfficial = comment.isOfficialReply || comment.isAdminReply ||
+                                (comment.user === TEAM_NAME);
+
+                            allComments.push({
+                                id: 'team_' + post.id + '_c' + index,
+                                text: comment.text || '',
+                                userName: comment.user || 'مجهول',
+                                userPhoto: comment.userPhoto || '',
+                                userId: comment.userId || null,
+                                postId: post.id,
+                                postTitle: post.title || 'بدون عنوان',
+                                source: 'منشورات الفريق',
+                                sourceType: 'team',
+                                status: comment.status || 'pending',
+                                createdAt: comment.createdAt || Date.now(),
+                                adminReplies: comment.adminReplies || [],
+                                adminLiked: comment.adminLiked || false,
+                                isInternal: true,
+                                internalIndex: index,
+                                isOfficialReply: isOfficial,
+                                isVerified: comment.verified || false,
+                                teamLogo: comment.userPhoto || '',
+                                teamName: comment.user || ''
+                            });
+                        });
+                    }
+                });
+
+                // 3. تعليقات منفصلة (forum_comments و team_comments) - إذا وجدت
+                try {
+                    const forumCommentsSnap = await db.ref('forum_comments').once('value');
+                    const forumCommentsData = forumCommentsSnap.val();
+                    if (forumCommentsData) {
+                        Object.keys(forumCommentsData).forEach(key => {
+                            const comment = forumCommentsData[key];
+                            if (comment.status === 'rejected') return;
+                            allComments.push({
+                                id: key,
+                                text: comment.text || '',
+                                userName: comment.userName || comment.user || 'مجهول',
+                                userPhoto: comment.userPhoto || '',
+                                userId: comment.userId || null,
+                                postId: comment.postId || null,
+                                postTitle: comment.postTitle || 'بدون عنوان',
+                                source: 'منتدى (خارجي)',
+                                sourceType: 'forum_external',
+                                status: comment.status || 'pending',
+                                createdAt: comment.createdAt || Date.now(),
+                                adminReplies: comment.adminReplies || [],
+                                adminLiked: comment.adminLiked || false,
+                                isInternal: false,
+                                isOfficialReply: comment.isOfficialReply || false,
+                                isVerified: comment.verified || false
+                            });
+                        });
+                    }
+                } catch (err) {}
+
+                try {
+                    const teamCommentsSnap = await db.ref('team_comments').once('value');
+                    const teamCommentsData = teamCommentsSnap.val();
+                    if (teamCommentsData) {
+                        Object.keys(teamCommentsData).forEach(key => {
+                            const comment = teamCommentsData[key];
+                            if (comment.status === 'rejected') return;
+                            allComments.push({
+                                id: 'team_ext_' + key,
+                                text: comment.text || '',
+                                userName: comment.userName || comment.user || 'مجهول',
+                                userPhoto: comment.userPhoto || '',
+                                userId: comment.userId || null,
+                                postId: comment.postId || null,
+                                postTitle: comment.postTitle || 'بدون عنوان',
+                                source: 'منشورات الفريق (خارجي)',
+                                sourceType: 'team_external',
+                                status: comment.status || 'pending',
+                                createdAt: comment.createdAt || Date.now(),
+                                adminReplies: comment.adminReplies || [],
+                                adminLiked: comment.adminLiked || false,
+                                isInternal: false,
+                                isOfficialReply: comment.isOfficialReply || false,
+                                isVerified: comment.verified || false
+                            });
+                        });
+                    }
+                } catch (err) {}
+
+                // ترتيب التعليقات من الأحدث للأقدم
+                allComments.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                // الأنشطة
                 allActivities = [];
                 allBooks.slice(0, 3).forEach(b => {
                     allActivities.push({
@@ -2687,6 +2653,13 @@
                         text: `💬 منشور: "${p.title || 'بدون عنوان'}"`,
                         time: p.createdAt ? formatDate(p.createdAt) : 'الآن',
                         status: p.status || 'pending'
+                    });
+                });
+                allComments.slice(0, 5).forEach(c => {
+                    allActivities.push({
+                        text: `💬 تعليق: "${(c.text || '').substring(0, 30)}..." من ${c.userName}`,
+                        time: c.createdAt ? formatDate(c.createdAt) : 'الآن',
+                        status: c.status || 'pending'
                     });
                 });
 
@@ -2944,7 +2917,6 @@
                 topStudentsList.innerHTML = html;
             }
 
-            // Quick Stats
             const quickStats = document.getElementById('quickStats');
             const officialReplies = allComments.reduce((sum, c) => sum + (c.adminReplies ? c.adminReplies.length : 0), 0);
             quickStats.innerHTML = `
@@ -2961,6 +2933,8 @@
                             <tr><td>📅 حسابات جديدة اليوم</td><td>${newToday}</td></tr>
                             <tr><td>📢 الإعلانات النشطة</td><td>${activeAds}</td></tr>
                             <tr><td>⏳ غير نشطين (أسبوع)</td><td>${inactiveWeek}</td></tr>
+                            <tr><td>💬 إجمالي التعليقات</td><td>${totalComments}</td></tr>
+                            <tr><td>⏳ تعليقات في الانتظار</td><td>${pendingComments}</td></tr>
                         </tbody>
                     </table>
                 `;
@@ -3062,7 +3036,7 @@
             const sizeMB = (totalSize / (1024 * 1024)).toFixed(2);
             document.getElementById('storageUsage').textContent = sizeMB + ' MB';
 
-            const dailyReads = allBooks.length + allUsers.length + allForumPosts.length;
+            const dailyReads = allBooks.length + allUsers.length + allForumPosts.length + allComments.length;
             const dailyWrites = allActivities.length;
             document.getElementById('dailyReads').textContent = dailyReads;
             document.getElementById('dailyWrites').textContent = dailyWrites;
@@ -3144,8 +3118,6 @@
                     log.action === 'delete' ? 'delete' :
                     log.action === 'update' ? 'update' :
                     log.action === 'ban' ? 'ban' :
-                    log.action === 'ban_permanent' ? 'ban' :
-                    log.action === 'unban_permanent' ? 'update' :
                     log.action === 'login' ? 'login' :
                     log.action === 'logout' ? 'logout' :
                     log.action === 'official_reply' ? 'official_reply' :
@@ -3207,7 +3179,7 @@
         }
 
         // ============================================================
-        // Users Management - مع نظام الحظر الدائم
+        // Users Management
         // ============================================================
         function renderUsers() {
             if (!requireAdmin()) return;
@@ -3251,7 +3223,7 @@
                                 <div style="display:flex;align-items:center;gap:6px;">
                                     ${u.photoURL ? `<img src="${u.photoURL}" style="width:24px;height:24px;border-radius:50%;object-fit:cover;">` : `<div style="width:24px;height:24px;border-radius:50%;background:#3498db;color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;">${(u.name||'?').charAt(0).toUpperCase()}</div>`}
                                     <strong>${safeText(u.name || 'مجهول')}</strong>
-                                    ${u.isVerified ? VERIFIED_BADGE_HTML : ''}
+                                    ${u.isVerified ? OFFICIAL_BADGE_HTML : ''}
                                 </div>
                             </td>
                             <td style="font-size:10px;">${safeText(u.email || '-')}</td>
@@ -3264,8 +3236,8 @@
                                     <button class="btn btn-primary btn-xs" onclick="viewStudentProfile('${u.id}')">👤</button>
                                     <button class="btn btn-warning btn-xs" onclick="editUser('${u.id}')">✏️</button>
                                     ${u.isBanned ? 
-                                        `<button class="btn btn-success btn-xs" onclick="unbanUserPermanent('${u.id}')">✅ فك</button>` :
-                                        `<button class="btn btn-danger btn-xs" onclick="banUserPermanent('${u.id}')">🚫 حظر</button>`
+                                        `<button class="btn btn-success btn-xs" onclick="unbanUser('${u.id}')">✅ فك</button>` :
+                                        `<button class="btn btn-danger btn-xs" onclick="banUser('${u.id}')">🚫 حظر</button>`
                                     }
                                     <button class="btn btn-purple btn-xs" onclick="sendNotificationToUser('${u.id}')">🔔</button>
                                     <button class="btn btn-danger btn-xs" onclick="deleteUser('${u.id}')">🗑️</button>
@@ -3333,7 +3305,7 @@
                             <div class="info">
                                 <h3>
                                     ${safeText(user.name || 'مجهول')}
-                                    ${user.isVerified ? VERIFIED_BADGE_HTML : ''}
+                                    ${user.isVerified ? OFFICIAL_BADGE_HTML : ''}
                                 </h3>
                                 <div class="sub">📧 ${safeText(user.email || '-')}</div>
                                 <div class="sub">📱 ${safeText(user.phone || '-')}</div>
@@ -3354,8 +3326,8 @@
                         <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:10px;">
                             <button class="btn btn-warning" onclick="editUser('${userId}');closeModal('studentProfileModal')">✏️ تعديل</button>
                             ${user.isBanned ? 
-                                `<button class="btn btn-success" onclick="unbanUserPermanent('${userId}');closeModal('studentProfileModal')">✅ فك الحظر</button>` :
-                                `<button class="btn btn-danger" onclick="banUserPermanent('${userId}');closeModal('studentProfileModal')">🚫 حظر</button>`
+                                `<button class="btn btn-success" onclick="unbanUser('${userId}');closeModal('studentProfileModal')">✅ فك الحظر</button>` :
+                                `<button class="btn btn-danger" onclick="banUser('${userId}');closeModal('studentProfileModal')">🚫 حظر</button>`
                             }
                             <button class="btn btn-purple" onclick="sendNotificationToUser('${userId}');closeModal('studentProfileModal')">🔔 إرسال إشعار</button>
                             <button class="btn btn-danger" onclick="deleteAllUserPosts('${userId}')">🗑️ حذف المنشورات</button>
@@ -3427,38 +3399,25 @@
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         });
 
-        // ===== دوال الحظر الدائم =====
-        async function banUserPermanent(userId, reason) {
+        // ===== دوال الحظر =====
+        async function banUser(userId) {
             if (!requireAdmin()) return;
-            const reasonText = reason || prompt('📌 سبب الحظر:');
-            if (!reasonText) return;
-            if (!confirm(`⚠️ هل تريد حظر هذا المستخدم بشكل دائم؟\nالسبب: ${reasonText}`)) return;
+            const reason = prompt('📌 سبب الحظر:');
+            if (!reason) return;
+            if (!confirm(`⚠️ هل تريد حظر هذا المستخدم؟\nالسبب: ${reason}`)) return;
 
-            try {
-                await banUserPermanentDB(userId, reasonText);
-                showToast('✅ تم حظر المستخدم بشكل دائم');
-                await loadAllData();
-                renderUsers();
-                updateDashboard();
-                updateBadges();
-            } catch (err) {
-                showToast('❌ ' + err.message, 'error');
-            }
-        }
-
-        async function banUserPermanentDB(userId, reason) {
             try {
                 await db.ref('users/' + userId).update({
                     isBanned: true,
                     isActive: false,
-                    banReason: reason || 'مخالفة قواعد المنصة',
+                    banReason: reason,
                     banDate: Date.now(),
                     bannedBy: currentUser?.uid || 'system',
                     bannedByName: userData?.name || 'المدير'
                 });
 
                 await db.ref('audit_logs').push({
-                    action: 'ban_permanent',
+                    action: 'ban',
                     performedBy: userData?.name || 'المدير',
                     userId: currentUser?.uid || 'unknown',
                     details: { target: userId, reason: reason },
@@ -3469,13 +3428,17 @@
                 await db.ref('users/' + userId + '/sessionId').set(null);
                 await db.ref('online_users/' + userId).remove();
 
-                return true;
+                showToast('✅ تم حظر المستخدم');
+                await loadAllData();
+                renderUsers();
+                updateDashboard();
+                updateBadges();
             } catch (err) {
-                throw err;
+                showToast('❌ ' + err.message, 'error');
             }
         }
 
-        async function unbanUserPermanent(userId) {
+        async function unbanUser(userId) {
             if (!requireAdmin()) return;
             if (!confirm('⚠️ هل تريد فك الحظر عن هذا المستخدم؟')) return;
 
@@ -3491,10 +3454,10 @@
                 });
 
                 await db.ref('audit_logs').push({
-                    action: 'unban_permanent',
+                    action: 'update',
                     performedBy: userData?.name || 'المدير',
                     userId: currentUser?.uid || 'unknown',
-                    details: { target: userId },
+                    details: { target: userId, action: 'unban' },
                     timestamp: Date.now()
                 });
 
@@ -3511,16 +3474,14 @@
         async function banUserFromModal() {
             const id = document.getElementById('editUserId').value;
             if (!id) return;
-            const reason = prompt('📌 سبب الحظر:');
-            if (!reason) return;
-            await banUserPermanent(id, reason);
+            await banUser(id);
             closeModal('editUserModal');
         }
 
         async function unbanUserFromModal() {
             const id = document.getElementById('editUserId').value;
             if (!id) return;
-            await unbanUserPermanent(id);
+            await unbanUser(id);
             closeModal('editUserModal');
         }
 
@@ -3655,7 +3616,7 @@
         });
 
         // ============================================================
-        // Comments Management - مع الردود الرسمية بالشعار والصورة
+        // Comments Management - عرض جميع التعليقات من المنتدى ومنشورات الفريق
         // ============================================================
         function renderComments() {
             if (!requireAdmin()) return;
@@ -3667,7 +3628,8 @@
             if (filter !== 'all') filtered = filtered.filter(c => c.status === filter);
             if (search) filtered = filtered.filter(c =>
                 (c.text || '').toLowerCase().includes(search) ||
-                (c.userName || '').toLowerCase().includes(search)
+                (c.userName || '').toLowerCase().includes(search) ||
+                (c.postTitle || '').toLowerCase().includes(search)
             );
 
             if (filtered.length === 0) {
@@ -3677,7 +3639,7 @@
             }
 
             let html =
-                '<table><thead><tr><th>#</th><th>التعليق</th><th>المستخدم</th><th>الحالة</th><th>الردود الرسمية</th><th>الإجراءات</th></tr></thead><tbody>';
+                `<table><thead><tr><th>#</th><th>التعليق</th><th>المستخدم</th><th>المصدر</th><th>الحالة</th><th>ردود رسمية</th><th>الإجراءات</th></tr></thead><tbody>`;
 
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
@@ -3691,11 +3653,28 @@
 
                 const officialReplies = c.adminReplies ? c.adminReplies.length : 0;
 
+                // عرض اسم المستخدم مع علامة التوثيق إذا كان الرد رسمياً
+                let userNameDisplay = safeText(c.userName || 'مجهول');
+                if (c.isOfficialReply || c.userName === TEAM_NAME) {
+                    userNameDisplay = `
+                            <span style="display:flex;align-items:center;gap:4px;">
+                                <img src="${TEAM_LOGO}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;border:1px solid #1a237e;">
+                                ${safeText(TEAM_NAME)}
+                                ${OFFICIAL_BADGE_HTML}
+                            </span>
+                        `;
+                } else if (c.isVerified) {
+                    userNameDisplay = safeText(c.userName || 'مجهول') + ' ' + OFFICIAL_BADGE_HTML;
+                }
+
+                const sourceDisplay = c.source || 'غير معروف';
+
                 html += `
                         <tr>
                             <td>${start + i + 1}</td>
-                            <td style="max-width:150px;word-wrap:break-word;font-size:10px;">${safeText(c.text || '')}</td>
-                            <td>${safeText(c.userName || 'مجهول')}</td>
+                            <td style="max-width:200px;word-wrap:break-word;font-size:11px;">${safeText(c.text || '')}</td>
+                            <td>${userNameDisplay}</td>
+                            <td style="font-size:10px;">${sourceDisplay}</td>
                             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                             <td>${officialReplies > 0 ? `📌 ${officialReplies}` : '-'}</td>
                             <td>
@@ -3705,7 +3684,7 @@
                                         <button class="btn btn-danger btn-xs" onclick="rejectComment('${c.id}')">❌ رفض</button>
                                     ` : ''}
                                     <button class="btn btn-official btn-xs" onclick="officialReplyComment('${c.id}')">📌 رد رسمي</button>
-                                    <button class="btn btn-official btn-xs" onclick="officialLikeComment('${c.id}')">❤️ Like رسمي</button>
+                                    <button class="btn btn-official btn-xs" onclick="officialLikeComment('${c.id}')">❤️ Like</button>
                                     <button class="btn btn-danger btn-xs" onclick="deleteComment('${c.id}')">🗑️</button>
                                 </div>
                             </td>
@@ -3724,6 +3703,7 @@
             renderComments();
         }
 
+        // ===== قبول/رفض/حذف التعليقات =====
         async function approveComment(commentId) {
             if (!requireAdmin()) return;
             try {
@@ -3736,7 +3716,11 @@
                         post.comments[comment.internalIndex].status = 'approved';
                         await updateData('forum_posts', comment.postId, { comments: post.comments });
                     }
+                } else if (comment.sourceType === 'forum_external' || comment.sourceType === 'team_external') {
+                    const collection = comment.sourceType === 'forum_external' ? 'forum_comments' : 'team_comments';
+                    await updateData(collection, comment.id, { status: 'approved' });
                 }
+
                 await db.ref('audit_logs').push({
                     action: 'update',
                     performedBy: window.userData?.name || 'المدير',
@@ -3744,6 +3728,7 @@
                     details: { target: commentId, action: 'approve_comment' },
                     timestamp: Date.now()
                 });
+
                 showToast('✅ تم قبول التعليق');
                 await loadAllData();
                 renderComments();
@@ -3765,7 +3750,11 @@
                         post.comments[comment.internalIndex].status = 'rejected';
                         await updateData('forum_posts', comment.postId, { comments: post.comments });
                     }
+                } else if (comment.sourceType === 'forum_external' || comment.sourceType === 'team_external') {
+                    const collection = comment.sourceType === 'forum_external' ? 'forum_comments' : 'team_comments';
+                    await updateData(collection, comment.id, { status: 'rejected' });
                 }
+
                 await db.ref('audit_logs').push({
                     action: 'update',
                     performedBy: window.userData?.name || 'المدير',
@@ -3773,6 +3762,7 @@
                     details: { target: commentId, action: 'reject_comment' },
                     timestamp: Date.now()
                 });
+
                 showToast('❌ تم رفض التعليق');
                 await loadAllData();
                 renderComments();
@@ -3795,7 +3785,11 @@
                         post.comments.splice(comment.internalIndex, 1);
                         await updateData('forum_posts', comment.postId, { comments: post.comments });
                     }
+                } else if (comment.sourceType === 'forum_external' || comment.sourceType === 'team_external') {
+                    const collection = comment.sourceType === 'forum_external' ? 'forum_comments' : 'team_comments';
+                    await deleteData(collection, comment.id);
                 }
+
                 await db.ref('audit_logs').push({
                     action: 'delete',
                     performedBy: window.userData?.name || 'المدير',
@@ -3803,6 +3797,7 @@
                     details: { target: commentId, action: 'delete_comment' },
                     timestamp: Date.now()
                 });
+
                 showToast('🗑️ تم الحذف');
                 await loadAllData();
                 renderComments();
@@ -3812,7 +3807,7 @@
             }
         }
 
-        // ===== الرد الرسمي بشعار المنصة وصورة الفريق =====
+        // ===== الرد الرسمي بشعار المنصة وصورة الفريق وعلامة التوثيق =====
         async function officialReplyComment(commentId) {
             if (!requireAdmin()) return;
             const reply = prompt('📌 اكتب الرد الرسمي من فريق الثانوية الرسمية بلس:');
@@ -3824,11 +3819,15 @@
 
                 const replyData = {
                     text: reply,
-                    adminName: TEAM_NAME,
-                    adminPhoto: TEAM_LOGO,
-                    timestamp: Date.now(),
+                    user: TEAM_NAME,
+                    userPhoto: TEAM_LOGO,
+                    userId: TEAM_UID,
+                    status: 'approved',
+                    isAdminReply: true,
                     isOfficialReply: true,
-                    verified: true
+                    verified: true,
+                    likes: 0,
+                    createdAt: Date.now()
                 };
 
                 if (comment.isInternal) {
@@ -3840,6 +3839,14 @@
                         post.comments[comment.internalIndex].status = 'approved';
                         await updateData('forum_posts', comment.postId, { comments: post.comments });
                     }
+                } else if (comment.sourceType === 'forum_external' || comment.sourceType === 'team_external') {
+                    const collection = comment.sourceType === 'forum_external' ? 'forum_comments' : 'team_comments';
+                    const commentRef = db.ref(collection + '/' + comment.id);
+                    const snapshot = await commentRef.once('value');
+                    const data = snapshot.val() || {};
+                    const replies = data.adminReplies || [];
+                    replies.push(replyData);
+                    await commentRef.update({ adminReplies: replies, status: 'approved' });
                 }
 
                 await db.ref('audit_logs').push({
@@ -3872,6 +3879,12 @@
                             .likes || 0) + 1;
                         await updateData('forum_posts', comment.postId, { comments: post.comments });
                     }
+                } else if (comment.sourceType === 'forum_external' || comment.sourceType === 'team_external') {
+                    const collection = comment.sourceType === 'forum_external' ? 'forum_comments' : 'team_comments';
+                    await updateData(collection, comment.id, {
+                        adminLiked: true,
+                        likes: firebase.database.ServerValue.increment(1)
+                    });
                 }
 
                 await db.ref('audit_logs').push({
@@ -5169,6 +5182,7 @@
                             <tr><td>🚨 البلاغات</td><td>${totalReports}</td><td>${allReports.filter(r=>r.status==='resolved').length} تم الحل</td></tr>
                             <tr><td>📌 ردود الإدارة</td><td>${officialReplies}</td><td>${allComments.filter(c=>c.adminLiked).length} إعجابات رسمية</td></tr>
                             <tr><td>📢 الإعلانات</td><td>${allAds.length}</td><td>${activeAds} نشطة</td></tr>
+                            <tr><td>💬 إجمالي التعليقات</td><td>${totalComments}</td><td>${allComments.filter(c=>c.status==='pending').length} في الانتظار</td></tr>
                         </tbody>
                     </table>
                 `;
@@ -5271,9 +5285,10 @@
         console.log('✅ لوحة التحكم الخارقة - Realtime Database Version');
         console.log('📊 جميع البيانات من Realtime Database');
         console.log('🟢 تحديثات لحظية للمتصلين');
-        console.log('🔵 علامة توثيق زرقاء (دائرة زرقاء + علامة صح بيضاء)');
+        console.log('🔵 علامة توثيق رسمية لفريق الثانوية الرسمية بلس');
         console.log('🚫 نظام حظر دائم يمنع الدخول مهما حدث');
-        console.log('📌 ردود رسمية بشعار المنصة وصورة الفريق');
+        console.log('📌 ردود رسمية بشعار المنصة وصورة الفريق وعلامة التوثيق');
+        console.log('💬 جميع التعليقات تظهر في لوحة التحكم');
 
         // تحميل أولي للبيانات
         setTimeout(() => {
