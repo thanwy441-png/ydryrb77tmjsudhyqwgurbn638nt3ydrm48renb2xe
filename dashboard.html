@@ -66,7 +66,120 @@
             filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18));
         }
 
-        /* ===== الشريط الجانبي ===== */
+        /* ===== الردود الرسمية ===== */
+        .official-reply {
+            background: #e8f0fe;
+            border-right: 4px solid #1a237e;
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin: 8px 0;
+        }
+        body.dark-mode .official-reply {
+            background: #1a237e30;
+            border-color: #64b5f6;
+        }
+        .official-reply .reply-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        .official-reply .reply-header .team-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #1a237e;
+        }
+        .official-reply .reply-header .team-name {
+            font-weight: 800;
+            font-size: 14px;
+            color: #1a237e;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .official-reply .reply-body {
+            font-size: 13px;
+            color: #1a237e;
+            line-height: 1.6;
+            padding-right: 10px;
+        }
+        body.dark-mode .official-reply .reply-body {
+            color: #e3f2fd;
+        }
+
+        /* ===== المتصلون الآن - Online Users ===== */
+        .online-user-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: 0.3s;
+        }
+        .online-user-item:hover {
+            background: #f8f9fa;
+        }
+        body.dark-mode .online-user-item:hover {
+            background: #2d2d44;
+        }
+        .online-user-item .online-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #2ecc71;
+        }
+        .online-user-item .online-avatar-placeholder {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+            flex-shrink: 0;
+            border: 2px solid #2ecc71;
+        }
+        .online-user-item .online-info {
+            flex: 1;
+        }
+        .online-user-item .online-info .name {
+            font-weight: 700;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .online-user-item .online-info .details {
+            font-size: 10px;
+            color: #888;
+        }
+        .online-user-item .online-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #2ecc71;
+            flex-shrink: 0;
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ===== باقي الستايلات محفوظة ===== */
         .sidebar {
             position: fixed;
             top: 0;
@@ -531,120 +644,6 @@
             background: #2d4373;
         }
 
-        /* ===== الردود الرسمية ===== */
-        .official-reply {
-            background: #e8f0fe;
-            border-right: 4px solid #1a237e;
-            padding: 10px 14px;
-            border-radius: 10px;
-            margin: 8px 0;
-        }
-        body.dark-mode .official-reply {
-            background: #1a237e30;
-            border-color: #64b5f6;
-        }
-        .official-reply .reply-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 4px;
-        }
-        .official-reply .reply-header .team-logo {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #1a237e;
-        }
-        .official-reply .reply-header .team-name {
-            font-weight: 800;
-            font-size: 14px;
-            color: #1a237e;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .official-reply .reply-body {
-            font-size: 13px;
-            color: #1a237e;
-            line-height: 1.6;
-            padding-right: 10px;
-        }
-        body.dark-mode .official-reply .reply-body {
-            color: #e3f2fd;
-        }
-
-        /* ===== Online Users ===== */
-        .online-user-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            border-bottom: 1px solid #f0f0f0;
-            transition: 0.3s;
-        }
-        .online-user-item:hover {
-            background: #f8f9fa;
-        }
-        body.dark-mode .online-user-item:hover {
-            background: #2d2d44;
-        }
-        .online-user-item .online-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #2ecc71;
-        }
-        .online-user-item .online-avatar-placeholder {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #3498db;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 800;
-            flex-shrink: 0;
-            border: 2px solid #2ecc71;
-        }
-        .online-user-item .online-info {
-            flex: 1;
-        }
-        .online-user-item .online-info .name {
-            font-weight: 700;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .online-user-item .online-info .details {
-            font-size: 10px;
-            color: #888;
-        }
-        .online-user-item .online-status {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #2ecc71;
-            flex-shrink: 0;
-            animation: pulse-dot 2s infinite;
-        }
-        @keyframes pulse-dot {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.5;
-                transform: scale(0.8);
-            }
-        }
-
-        /* ===== باقي الستايلات محفوظة ===== */
         .ad-item {
             background: #e3f2fd;
             border-right: 4px solid #1a237e;
@@ -1351,24 +1350,6 @@
             background: #1a237e;
             color: #e3f2fd;
         }
-
-        /* ===== علامة التوثيق الزرقاء الجديدة ===== */
-        .official-badge-blue {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            margin-inline-start: 4px;
-            vertical-align: middle;
-            user-select: none;
-            flex-shrink: 0;
-        }
-        .official-badge-blue svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18));
-        }
     </style>
 </head>
 <body>
@@ -1386,47 +1367,16 @@
             <div class="avatar-placeholder">ف</div>
             <div class="name" id="adminName">
                 فريق الثانوية الرسمية
-                <span class="official-badge-blue" title="الحساب الرسمي الموثق">
-                    <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path fill="#1D9BF0"
-                              d="M12 1.8
-                                 L13.8 3.2
-                                 L16 2.7
-                                 L17.2 4.7
-                                 L19.5 5
-                                 L19.7 7.3
-                                 L21.5 8.8
-                                 L20.7 11
-                                 L22 12.9
-                                 L20.7 14.8
-                                 L21.5 17
-                                 L19.7 18.5
-                                 L19.5 20.8
-                                 L17.2 21.1
-                                 L16 23.1
-                                 L13.8 22.6
-                                 L12 24
-                                 L10.2 22.6
-                                 L8 23.1
-                                 L6.8 21.1
-                                 L4.5 20.8
-                                 L4.3 18.5
-                                 L2.5 17
-                                 L3.3 14.8
-                                 L2 12.9
-                                 L3.3 11
-                                 L2.5 8.8
-                                 L4.3 7.3
-                                 L4.5 5
-                                 L6.8 4.7
-                                 L8 2.7
-                                 L10.2 3.2 Z"/>
-                        <path d="M8.3 12.3l2.2 2.2 5.2-5.3"
-                              fill="none"
-                              stroke="#fff"
-                              stroke-width="2.2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"/>
+                <span class="official-badge" title="الحساب الرسمي الموثق">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="verifyBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#3DB4FF"/>
+                                <stop offset="100%" stop-color="#1D9BF0"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="12" cy="12" r="10" fill="url(#verifyBlue)"/>
+                        <path d="M7.8 12.4l2.3 2.3 6-6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </span>
             </div>
@@ -1567,7 +1517,7 @@
             </div>
         </div>
 
-        <!-- ===== صفحة التعليقات - هنا تظهر جميع التعليقات ===== -->
+        <!-- ===== صفحة التعليقات ===== -->
         <div class="page" id="page-comments">
             <div class="table-container">
                 <div class="table-header">
@@ -2080,49 +2030,18 @@
         const TEAM_NAME = "فريق الثانوية الرسمية بلس";
         const TEAM_UID = "admin_team_official";
 
-        // ===== علامة التوثيق الزرقاء الجديدة =====
-        const OFFICIAL_BADGE_BLUE_HTML = `
-            <span class="official-badge-blue" title="الحساب الرسمي الموثق">
-                <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="#1D9BF0"
-                          d="M12 1.8
-                             L13.8 3.2
-                             L16 2.7
-                             L17.2 4.7
-                             L19.5 5
-                             L19.7 7.3
-                             L21.5 8.8
-                             L20.7 11
-                             L22 12.9
-                             L20.7 14.8
-                             L21.5 17
-                             L19.7 18.5
-                             L19.5 20.8
-                             L17.2 21.1
-                             L16 23.1
-                             L13.8 22.6
-                             L12 24
-                             L10.2 22.6
-                             L8 23.1
-                             L6.8 21.1
-                             L4.5 20.8
-                             L4.3 18.5
-                             L2.5 17
-                             L3.3 14.8
-                             L2 12.9
-                             L3.3 11
-                             L2.5 8.8
-                             L4.3 7.3
-                             L4.5 5
-                             L6.8 4.7
-                             L8 2.7
-                             L10.2 3.2 Z"/>
-                    <path d="M8.3 12.3l2.2 2.2 5.2-5.3"
-                          fill="none"
-                          stroke="#fff"
-                          stroke-width="2.2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"/>
+        // ===== علامة التوثيق الرسمية =====
+        const OFFICIAL_BADGE_HTML = `
+            <span class="official-badge" title="الحساب الرسمي الموثق">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="verifyBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#3DB4FF"/>
+                            <stop offset="100%" stop-color="#1D9BF0"/>
+                        </linearGradient>
+                    </defs>
+                    <circle cx="12" cy="12" r="10" fill="url(#verifyBlue)"/>
+                    <path d="M7.8 12.4l2.3 2.3 6-6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </span>
         `;
@@ -2208,7 +2127,7 @@
         }
 
         // ============================================================
-        // التحقق من المستخدم - مع نظام الحظر الحقيقي
+        // التحقق من المستخدم - مع نظام الحظر
         // ============================================================
         function showAccessDenied(message = 'غير مصرح بالدخول') {
             document.body.innerHTML = `
@@ -2249,7 +2168,7 @@
             try {
                 const isBanned = await checkUserBanStatus(user.uid);
                 if (isBanned) {
-                    showAccessDenied('⛔ حسابك محظور بشكل دائم، يرجى التواصل مع الإدارة');
+                    showAccessDenied('⛔ حسابك محظور، يرجى التواصل مع الإدارة');
                     await auth.signOut();
                     return false;
                 }
@@ -2264,7 +2183,7 @@
                 }
 
                 if (userDataSnap.isBanned === true) {
-                    showAccessDenied('⛔ حسابك محظور بشكل دائم، يرجى التواصل مع الإدارة');
+                    showAccessDenied('⛔ حسابك محظور، يرجى التواصل مع الإدارة');
                     await auth.signOut();
                     return false;
                 }
@@ -2289,10 +2208,11 @@
 
                 document.getElementById('adminName').innerHTML = `
                         ${userDataSnap.name || 'المدير'}
-                        ${OFFICIAL_BADGE_BLUE_HTML}
+                        ${OFFICIAL_BADGE_HTML}
                     `;
                 document.getElementById('adminEmail').textContent = userDataSnap.email || user.email;
 
+                // تحديث حالة الاتصال للأدمن في online_users
                 await db.ref('online_users/' + user.uid).set({
                     uid: user.uid,
                     name: userDataSnap.name || 'المدير',
@@ -2301,6 +2221,7 @@
                     lastActive: Date.now(),
                     isAdmin: true
                 });
+                // عند قطع الاتصال يتم حذف المستخدم من online_users تلقائياً
                 db.ref('online_users/' + user.uid).onDisconnect().remove();
 
                 await db.ref('audit_logs').push({
@@ -2370,7 +2291,7 @@
         });
 
         // ============================================================
-        // مراقبة المتصلين - Realtime + لحظية
+        // مراقبة المتصلين - Realtime مع المتصلين الحقيقيين فقط
         // ============================================================
         let onlineUsersListener = null;
 
@@ -2387,23 +2308,30 @@
                     if (data) {
                         Object.keys(data).forEach(key => {
                             const user = data[key];
-                            // ===== فقط المستخدمين الحقيقيين (غير المشرفين) =====
+                            // فقط المستخدمين غير الأدمن وغير المحظورين
                             if (user && !user.isAdmin && !user.isBanned) {
-                                allOnlineUsers.push({
-                                    id: key,
-                                    ...user,
-                                    status: 'online'
-                                });
+                                // التحقق من أن المستخدم نشط فعلاً (آخر نشاط خلال 3 دقائق)
+                                const now = Date.now();
+                                const lastActive = user.lastActive || 0;
+                                if (now - lastActive < 180000) { // 3 دقائق
+                                    allOnlineUsers.push({
+                                        id: key,
+                                        ...user,
+                                        status: 'online'
+                                    });
+                                }
                             }
                         });
                     }
 
+                    // تحديث العدد
                     document.getElementById('onlineBadge').textContent = allOnlineUsers.length;
                     document.getElementById('onlineCountHeader').textContent = allOnlineUsers.length;
                     document.getElementById('onlineUsersCount').textContent = allOnlineUsers.length;
 
                     renderOnlineUsers();
 
+                    // تحديث Dashboard إذا كان مفتوحاً
                     const dashPage = document.getElementById('page-dashboard');
                     if (dashPage && dashPage.classList.contains('active')) {
                         updateDashboard();
@@ -2442,7 +2370,7 @@
                             <div class="online-info">
                                 <div class="name">
                                     ${safeText(u.name || 'مجهول')}
-                                    ${u.isVerified ? OFFICIAL_BADGE_BLUE_HTML : ''}
+                                    ${u.isVerified ? OFFICIAL_BADGE_HTML : ''}
                                     <span style="font-size:8px;color:#888;">${safeText(u.role || 'طالب')}</span>
                                 </div>
                                 <div class="details">
@@ -2547,7 +2475,7 @@
         }
 
         // ============================================================
-        // تحميل جميع البيانات - مع جلب التعليقات من المنتدى ومنشورات الفريق
+        // تحميل جميع البيانات
         // ============================================================
         async function loadAllData() {
             if (!requireAdmin()) return;
@@ -2578,17 +2506,14 @@
                 allAuditLogs = auditLogs || [];
                 allUploads = allBooks.filter(b => b.status === 'pending');
 
-                // ===== جلب جميع التعليقات من المنتدى ومنشورات الفريق =====
+                // جلب جميع التعليقات
                 allComments = [];
 
-                // 1. تعليقات المنتدى الداخلية (من forum_posts)
+                // تعليقات المنتدى الداخلية
                 allForumPosts.forEach(post => {
                     if (post.comments && post.comments.length > 0) {
                         post.comments.forEach((comment, index) => {
-                            // تجاهل التعليقات المرفوضة
                             if (comment.status === 'rejected') return;
-
-                            // التحقق من أن التعليق ليس رداً رسمياً (حتى لا يتكرر)
                             const isOfficial = comment.isOfficialReply || comment.isAdminReply ||
                                 (comment.user === TEAM_NAME);
 
@@ -2609,20 +2534,17 @@
                                 isInternal: true,
                                 internalIndex: index,
                                 isOfficialReply: isOfficial,
-                                isVerified: comment.verified || false,
-                                teamLogo: comment.userPhoto || '',
-                                teamName: comment.user || ''
+                                isVerified: comment.verified || false
                             });
                         });
                     }
                 });
 
-                // 2. تعليقات منشورات الفريق الداخلية (من team_posts)
+                // تعليقات منشورات الفريق الداخلية
                 allTeamPosts.forEach(post => {
                     if (post.comments && post.comments.length > 0) {
                         post.comments.forEach((comment, index) => {
                             if (comment.status === 'rejected') return;
-
                             const isOfficial = comment.isOfficialReply || comment.isAdminReply ||
                                 (comment.user === TEAM_NAME);
 
@@ -2643,74 +2565,12 @@
                                 isInternal: true,
                                 internalIndex: index,
                                 isOfficialReply: isOfficial,
-                                isVerified: comment.verified || false,
-                                teamLogo: comment.userPhoto || '',
-                                teamName: comment.user || ''
+                                isVerified: comment.verified || false
                             });
                         });
                     }
                 });
 
-                // 3. تعليقات منفصلة (forum_comments و team_comments) - إذا وجدت
-                try {
-                    const forumCommentsSnap = await db.ref('forum_comments').once('value');
-                    const forumCommentsData = forumCommentsSnap.val();
-                    if (forumCommentsData) {
-                        Object.keys(forumCommentsData).forEach(key => {
-                            const comment = forumCommentsData[key];
-                            if (comment.status === 'rejected') return;
-                            allComments.push({
-                                id: key,
-                                text: comment.text || '',
-                                userName: comment.userName || comment.user || 'مجهول',
-                                userPhoto: comment.userPhoto || '',
-                                userId: comment.userId || null,
-                                postId: comment.postId || null,
-                                postTitle: comment.postTitle || 'بدون عنوان',
-                                source: 'منتدى (خارجي)',
-                                sourceType: 'forum_external',
-                                status: comment.status || 'pending',
-                                createdAt: comment.createdAt || Date.now(),
-                                adminReplies: comment.adminReplies || [],
-                                adminLiked: comment.adminLiked || false,
-                                isInternal: false,
-                                isOfficialReply: comment.isOfficialReply || false,
-                                isVerified: comment.verified || false
-                            });
-                        });
-                    }
-                } catch (err) {}
-
-                try {
-                    const teamCommentsSnap = await db.ref('team_comments').once('value');
-                    const teamCommentsData = teamCommentsSnap.val();
-                    if (teamCommentsData) {
-                        Object.keys(teamCommentsData).forEach(key => {
-                            const comment = teamCommentsData[key];
-                            if (comment.status === 'rejected') return;
-                            allComments.push({
-                                id: 'team_ext_' + key,
-                                text: comment.text || '',
-                                userName: comment.userName || comment.user || 'مجهول',
-                                userPhoto: comment.userPhoto || '',
-                                userId: comment.userId || null,
-                                postId: comment.postId || null,
-                                postTitle: comment.postTitle || 'بدون عنوان',
-                                source: 'منشورات الفريق (خارجي)',
-                                sourceType: 'team_external',
-                                status: comment.status || 'pending',
-                                createdAt: comment.createdAt || Date.now(),
-                                adminReplies: comment.adminReplies || [],
-                                adminLiked: comment.adminLiked || false,
-                                isInternal: false,
-                                isOfficialReply: comment.isOfficialReply || false,
-                                isVerified: comment.verified || false
-                            });
-                        });
-                    }
-                } catch (err) {}
-
-                // ترتيب التعليقات من الأحدث للأقدم
                 allComments.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
                 // الأنشطة
@@ -3304,7 +3164,7 @@
                                 <div style="display:flex;align-items:center;gap:6px;">
                                     ${u.photoURL ? `<img src="${u.photoURL}" style="width:24px;height:24px;border-radius:50%;object-fit:cover;">` : `<div style="width:24px;height:24px;border-radius:50%;background:#3498db;color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;">${(u.name||'?').charAt(0).toUpperCase()}</div>`}
                                     <strong>${safeText(u.name || 'مجهول')}</strong>
-                                    ${u.isVerified ? OFFICIAL_BADGE_BLUE_HTML : ''}
+                                    ${u.isVerified ? OFFICIAL_BADGE_HTML : ''}
                                 </div>
                             </td>
                             <td style="font-size:10px;">${safeText(u.email || '-')}</td>
@@ -3386,7 +3246,7 @@
                             <div class="info">
                                 <h3>
                                     ${safeText(user.name || 'مجهول')}
-                                    ${user.isVerified ? OFFICIAL_BADGE_BLUE_HTML : ''}
+                                    ${user.isVerified ? OFFICIAL_BADGE_HTML : ''}
                                 </h3>
                                 <div class="sub">📧 ${safeText(user.email || '-')}</div>
                                 <div class="sub">📱 ${safeText(user.phone || '-')}</div>
@@ -3697,7 +3557,7 @@
         });
 
         // ============================================================
-        // Comments Management - عرض جميع التعليقات من المنتدى ومنشورات الفريق
+        // Comments Management - عرض جميع التعليقات مع الردود الرسمية
         // ============================================================
         function renderComments() {
             if (!requireAdmin()) return;
@@ -3734,18 +3594,18 @@
 
                 const officialReplies = c.adminReplies ? c.adminReplies.length : 0;
 
-                // عرض اسم المستخدم مع علامة التوثيق الزرقاء إذا كان الرد رسمياً
+                // عرض اسم المستخدم مع الصورة والشعار وعلامة التوثيق إذا كان رداً رسمياً
                 let userNameDisplay = safeText(c.userName || 'مجهول');
                 if (c.isOfficialReply || c.userName === TEAM_NAME) {
                     userNameDisplay = `
-                            <span style="display:flex;align-items:center;gap:4px;">
-                                <img src="${TEAM_LOGO}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;border:1px solid #1a237e;">
-                                ${safeText(TEAM_NAME)}
-                                ${OFFICIAL_BADGE_BLUE_HTML}
-                            </span>
+                            <div style="display:flex;align-items:center;gap:6px;">
+                                <img src="${TEAM_LOGO}" style="width:24px;height:24px;border-radius:50%;object-fit:cover;border:2px solid #1a237e;">
+                                <span style="font-weight:800;color:#1a237e;">${safeText(TEAM_NAME)}</span>
+                                ${OFFICIAL_BADGE_HTML}
+                            </div>
                         `;
                 } else if (c.isVerified) {
-                    userNameDisplay = safeText(c.userName || 'مجهول') + ' ' + OFFICIAL_BADGE_BLUE_HTML;
+                    userNameDisplay = safeText(c.userName || 'مجهول') + ' ' + OFFICIAL_BADGE_HTML;
                 }
 
                 const sourceDisplay = c.source || 'غير معروف';
@@ -3797,9 +3657,6 @@
                         post.comments[comment.internalIndex].status = 'approved';
                         await updateData('forum_posts', comment.postId, { comments: post.comments });
                     }
-                } else if (comment.sourceType === 'forum_external' || comment.sourceType === 'team_external') {
-                    const collection = comment.sourceType === 'forum_external' ? 'forum_comments' : 'team_comments';
-                    await updateData(collection, comment.id, { status: 'approved' });
                 }
 
                 await db.ref('audit_logs').push({
@@ -3831,9 +3688,6 @@
                         post.comments[comment.internalIndex].status = 'rejected';
                         await updateData('forum_posts', comment.postId, { comments: post.comments });
                     }
-                } else if (comment.sourceType === 'forum_external' || comment.sourceType === 'team_external') {
-                    const collection = comment.sourceType === 'forum_external' ? 'forum_comments' : 'team_comments';
-                    await updateData(collection, comment.id, { status: 'rejected' });
                 }
 
                 await db.ref('audit_logs').push({
@@ -3866,9 +3720,6 @@
                         post.comments.splice(comment.internalIndex, 1);
                         await updateData('forum_posts', comment.postId, { comments: post.comments });
                     }
-                } else if (comment.sourceType === 'forum_external' || comment.sourceType === 'team_external') {
-                    const collection = comment.sourceType === 'forum_external' ? 'forum_comments' : 'team_comments';
-                    await deleteData(collection, comment.id);
                 }
 
                 await db.ref('audit_logs').push({
@@ -3888,7 +3739,7 @@
             }
         }
 
-        // ===== الرد الرسمي بشعار المنصة وصورة الفريق وعلامة التوثيق الزرقاء =====
+        // ===== الرد الرسمي بشعار المنصة وصورة الفريق وعلامة التوثيق =====
         async function officialReplyComment(commentId) {
             if (!requireAdmin()) return;
             const reply = prompt('📌 اكتب الرد الرسمي من فريق الثانوية الرسمية بلس:');
@@ -3920,14 +3771,6 @@
                         post.comments[comment.internalIndex].status = 'approved';
                         await updateData('forum_posts', comment.postId, { comments: post.comments });
                     }
-                } else if (comment.sourceType === 'forum_external' || comment.sourceType === 'team_external') {
-                    const collection = comment.sourceType === 'forum_external' ? 'forum_comments' : 'team_comments';
-                    const commentRef = db.ref(collection + '/' + comment.id);
-                    const snapshot = await commentRef.once('value');
-                    const data = snapshot.val() || {};
-                    const replies = data.adminReplies || [];
-                    replies.push(replyData);
-                    await commentRef.update({ adminReplies: replies, status: 'approved' });
                 }
 
                 await db.ref('audit_logs').push({
@@ -3960,12 +3803,6 @@
                             .likes || 0) + 1;
                         await updateData('forum_posts', comment.postId, { comments: post.comments });
                     }
-                } else if (comment.sourceType === 'forum_external' || comment.sourceType === 'team_external') {
-                    const collection = comment.sourceType === 'forum_external' ? 'forum_comments' : 'team_comments';
-                    await updateData(collection, comment.id, {
-                        adminLiked: true,
-                        likes: firebase.database.ServerValue.increment(1)
-                    });
                 }
 
                 await db.ref('audit_logs').push({
@@ -5365,11 +5202,10 @@
 
         console.log('✅ لوحة التحكم الخارقة - Realtime Database Version');
         console.log('📊 جميع البيانات من Realtime Database');
-        console.log('🟢 تحديثات لحظية للمتصلين');
-        console.log('🔵 علامة توثيق زرقاء رسمية لفريق الثانوية الرسمية بلس');
+        console.log('🟢 تحديثات لحظية للمتصلين الحقيقيين فقط');
+        console.log('🔵 علامة توثيق رسمية لفريق الثانوية الرسمية بلس');
         console.log('🚫 نظام حظر دائم يمنع الدخول مهما حدث');
-        console.log('📌 ردود رسمية بشعار المنصة وصورة الفريق وعلامة التوثيق الزرقاء');
-        console.log('💬 جميع التعليقات تظهر في لوحة التحكم');
+        console.log('📌 ردود رسمية باسم + صورة + شعار + علامة توثيق');
 
         // تحميل أولي للبيانات
         setTimeout(() => {
@@ -5381,4 +5217,3 @@
 
 </body>
 </html>
-                
