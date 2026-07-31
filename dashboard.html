@@ -2307,6 +2307,7 @@
                     if (data) {
                         Object.keys(data).forEach(key => {
                             const user = data[key];
+                            // ===== فقط المستخدمين الحقيقيين (غير المشرفين) =====
                             if (user && !user.isAdmin && !user.isBanned) {
                                 allOnlineUsers.push({
                                     id: key,
