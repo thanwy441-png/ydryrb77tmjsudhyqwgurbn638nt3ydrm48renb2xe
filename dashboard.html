@@ -1351,6 +1351,24 @@
             background: #1a237e;
             color: #e3f2fd;
         }
+
+        /* ===== علامة التوثيق الزرقاء الجديدة ===== */
+        .official-badge-blue {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            margin-inline-start: 4px;
+            vertical-align: middle;
+            user-select: none;
+            flex-shrink: 0;
+        }
+        .official-badge-blue svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18));
+        }
     </style>
 </head>
 <body>
@@ -1368,16 +1386,47 @@
             <div class="avatar-placeholder">ف</div>
             <div class="name" id="adminName">
                 فريق الثانوية الرسمية
-                <span class="official-badge" title="الحساب الرسمي الموثق">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="verifyBlue" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#3DB4FF"/>
-                                <stop offset="100%" stop-color="#1D9BF0"/>
-                            </linearGradient>
-                        </defs>
-                        <circle cx="12" cy="12" r="10" fill="url(#verifyBlue)"/>
-                        <path d="M7.8 12.4l2.3 2.3 6-6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                <span class="official-badge-blue" title="الحساب الرسمي الموثق">
+                    <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="#1D9BF0"
+                              d="M12 1.8
+                                 L13.8 3.2
+                                 L16 2.7
+                                 L17.2 4.7
+                                 L19.5 5
+                                 L19.7 7.3
+                                 L21.5 8.8
+                                 L20.7 11
+                                 L22 12.9
+                                 L20.7 14.8
+                                 L21.5 17
+                                 L19.7 18.5
+                                 L19.5 20.8
+                                 L17.2 21.1
+                                 L16 23.1
+                                 L13.8 22.6
+                                 L12 24
+                                 L10.2 22.6
+                                 L8 23.1
+                                 L6.8 21.1
+                                 L4.5 20.8
+                                 L4.3 18.5
+                                 L2.5 17
+                                 L3.3 14.8
+                                 L2 12.9
+                                 L3.3 11
+                                 L2.5 8.8
+                                 L4.3 7.3
+                                 L4.5 5
+                                 L6.8 4.7
+                                 L8 2.7
+                                 L10.2 3.2 Z"/>
+                        <path d="M8.3 12.3l2.2 2.2 5.2-5.3"
+                              fill="none"
+                              stroke="#fff"
+                              stroke-width="2.2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
                     </svg>
                 </span>
             </div>
@@ -2031,18 +2080,49 @@
         const TEAM_NAME = "فريق الثانوية الرسمية بلس";
         const TEAM_UID = "admin_team_official";
 
-        // ===== علامة التوثيق الرسمية =====
-        const OFFICIAL_BADGE_HTML = `
-            <span class="official-badge" title="الحساب الرسمي الموثق">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="verifyBlue" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#3DB4FF"/>
-                            <stop offset="100%" stop-color="#1D9BF0"/>
-                        </linearGradient>
-                    </defs>
-                    <circle cx="12" cy="12" r="10" fill="url(#verifyBlue)"/>
-                    <path d="M7.8 12.4l2.3 2.3 6-6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        // ===== علامة التوثيق الزرقاء الجديدة =====
+        const OFFICIAL_BADGE_BLUE_HTML = `
+            <span class="official-badge-blue" title="الحساب الرسمي الموثق">
+                <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#1D9BF0"
+                          d="M12 1.8
+                             L13.8 3.2
+                             L16 2.7
+                             L17.2 4.7
+                             L19.5 5
+                             L19.7 7.3
+                             L21.5 8.8
+                             L20.7 11
+                             L22 12.9
+                             L20.7 14.8
+                             L21.5 17
+                             L19.7 18.5
+                             L19.5 20.8
+                             L17.2 21.1
+                             L16 23.1
+                             L13.8 22.6
+                             L12 24
+                             L10.2 22.6
+                             L8 23.1
+                             L6.8 21.1
+                             L4.5 20.8
+                             L4.3 18.5
+                             L2.5 17
+                             L3.3 14.8
+                             L2 12.9
+                             L3.3 11
+                             L2.5 8.8
+                             L4.3 7.3
+                             L4.5 5
+                             L6.8 4.7
+                             L8 2.7
+                             L10.2 3.2 Z"/>
+                    <path d="M8.3 12.3l2.2 2.2 5.2-5.3"
+                          fill="none"
+                          stroke="#fff"
+                          stroke-width="2.2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"/>
                 </svg>
             </span>
         `;
@@ -2209,7 +2289,7 @@
 
                 document.getElementById('adminName').innerHTML = `
                         ${userDataSnap.name || 'المدير'}
-                        ${OFFICIAL_BADGE_HTML}
+                        ${OFFICIAL_BADGE_BLUE_HTML}
                     `;
                 document.getElementById('adminEmail').textContent = userDataSnap.email || user.email;
 
@@ -2290,7 +2370,7 @@
         });
 
         // ============================================================
-        // مراقبة المتصلين - Realtime
+        // مراقبة المتصلين - Realtime + لحظية
         // ============================================================
         let onlineUsersListener = null;
 
@@ -2362,7 +2442,7 @@
                             <div class="online-info">
                                 <div class="name">
                                     ${safeText(u.name || 'مجهول')}
-                                    ${u.isVerified ? OFFICIAL_BADGE_HTML : ''}
+                                    ${u.isVerified ? OFFICIAL_BADGE_BLUE_HTML : ''}
                                     <span style="font-size:8px;color:#888;">${safeText(u.role || 'طالب')}</span>
                                 </div>
                                 <div class="details">
@@ -3224,7 +3304,7 @@
                                 <div style="display:flex;align-items:center;gap:6px;">
                                     ${u.photoURL ? `<img src="${u.photoURL}" style="width:24px;height:24px;border-radius:50%;object-fit:cover;">` : `<div style="width:24px;height:24px;border-radius:50%;background:#3498db;color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;">${(u.name||'?').charAt(0).toUpperCase()}</div>`}
                                     <strong>${safeText(u.name || 'مجهول')}</strong>
-                                    ${u.isVerified ? OFFICIAL_BADGE_HTML : ''}
+                                    ${u.isVerified ? OFFICIAL_BADGE_BLUE_HTML : ''}
                                 </div>
                             </td>
                             <td style="font-size:10px;">${safeText(u.email || '-')}</td>
@@ -3306,7 +3386,7 @@
                             <div class="info">
                                 <h3>
                                     ${safeText(user.name || 'مجهول')}
-                                    ${user.isVerified ? OFFICIAL_BADGE_HTML : ''}
+                                    ${user.isVerified ? OFFICIAL_BADGE_BLUE_HTML : ''}
                                 </h3>
                                 <div class="sub">📧 ${safeText(user.email || '-')}</div>
                                 <div class="sub">📱 ${safeText(user.phone || '-')}</div>
@@ -3654,18 +3734,18 @@
 
                 const officialReplies = c.adminReplies ? c.adminReplies.length : 0;
 
-                // عرض اسم المستخدم مع علامة التوثيق إذا كان الرد رسمياً
+                // عرض اسم المستخدم مع علامة التوثيق الزرقاء إذا كان الرد رسمياً
                 let userNameDisplay = safeText(c.userName || 'مجهول');
                 if (c.isOfficialReply || c.userName === TEAM_NAME) {
                     userNameDisplay = `
                             <span style="display:flex;align-items:center;gap:4px;">
                                 <img src="${TEAM_LOGO}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;border:1px solid #1a237e;">
                                 ${safeText(TEAM_NAME)}
-                                ${OFFICIAL_BADGE_HTML}
+                                ${OFFICIAL_BADGE_BLUE_HTML}
                             </span>
                         `;
                 } else if (c.isVerified) {
-                    userNameDisplay = safeText(c.userName || 'مجهول') + ' ' + OFFICIAL_BADGE_HTML;
+                    userNameDisplay = safeText(c.userName || 'مجهول') + ' ' + OFFICIAL_BADGE_BLUE_HTML;
                 }
 
                 const sourceDisplay = c.source || 'غير معروف';
@@ -3808,7 +3888,7 @@
             }
         }
 
-        // ===== الرد الرسمي بشعار المنصة وصورة الفريق وعلامة التوثيق =====
+        // ===== الرد الرسمي بشعار المنصة وصورة الفريق وعلامة التوثيق الزرقاء =====
         async function officialReplyComment(commentId) {
             if (!requireAdmin()) return;
             const reply = prompt('📌 اكتب الرد الرسمي من فريق الثانوية الرسمية بلس:');
@@ -5286,9 +5366,9 @@
         console.log('✅ لوحة التحكم الخارقة - Realtime Database Version');
         console.log('📊 جميع البيانات من Realtime Database');
         console.log('🟢 تحديثات لحظية للمتصلين');
-        console.log('🔵 علامة توثيق رسمية لفريق الثانوية الرسمية بلس');
+        console.log('🔵 علامة توثيق زرقاء رسمية لفريق الثانوية الرسمية بلس');
         console.log('🚫 نظام حظر دائم يمنع الدخول مهما حدث');
-        console.log('📌 ردود رسمية بشعار المنصة وصورة الفريق وعلامة التوثيق');
+        console.log('📌 ردود رسمية بشعار المنصة وصورة الفريق وعلامة التوثيق الزرقاء');
         console.log('💬 جميع التعليقات تظهر في لوحة التحكم');
 
         // تحميل أولي للبيانات
@@ -5301,3 +5381,4 @@
 
 </body>
 </html>
+                
