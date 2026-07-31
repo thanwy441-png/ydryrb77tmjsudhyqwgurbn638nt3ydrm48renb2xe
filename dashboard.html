@@ -48,6 +48,7 @@
             color: #e0e0e0;
         }
 
+        /* ===== علامة التوثيق الزرقاء ===== */
         .verified-badge {
             display: inline-flex;
             align-items: center;
@@ -57,11 +58,12 @@
         }
         .verified-badge svg {
             display: block;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             flex-shrink: 0;
         }
 
+        /* ===== الشريط الجانبي ===== */
         .sidebar {
             position: fixed;
             top: 0;
@@ -522,7 +524,144 @@
             background: #2d4373;
         }
 
-        /* ===== الإعلانات ===== */
+        /* ===== الردود الرسمية ===== */
+        .admin-reply {
+            background: #e3f2fd;
+            border-right: 3px solid #1a237e;
+            padding: 6px 12px;
+            border-radius: 8px;
+            margin: 4px 0;
+        }
+        .admin-reply .reply-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            color: #1a237e;
+            font-size: 12px;
+        }
+        .admin-reply .reply-header img {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #1a237e;
+            object-fit: cover;
+        }
+        .admin-reply .reply-header .team-name {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #1a237e;
+        }
+        .admin-reply .reply-body {
+            font-size: 13px;
+            padding: 6px 0;
+            color: #1a237e;
+            line-height: 1.6;
+        }
+        .dark-mode .admin-reply {
+            background: #1a237e40;
+            border-color: #64b5f6;
+        }
+        .dark-mode .admin-reply .reply-header {
+            color: #90caf9;
+        }
+        .dark-mode .admin-reply .reply-body {
+            color: #e3f2fd;
+        }
+
+        .official-like {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #e3f2fd;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #1a237e;
+            border: 1px solid #90caf9;
+        }
+        .official-like img {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 1px solid #1a237e;
+        }
+        .dark-mode .official-like {
+            background: #1a237e40;
+            color: #90caf9;
+            border-color: #64b5f6;
+        }
+
+        /* ===== Online Users ===== */
+        .online-user-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: 0.3s;
+        }
+        .online-user-item:hover {
+            background: #f8f9fa;
+        }
+        body.dark-mode .online-user-item:hover {
+            background: #2d2d44;
+        }
+        .online-user-item .online-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #2ecc71;
+        }
+        .online-user-item .online-avatar-placeholder {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+            flex-shrink: 0;
+            border: 2px solid #2ecc71;
+        }
+        .online-user-item .online-info {
+            flex: 1;
+        }
+        .online-user-item .online-info .name {
+            font-weight: 700;
+            font-size: 13px;
+        }
+        .online-user-item .online-info .details {
+            font-size: 10px;
+            color: #888;
+        }
+        .online-user-item .online-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #2ecc71;
+            flex-shrink: 0;
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ===== باقي الستايلات محفوظة ===== */
         .ad-item {
             background: #e3f2fd;
             border-right: 4px solid #1a237e;
@@ -566,68 +705,6 @@
         .ad-item .ad-meta {
             font-size: 10px;
             color: #888;
-        }
-
-        /* ===== الردود الرسمية ===== */
-        .admin-reply {
-            background: #e3f2fd;
-            border-right: 3px solid #1a237e;
-            padding: 4px 8px;
-            border-radius: 6px;
-            margin: 2px 0;
-        }
-        .admin-reply .reply-header {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 9px;
-            font-weight: 700;
-            color: #1a237e;
-        }
-        .admin-reply .reply-header img {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            border: 1px solid #1a237e;
-        }
-        .admin-reply .reply-body {
-            font-size: 10px;
-            padding: 2px 0;
-            color: #1a237e;
-        }
-        .dark-mode .admin-reply {
-            background: #1a237e40;
-            border-color: #64b5f6;
-        }
-        .dark-mode .admin-reply .reply-header {
-            color: #90caf9;
-        }
-        .dark-mode .admin-reply .reply-body {
-            color: #e3f2fd;
-        }
-
-        .official-like {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: #e3f2fd;
-            padding: 1px 8px;
-            border-radius: 20px;
-            font-size: 9px;
-            font-weight: 700;
-            color: #1a237e;
-            border: 1px solid #90caf9;
-        }
-        .official-like img {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            border: 1px solid #1a237e;
-        }
-        .dark-mode .official-like {
-            background: #1a237e40;
-            color: #90caf9;
-            border-color: #64b5f6;
         }
 
         .quick-reply {
@@ -738,7 +815,6 @@
             padding: 16px;
         }
 
-        /* ===== النوافذ المنبثقة ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -918,17 +994,6 @@
             background: #2ecc71;
             animation: pulse-dot 1s infinite;
         }
-        @keyframes pulse-dot {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.5;
-                transform: scale(0.8);
-            }
-        }
 
         .youtube-channel-item {
             background: white;
@@ -977,131 +1042,6 @@
             display: flex;
             gap: 4px;
             flex-wrap: wrap;
-        }
-
-        .online-user-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            border-bottom: 1px solid #f0f0f0;
-            transition: 0.3s;
-        }
-        .online-user-item:hover {
-            background: #f8f9fa;
-        }
-        .online-user-item .online-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .online-user-item .online-avatar-placeholder {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #3498db;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 800;
-            flex-shrink: 0;
-        }
-        .online-user-item .online-info {
-            flex: 1;
-        }
-        .online-user-item .online-info .name {
-            font-weight: 700;
-            font-size: 13px;
-        }
-        .online-user-item .online-info .details {
-            font-size: 10px;
-            color: #888;
-        }
-        .online-user-item .online-status {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #2ecc71;
-            flex-shrink: 0;
-            animation: pulse-dot 2s infinite;
-        }
-
-        .chart-container {
-            background: white;
-            border-radius: 12px;
-            padding: 16px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            margin-bottom: 16px;
-        }
-        body.dark-mode .chart-container {
-            background: #1e1e32;
-        }
-        .chart-container canvas {
-            max-height: 250px;
-            width: 100% !important;
-        }
-
-        .audit-item {
-            padding: 6px 10px;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-        body.dark-mode .audit-item {
-            border-bottom-color: #333;
-        }
-        .audit-item .audit-action {
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 10px;
-        }
-        .audit-item .audit-action.create {
-            background: #2ecc7120;
-            color: #2ecc71;
-        }
-        .audit-item .audit-action.delete {
-            background: #e74c3c20;
-            color: #e74c3c;
-        }
-        .audit-item .audit-action.update {
-            background: #3498db20;
-            color: #3498db;
-        }
-        .audit-item .audit-action.ban {
-            background: #e74c3c20;
-            color: #e74c3c;
-        }
-        .audit-item .audit-action.login {
-            background: #3498db20;
-            color: #3498db;
-        }
-        .audit-item .audit-action.logout {
-            background: #f39c1220;
-            color: #f39c12;
-        }
-        .audit-item .audit-action.report {
-            background: #e74c3c20;
-            color: #e74c3c;
-        }
-        .audit-item .audit-action.official_reply {
-            background: #1a237e20;
-            color: #1a237e;
-        }
-        .audit-item .audit-action.official_like {
-            background: #1a237e20;
-            color: #1a237e;
-        }
-        .audit-item .audit-action.notification {
-            background: #3498db20;
-            color: #3498db;
         }
 
         .online-users-container {
@@ -1203,6 +1143,81 @@
         .student-profile .profile-stats-grid .stat .label {
             font-size: 10px;
             color: #888;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            margin-bottom: 16px;
+        }
+        body.dark-mode .chart-container {
+            background: #1e1e32;
+        }
+        .chart-container canvas {
+            max-height: 250px;
+            width: 100% !important;
+        }
+
+        .audit-item {
+            padding: 6px 10px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        body.dark-mode .audit-item {
+            border-bottom-color: #333;
+        }
+        .audit-item .audit-action {
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+        .audit-item .audit-action.create {
+            background: #2ecc7120;
+            color: #2ecc71;
+        }
+        .audit-item .audit-action.delete {
+            background: #e74c3c20;
+            color: #e74c3c;
+        }
+        .audit-item .audit-action.update {
+            background: #3498db20;
+            color: #3498db;
+        }
+        .audit-item .audit-action.ban {
+            background: #e74c3c20;
+            color: #e74c3c;
+        }
+        .audit-item .audit-action.login {
+            background: #3498db20;
+            color: #3498db;
+        }
+        .audit-item .audit-action.logout {
+            background: #f39c1220;
+            color: #f39c12;
+        }
+        .audit-item .audit-action.report {
+            background: #e74c3c20;
+            color: #e74c3c;
+        }
+        .audit-item .audit-action.official_reply {
+            background: #1a237e20;
+            color: #1a237e;
+        }
+        .audit-item .audit-action.official_like {
+            background: #1a237e20;
+            color: #1a237e;
+        }
+        .audit-item .audit-action.notification {
+            background: #3498db20;
+            color: #3498db;
         }
 
         .pagination {
@@ -1335,7 +1350,7 @@
             gap: 4px;
             background: #1a237e;
             color: white;
-            padding: 2px 10px;
+            padding: 2px 12px;
             border-radius: 50px;
             font-size: 10px;
             font-weight: 700;
@@ -1348,6 +1363,49 @@
         }
         body.dark-mode .official-account-badge {
             background: #1a237e;
+            color: #e3f2fd;
+        }
+
+        /* ===== Team Reply Style ===== */
+        .team-reply {
+            background: #e8f0fe;
+            border-right: 4px solid #1a237e;
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin: 6px 0;
+        }
+        body.dark-mode .team-reply {
+            background: #1a237e30;
+            border-color: #64b5f6;
+        }
+        .team-reply .team-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        .team-reply .team-header .team-logo {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #1a237e;
+        }
+        .team-reply .team-header .team-name {
+            font-weight: 800;
+            font-size: 14px;
+            color: #1a237e;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .team-reply .team-body {
+            font-size: 13px;
+            color: #1a237e;
+            line-height: 1.6;
+            padding-right: 10px;
+        }
+        body.dark-mode .team-reply .team-body {
             color: #e3f2fd;
         }
     </style>
@@ -1428,7 +1486,7 @@
     </aside>
 
     <!-- ============================================================
-    المحتوى الرئيسي (نفس الهيكل السابق مع تعديل JS فقط)
+    المحتوى الرئيسي
     ============================================================ -->
     <div class="main-content">
         <div class="topbar">
@@ -1759,7 +1817,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- النوافذ المنبثقة (نفسها) -->
+    <!-- النوافذ المنبثقة -->
     <!-- ============================================================ -->
 
     <!-- إضافة مستخدم -->
@@ -1960,7 +2018,7 @@
     <div class="toast" id="toast"></div>
 
     <!-- ============================================================ -->
-    <!-- JavaScript - Realtime Database Version -->
+    <!-- JavaScript - Realtime Database Version مع الميزات الجديدة -->
     <!-- ============================================================ -->
     <script>
         // ============================================================
@@ -1982,7 +2040,7 @@
         const storage = firebase.storage();
 
         // ============================================================
-        // 🛡️ نظام الأمان
+        // 🛡️ نظام الأمان والمتغيرات العامة
         // ============================================================
         let currentUser = null;
         let isAdmin = false;
@@ -2009,6 +2067,15 @@
         let adImages = [];
         let currentPage = 1;
         const itemsPerPage = 20;
+
+        // شعار المنصة وصورة الفريق
+        const TEAM_LOGO = "https://cdn.phototourl.com/free/2026-07-21-1dd4b984-ed08-4a40-aead-9ef086ebbd45.jpg";
+        const TEAM_NAME = "فريق الثانوية الرسمية بلس";
+        const TEAM_UID = "admin_team_official";
+
+        // علامة التوثيق الزرقاء SVG
+        const VERIFIED_BADGE_SVG =
+            '<span class="verified-badge" title="حساب موثق رسمي"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#1D9BF0"><path d="M22.25 12c0-1.06-.82-1.95-1.88-2.07.61-.88.54-2.08-.25-2.87-.79-.79-1.99-.86-2.87-.25C17.13 5.82 16.24 5 15.18 5c-.52 0-1 .18-1.39.48A2.07 2.07 0 0 0 12 4c-.69 0-1.32.34-1.7.86A2.07 2.07 0 0 0 8.82 5c-1.06 0-1.95.82-2.07 1.88-.88-.61-2.08-.54-2.87.25-.79.79-.86 1.99-.25 2.87C2.82 10.05 2 10.94 2 12s.82 1.95 1.88 2.07c-.61.88-.54 2.08.25 2.87.79.79 1.99.86 2.87.25.12 1.06 1.01 1.88 2.07 1.88.52 0 1-.18 1.39-.48.38.52 1.01.86 1.7.86.69 0 1.32-.34 1.7-.86.39.3.87.48 1.39.48 1.06 0 1.95-.82 2.07-1.88.88.61 2.08.54 2.87-.25.79.79.86-1.99.25-2.87A2.08 2.08 0 0 0 22.25 12z"/><path fill="#FFFFFF" d="M10.3 15.7l-2.5-2.5 1.06-1.06 1.44 1.44 4.9-4.9 1.06 1.06z"/></svg></span>';
 
         // ============================================================
         // دوال مساعدة
@@ -2091,7 +2158,7 @@
         }
 
         // ============================================================
-        // التحقق من المستخدم
+        // التحقق من المستخدم - مع نظام الحظر الحقيقي
         // ============================================================
         function showAccessDenied(message = 'غير مصرح بالدخول') {
             document.body.innerHTML = `
@@ -2104,6 +2171,85 @@
                 `;
         }
 
+        // دالة التحقق من الحظر - حقيقي ودائم
+        async function checkUserBanStatus(userId) {
+            try {
+                const snap = await db.ref('users/' + userId + '/isBanned').once('value');
+                const isBanned = snap.val();
+                if (isBanned === true) {
+                    // تسجيل محاولة دخول من محظور
+                    await db.ref('audit_logs').push({
+                        action: 'banned_access_attempt',
+                        performedBy: userId,
+                        details: { message: 'محاولة دخول من حساب محظور' },
+                        timestamp: Date.now()
+                    });
+                    return true;
+                }
+                return false;
+            } catch (err) {
+                return false;
+            }
+        }
+
+        // دالة حظر مستخدم - دائمة حتى فك الحظر
+        async function banUserPermanent(userId, reason = 'تم الحظر بواسطة الإدارة') {
+            try {
+                await db.ref('users/' + userId).update({
+                    isBanned: true,
+                    isActive: false,
+                    banReason: reason,
+                    banDate: Date.now(),
+                    bannedBy: currentUser?.uid || 'system',
+                    bannedByName: userData?.name || 'المدير'
+                });
+
+                // تسجيل في سجل العمليات
+                await db.ref('audit_logs').push({
+                    action: 'ban_permanent',
+                    performedBy: userData?.name || 'المدير',
+                    userId: currentUser?.uid || 'unknown',
+                    details: { target: userId, reason: reason },
+                    timestamp: Date.now()
+                });
+
+                // إنهاء جلسة المستخدم المحظور
+                await db.ref('users/' + userId + '/lastActive').set(null);
+                await db.ref('users/' + userId + '/sessionId').set(null);
+
+                return true;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        // دالة فك الحظر
+        async function unbanUserPermanent(userId) {
+            try {
+                await db.ref('users/' + userId).update({
+                    isBanned: false,
+                    isActive: true,
+                    banReason: null,
+                    banDate: null,
+                    unbannedBy: currentUser?.uid || 'system',
+                    unbannedByName: userData?.name || 'المدير',
+                    unbannedDate: Date.now()
+                });
+
+                await db.ref('audit_logs').push({
+                    action: 'unban_permanent',
+                    performedBy: userData?.name || 'المدير',
+                    userId: currentUser?.uid || 'unknown',
+                    details: { target: userId },
+                    timestamp: Date.now()
+                });
+
+                return true;
+            } catch (err) {
+                throw err;
+            }
+        }
+
         async function verifyUser(user) {
             if (!user) {
                 showAccessDenied('يرجى تسجيل الدخول أولاً');
@@ -2111,28 +2257,37 @@
             }
 
             try {
-                const snap = await db.ref('users/' + user.uid).once('value');
-                const userData = snap.val();
+                // التحقق من الحظر أولاً
+                const isBanned = await checkUserBanStatus(user.uid);
+                if (isBanned) {
+                    showAccessDenied('⛔ حسابك محظور بشكل دائم، يرجى التواصل مع الإدارة');
+                    await auth.signOut();
+                    return false;
+                }
 
-                if (!userData) {
+                const snap = await db.ref('users/' + user.uid).once('value');
+                const userDataSnap = snap.val();
+
+                if (!userDataSnap) {
                     showAccessDenied('لم يتم العثور على بيانات المستخدم');
                     await auth.signOut();
                     return false;
                 }
 
-                if (userData.isBanned === true) {
-                    showAccessDenied('⛔ حسابك محظور، يرجى التواصل مع الإدارة');
+                // تحقق إضافي من الحظر
+                if (userDataSnap.isBanned === true) {
+                    showAccessDenied('⛔ حسابك محظور بشكل دائم، يرجى التواصل مع الإدارة');
                     await auth.signOut();
                     return false;
                 }
 
-                if (userData.isActive === false) {
+                if (userDataSnap.isActive === false) {
                     showAccessDenied('⛔ حسابك غير نشط، يرجى التواصل مع الإدارة');
                     await auth.signOut();
                     return false;
                 }
 
-                const role = userData.role || 'user';
+                const role = userDataSnap.role || 'user';
                 if (role !== 'admin' && role !== 'superAdmin') {
                     showAccessDenied('ليس لديك صلاحية الدخول إلى لوحة التحكم');
                     await auth.signOut();
@@ -2142,15 +2297,26 @@
                 isAdmin = role === 'admin';
                 isSuperAdmin = role === 'superAdmin';
                 currentUser = user;
-                window.userData = userData;
+                window.userData = userDataSnap;
 
-                document.getElementById('adminName').textContent = userData.name || 'المدير';
-                document.getElementById('adminEmail').textContent = userData.email || user.email;
+                document.getElementById('adminName').textContent = userDataSnap.name || 'المدير';
+                document.getElementById('adminEmail').textContent = userDataSnap.email || user.email;
+
+                // تحديث حالة الاتصال للأدمن
+                await db.ref('online_users/' + user.uid).set({
+                    uid: user.uid,
+                    name: userDataSnap.name || 'المدير',
+                    photoURL: userDataSnap.photoURL || '',
+                    role: 'admin',
+                    lastActive: Date.now(),
+                    isAdmin: true
+                });
+                db.ref('online_users/' + user.uid).onDisconnect().remove();
 
                 // تسجيل دخول الأدمن
                 await db.ref('audit_logs').push({
                     action: 'login',
-                    performedBy: userData.name || 'المدير',
+                    performedBy: userDataSnap.name || 'المدير',
                     userId: user.uid,
                     details: { role: role },
                     timestamp: Date.now()
@@ -2167,6 +2333,9 @@
 
         function logoutAdmin() {
             if (confirm('⚠️ هل تريد تسجيل الخروج من لوحة التحكم؟')) {
+                if (currentUser) {
+                    db.ref('online_users/' + currentUser.uid).remove().catch(() => {});
+                }
                 db.ref('audit_logs').push({
                     action: 'logout',
                     performedBy: window.userData?.name || 'المدير',
@@ -2189,6 +2358,7 @@
                     loadAllData();
                     updateBadges();
                     startLiveUpdates();
+                    startOnlineUsersListener();
                 }
             } else {
                 showAccessDenied('يرجى تسجيل الدخول أولاً');
@@ -2209,6 +2379,133 @@
                 navList.appendChild(logoutLi);
             }
         });
+
+        // ============================================================
+        // مراقبة المتصلين - Realtime مع الأسماء
+        // ============================================================
+        let onlineUsersListener = null;
+
+        function startOnlineUsersListener() {
+            if (onlineUsersListener) {
+                db.ref('online_users').off('value', onlineUsersListener);
+                onlineUsersListener = null;
+            }
+
+            onlineUsersListener = function(snapshot) {
+                try {
+                    const data = snapshot.val();
+                    allOnlineUsers = [];
+                    if (data) {
+                        Object.keys(data).forEach(key => {
+                            const user = data[key];
+                            if (user && !user.isAdmin && !user.isBanned) {
+                                allOnlineUsers.push({
+                                    id: key,
+                                    ...user,
+                                    status: 'online'
+                                });
+                            }
+                        });
+                    }
+
+                    // تحديث العدد
+                    document.getElementById('onlineBadge').textContent = allOnlineUsers.length;
+                    document.getElementById('onlineCountHeader').textContent = allOnlineUsers.length;
+                    document.getElementById('onlineUsersCount').textContent = allOnlineUsers.length;
+
+                    renderOnlineUsers();
+
+                    // تحديث Dashboard إذا كان مفتوحاً
+                    const dashPage = document.getElementById('page-dashboard');
+                    if (dashPage && dashPage.classList.contains('active')) {
+                        updateDashboard();
+                    }
+                } catch (err) {
+                    console.warn('❌ خطأ في تحديث المتصلين:', err);
+                }
+            };
+
+            db.ref('online_users').on('value', onlineUsersListener);
+        }
+
+        function renderOnlineUsers() {
+            const container = document.getElementById('onlineUsersList');
+            const fullContainer = document.getElementById('onlineUsersFullList');
+
+            if (allOnlineUsers.length === 0) {
+                const emptyHtml =
+                    `<div class="empty-state"><div class="icon">🟢</div><p>لا يوجد مستخدمين متصلين حالياً</p></div>`;
+                container.innerHTML = emptyHtml;
+                if (fullContainer) fullContainer.innerHTML = emptyHtml;
+                return;
+            }
+
+            let html = '<div class="online-users-container">';
+            allOnlineUsers.forEach(u => {
+                const initial = u.name ? u.name.charAt(0).toUpperCase() : '?';
+                const photo = u.photoURL || '';
+                const gradeNames = { '1': 'أولى', '2': 'تانية', '3': 'تالتة' };
+                const grade = gradeNames[u.grade] || '-';
+                const lastActive = u.lastActive ? new Date(u.lastActive).toLocaleString('ar') : 'الآن';
+
+                html += `
+                        <div class="online-user-item">
+                            ${photo ? `<img src="${photo}" class="online-avatar">` : `<div class="online-avatar-placeholder">${initial}</div>`}
+                            <div class="online-info">
+                                <div class="name">${safeText(u.name || 'مجهول')} 
+                                    <span style="font-size:8px;color:#888;">${safeText(u.role || 'طالب')}</span>
+                                    ${u.isVerified ? '<span style="color:#1D9BF0;font-size:12px;">✓</span>' : ''}
+                                </div>
+                                <div class="details">
+                                    ${grade} • ${safeText(u.system || 'عام')}
+                                    • آخر نشاط: ${lastActive}
+                                    ${u.device ? ` • ${safeText(u.device)}` : ''}
+                                    ${u.browser ? ` • ${safeText(u.browser)}` : ''}
+                                </div>
+                            </div>
+                            <div class="online-status"></div>
+                            ${u.isBanned ? '<span style="color:#e74c3c;font-size:10px;">⛔ محظور</span>' : ''}
+                            <button class="btn btn-danger btn-xs" onclick="forceLogout('${u.id}')" title="إنهاء الجلسة">🚪</button>
+                        </div>
+                    `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+            if (fullContainer) fullContainer.innerHTML = html;
+        }
+
+        async function forceLogout(userId) {
+            if (!requireAdmin()) return;
+            if (!confirm(`⚠️ هل تريد إنهاء جلسة المستخدم؟`)) return;
+            try {
+                await db.ref('users/' + userId).update({
+                    lastActive: null,
+                    sessionId: null
+                });
+                await db.ref('online_users/' + userId).remove();
+                showToast('✅ تم إنهاء الجلسة');
+            } catch (err) {
+                showToast('❌ ' + err.message, 'error');
+            }
+        }
+
+        async function forceLogoutAll() {
+            if (!requireAdmin()) return;
+            if (!confirm('⚠️ هل تريد إنهاء جميع الجلسات النشطة؟')) return;
+            try {
+                const updates = {};
+                allOnlineUsers.forEach(u => {
+                    updates[u.id] = { lastActive: null, sessionId: null };
+                });
+                for (const u of allOnlineUsers) {
+                    await db.ref('users/' + u.id).update({ lastActive: null, sessionId: null });
+                    await db.ref('online_users/' + u.id).remove();
+                }
+                showToast('✅ تم إنهاء جميع الجلسات');
+            } catch (err) {
+                showToast('❌ ' + err.message, 'error');
+            }
+        }
 
         // ============================================================
         // دوال قراءة البيانات من Realtime Database
@@ -2313,7 +2610,8 @@
                                 adminReplies: comment.adminReplies || [],
                                 adminLiked: comment.adminLiked || false,
                                 isInternal: true,
-                                internalIndex: index
+                                internalIndex: index,
+                                isOfficialReply: comment.isOfficialReply || false
                             });
                         });
                     }
@@ -2346,7 +2644,6 @@
 
                 updateDashboard();
                 updateBadges();
-                updateOnlineUsers();
                 updateSystemStatus();
                 updateGrowthChart();
             } catch (err) {
@@ -2379,7 +2676,6 @@
                 if (requireAdmin()) {
                     loadAllData();
                     updateBadges();
-                    updateOnlineUsers();
                     updateSystemStatus();
                 }
             }, 5000);
@@ -2434,7 +2730,7 @@
             if (page === 'reports') renderReports();
             if (page === 'notifications') renderNotifications();
             if (page === 'analytics') loadAnalytics();
-            if (page === 'onlineUsers') updateOnlineUsers();
+            if (page === 'onlineUsers') renderOnlineUsers();
             if (page === 'security') loadSecurity();
             if (page === 'audit') renderAuditLog();
             if (page === 'monitoring') loadMonitoring();
@@ -2466,7 +2762,6 @@
             const grade2 = allUsers.filter(u => u.grade === '2').length;
             const grade3 = allUsers.filter(u => u.grade === '3').length;
 
-            // الحسابات الجديدة
             const now = Date.now();
             const today = new Date(now).setHours(0, 0, 0, 0);
             const weekAgo = today - 7 * 24 * 60 * 60 * 1000;
@@ -2476,13 +2771,9 @@
             const newWeek = allUsers.filter(u => (u.createdAt || 0) >= weekAgo).length;
             const newMonth = allUsers.filter(u => (u.createdAt || 0) >= monthAgo).length;
 
-            // الإعجابات
             const totalLikes = allForumPosts.reduce((s, p) => s + (p.likesCount || 0), 0);
-
-            // أكثر منشور حصل على إعجابات
             const topPost = allForumPosts.reduce((max, p) => (p.likesCount || 0) > (max.likesCount || 0) ? p : max, {});
 
-            // أكثر طالب نشاطاً
             const userPostCount = {};
             allForumPosts.forEach(p => {
                 if (p.userId) userPostCount[p.userId] = (userPostCount[p.userId] || 0) + 1;
@@ -2490,7 +2781,6 @@
             const topUser = Object.keys(userPostCount).reduce((a, b) => userPostCount[a] > userPostCount[b] ? a : b, '');
             const topUserData = allUsers.find(u => u.id === topUser);
 
-            // أكثر طالب تعليقاً
             const userCommentCount = {};
             allComments.forEach(c => {
                 if (c.userId) userCommentCount[c.userId] = (userCommentCount[c.userId] || 0) + 1;
@@ -2499,7 +2789,6 @@
                 a : b, '');
             const topCommenterData = allUsers.find(u => u.id === topCommenter);
 
-            // غير النشطين
             const inactiveDay = allUsers.filter(u => {
                 const lastActive = u.lastActive || 0;
                 return lastActive < (now - 24 * 60 * 60 * 1000);
@@ -2513,11 +2802,8 @@
                 return lastActive < (now - 30 * 24 * 60 * 60 * 1000);
             }).length;
 
-            // آخر طالب دخل
             const lastActiveUser = allUsers.filter(u => u.lastActive)
                 .sort((a, b) => (b.lastActive || 0) - (a.lastActive || 0))[0];
-
-            // آخر طالب سجل
             const lastRegistered = allUsers.filter(u => u.createdAt)
                 .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))[0];
 
@@ -2633,98 +2919,6 @@
         function loadDashboard() { updateDashboard(); }
 
         // ============================================================
-        // Online Users
-        // ============================================================
-        async function updateOnlineUsers() {
-            if (!requireAdmin()) return;
-
-            const now = Date.now();
-            const activeThreshold = now - 3 * 60 * 1000;
-
-            try {
-                // في Realtime Database نستخدم lastActive للتحديد
-                const usersWithLastActive = allUsers.filter(u => u.lastActive && u.lastActive > activeThreshold);
-                allOnlineUsers = usersWithLastActive.filter(u => !u.isBanned && u.role !== 'admin' && u.role !==
-                'superAdmin');
-
-                document.getElementById('onlineBadge').textContent = allOnlineUsers.length;
-                document.getElementById('onlineCountHeader').textContent = allOnlineUsers.length;
-                document.getElementById('onlineUsersCount').textContent = allOnlineUsers.length;
-
-                renderOnlineUsers();
-            } catch (err) {
-                console.warn('❌ فشل تحديث المتصلين:', err);
-            }
-        }
-
-        function renderOnlineUsers() {
-            const container = document.getElementById('onlineUsersList');
-            const fullContainer = document.getElementById('onlineUsersFullList');
-
-            if (allOnlineUsers.length === 0) {
-                const emptyHtml = `<div class="empty-state"><div class="icon">🟢</div><p>لا يوجد مستخدمين متصلين حالياً</p></div>`;
-                container.innerHTML = emptyHtml;
-                if (fullContainer) fullContainer.innerHTML = emptyHtml;
-                return;
-            }
-
-            let html = '<div class="online-users-container">';
-            allOnlineUsers.forEach(u => {
-                const initial = u.name ? u.name.charAt(0).toUpperCase() : '?';
-                const photo = u.photoURL || '';
-                const gradeNames = { '1': 'أولى', '2': 'تانية', '3': 'تالتة' };
-                const grade = gradeNames[u.grade] || '-';
-                const lastActive = u.lastActive ? new Date(u.lastActive).toLocaleString('ar') : 'الآن';
-
-                html += `
-                        <div class="online-user-item">
-                            ${photo ? `<img src="${photo}" class="online-avatar">` : `<div class="online-avatar-placeholder">${initial}</div>`}
-                            <div class="online-info">
-                                <div class="name">${safeText(u.name || 'مجهول')} 
-                                    <span style="font-size:8px;color:#888;">${safeText(u.role || 'طالب')}</span>
-                                </div>
-                                <div class="details">
-                                    ${grade} • ${safeText(u.system || 'عام')}
-                                    • آخر نشاط: ${lastActive}
-                                </div>
-                            </div>
-                            <div class="online-status"></div>
-                            <button class="btn btn-danger btn-xs" onclick="forceLogout('${u.id}')" title="إنهاء الجلسة">🚪</button>
-                        </div>
-                    `;
-            });
-            html += '</div>';
-            container.innerHTML = html;
-            if (fullContainer) fullContainer.innerHTML = html;
-        }
-
-        async function forceLogout(userId) {
-            if (!requireAdmin()) return;
-            if (!confirm(`⚠️ هل تريد إنهاء جلسة المستخدم؟`)) return;
-            try {
-                await updateData('users', userId, { lastActive: null, sessionId: null });
-                showToast('✅ تم إنهاء الجلسة');
-                updateOnlineUsers();
-            } catch (err) {
-                showToast('❌ ' + err.message, 'error');
-            }
-        }
-
-        async function forceLogoutAll() {
-            if (!requireAdmin()) return;
-            if (!confirm('⚠️ هل تريد إنهاء جميع الجلسات النشطة؟')) return;
-            try {
-                for (const u of allOnlineUsers) {
-                    await updateData('users', u.id, { lastActive: null, sessionId: null });
-                }
-                showToast('✅ تم إنهاء جميع الجلسات');
-                updateOnlineUsers();
-            } catch (err) {
-                showToast('❌ ' + err.message, 'error');
-            }
-        }
-
-        // ============================================================
         // Growth Chart
         // ============================================================
         function updateGrowthChart() {
@@ -2838,10 +3032,12 @@
             const failedLogins = allAuditLogs.filter(l => l.action === 'login_failed').length;
             const suspicious = allAuditLogs.filter(l => l.severity === 'WARNING').length;
             const adminAttempts = allAuditLogs.filter(l => l.action === 'admin_access_attempt').length;
+            const bannedAttempts = allAuditLogs.filter(l => l.action === 'banned_access_attempt').length;
 
             document.getElementById('failedLogins').textContent = failedLogins;
             document.getElementById('suspiciousAttempts').textContent = suspicious;
             document.getElementById('adminAccessAttempts').textContent = adminAttempts;
+            document.getElementById('anomalyDetected').textContent = bannedAttempts;
 
             if (allAuditLogs.length === 0) {
                 container.innerHTML = `<div class="empty-state"><div class="icon">🛡️</div><p>لا توجد سجلات أمان</p></div>`;
@@ -2857,10 +3053,14 @@
                     severity = 'WARNING';
                     icon = '⚠️';
                 }
+                if (log.action === 'banned_access_attempt') {
+                    severity = 'CRITICAL';
+                    icon = '🚨';
+                }
                 html += `
                         <div class="audit-item">
                             <span>${icon} ${log.action}</span>
-                            <span style="color:${severity === 'WARNING' ? '#f39c12' : '#3498db'};">${severity}</span>
+                            <span style="color:${severity === 'CRITICAL' ? '#e74c3c' : severity === 'WARNING' ? '#f39c12' : '#3498db'};">${severity}</span>
                             <span>${time}</span>
                         </div>
                     `;
@@ -2894,6 +3094,8 @@
                     log.action === 'delete' ? 'delete' :
                     log.action === 'update' ? 'update' :
                     log.action === 'ban' ? 'ban' :
+                    log.action === 'ban_permanent' ? 'ban' :
+                    log.action === 'unban_permanent' ? 'update' :
                     log.action === 'login' ? 'login' :
                     log.action === 'logout' ? 'logout' :
                     log.action === 'official_reply' ? 'official_reply' :
@@ -2955,7 +3157,7 @@
         }
 
         // ============================================================
-        // Users Management - مع دوال Realtime Database
+        // Users Management - مع نظام الحظر الدائم
         // ============================================================
         function renderUsers() {
             if (!requireAdmin()) return;
@@ -2965,7 +3167,7 @@
 
             let filtered = allUsers;
             if (filter === 'active') filtered = filtered.filter(u => !u.isBanned && u.isActive !== false);
-            if (filter === 'banned') filtered = filtered.filter(u => u.isBanned);
+            if (filter === 'banned') filtered = filtered.filter(u => u.isBanned === true);
             if (filter === 'suspended') filtered = filtered.filter(u => u.isActive === false && !u.isBanned);
             if (search) filtered = filtered.filter(u =>
                 (u.name || '').toLowerCase().includes(search) ||
@@ -2999,6 +3201,7 @@
                                 <div style="display:flex;align-items:center;gap:6px;">
                                     ${u.photoURL ? `<img src="${u.photoURL}" style="width:24px;height:24px;border-radius:50%;object-fit:cover;">` : `<div style="width:24px;height:24px;border-radius:50%;background:#3498db;color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;">${(u.name||'?').charAt(0).toUpperCase()}</div>`}
                                     <strong>${safeText(u.name || 'مجهول')}</strong>
+                                    ${u.isVerified ? '<span style="color:#1D9BF0;font-size:12px;">✓</span>' : ''}
                                 </div>
                             </td>
                             <td style="font-size:10px;">${safeText(u.email || '-')}</td>
@@ -3011,8 +3214,8 @@
                                     <button class="btn btn-primary btn-xs" onclick="viewStudentProfile('${u.id}')">👤</button>
                                     <button class="btn btn-warning btn-xs" onclick="editUser('${u.id}')">✏️</button>
                                     ${u.isBanned ? 
-                                        `<button class="btn btn-success btn-xs" onclick="unbanUser('${u.id}')">✅</button>` :
-                                        `<button class="btn btn-danger btn-xs" onclick="banUser('${u.id}')">🚫</button>`
+                                        `<button class="btn btn-success btn-xs" onclick="unbanUserPermanent('${u.id}')">✅ فك</button>` :
+                                        `<button class="btn btn-danger btn-xs" onclick="banUserPermanent('${u.id}')">🚫 حظر</button>`
                                     }
                                     <button class="btn btn-purple btn-xs" onclick="sendNotificationToUser('${u.id}')">🔔</button>
                                     <button class="btn btn-danger btn-xs" onclick="deleteUser('${u.id}')">🗑️</button>
@@ -3048,7 +3251,6 @@
 
             window.changePage = function(cId, page) {
                 currentPage = page;
-                // إعادة تحميل الصفحة الحالية
                 const activePage = document.querySelector('.page.active');
                 if (activePage) {
                     const id = activePage.id.replace('page-', '');
@@ -3079,7 +3281,7 @@
                         <div class="profile-header">
                             ${user.photoURL ? `<img src="${user.photoURL}" alt="صورة الطالب">` : `<div style="width:80px;height:80px;border-radius:50%;background:#3498db;color:white;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;">${(user.name||'?').charAt(0).toUpperCase()}</div>`}
                             <div class="info">
-                                <h3>${safeText(user.name || 'مجهول')}</h3>
+                                <h3>${safeText(user.name || 'مجهول')} ${user.isVerified ? '✓' : ''}</h3>
                                 <div class="sub">📧 ${safeText(user.email || '-')}</div>
                                 <div class="sub">📱 ${safeText(user.phone || '-')}</div>
                                 <div class="sub">🏫 ${grade} • ${safeText(user.system || 'عام')} • ${user.role || 'طالب'}</div>
@@ -3087,6 +3289,8 @@
                                 <div class="sub">📅 تاريخ التسجيل: ${formatDate(user.createdAt)}</div>
                                 <div class="sub">🕐 آخر نشاط: ${user.lastActive ? formatDate(user.lastActive) : 'غير معروف'}</div>
                                 <div class="sub">⚡ الحالة: <span class="status-badge ${user.isBanned ? 'banned' : user.isActive === false ? 'suspended' : 'active'}">${status}</span></div>
+                                ${user.isBanned ? `<div class="sub" style="color:#e74c3c;">⛔ سبب الحظر: ${user.banReason || 'مخالفة قواعد المنصة'}</div>` : ''}
+                                ${user.banDate ? `<div class="sub">📅 تاريخ الحظر: ${formatDate(user.banDate)}</div>` : ''}
                             </div>
                         </div>
                         <div class="profile-stats-grid">
@@ -3097,8 +3301,8 @@
                         <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:10px;">
                             <button class="btn btn-warning" onclick="editUser('${userId}');closeModal('studentProfileModal')">✏️ تعديل</button>
                             ${user.isBanned ? 
-                                `<button class="btn btn-success" onclick="unbanUser('${userId}');closeModal('studentProfileModal')">✅ فك الحظر</button>` :
-                                `<button class="btn btn-danger" onclick="banUser('${userId}');closeModal('studentProfileModal')">🚫 حظر</button>`
+                                `<button class="btn btn-success" onclick="unbanUserPermanent('${userId}');closeModal('studentProfileModal')">✅ فك الحظر</button>` :
+                                `<button class="btn btn-danger" onclick="banUserPermanent('${userId}');closeModal('studentProfileModal')">🚫 حظر</button>`
                             }
                             <button class="btn btn-purple" onclick="sendNotificationToUser('${userId}');closeModal('studentProfileModal')">🔔 إرسال إشعار</button>
                             <button class="btn btn-danger" onclick="deleteAllUserPosts('${userId}')">🗑️ حذف المنشورات</button>
@@ -3170,54 +3374,101 @@
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         });
 
-        async function banUser(userId) {
+        // ===== دوال الحظر الدائم =====
+        async function banUserPermanent(userId, reason) {
             if (!requireAdmin()) return;
-            if (!confirm('⚠️ حظر هذا المستخدم؟')) return;
+            const reasonText = reason || prompt('📌 سبب الحظر:');
+            if (!reasonText) return;
+            if (!confirm(`⚠️ هل تريد حظر هذا المستخدم بشكل دائم؟\nالسبب: ${reasonText}`)) return;
+
             try {
-                await updateData('users', userId, {
-                    isBanned: true,
-                    isActive: false,
-                    banReason: 'تم الحظر بواسطة الإدارة',
-                    banDate: Date.now()
-                });
-                await db.ref('audit_logs').push({
-                    action: 'ban',
-                    performedBy: window.userData?.name || 'المدير',
-                    userId: currentUser?.uid || 'unknown',
-                    details: { target: userId },
-                    timestamp: Date.now()
-                });
-                showToast('✅ تم الحظر');
+                await banUserPermanentDB(userId, reasonText);
+                showToast('✅ تم حظر المستخدم بشكل دائم');
                 await loadAllData();
                 renderUsers();
                 updateDashboard();
                 updateBadges();
-            } catch (err) { showToast('❌ ' + err.message, 'error'); }
+            } catch (err) {
+                showToast('❌ ' + err.message, 'error');
+            }
         }
 
-        async function unbanUser(userId) {
-            if (!requireAdmin()) return;
-            if (!confirm('⚠️ فك الحظر؟')) return;
+        async function banUserPermanentDB(userId, reason) {
             try {
-                await updateData('users', userId, {
+                await db.ref('users/' + userId).update({
+                    isBanned: true,
+                    isActive: false,
+                    banReason: reason || 'مخالفة قواعد المنصة',
+                    banDate: Date.now(),
+                    bannedBy: currentUser?.uid || 'system',
+                    bannedByName: userData?.name || 'المدير'
+                });
+
+                await db.ref('audit_logs').push({
+                    action: 'ban_permanent',
+                    performedBy: userData?.name || 'المدير',
+                    userId: currentUser?.uid || 'unknown',
+                    details: { target: userId, reason: reason },
+                    timestamp: Date.now()
+                });
+
+                await db.ref('users/' + userId + '/lastActive').set(null);
+                await db.ref('users/' + userId + '/sessionId').set(null);
+                await db.ref('online_users/' + userId).remove();
+
+                return true;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        async function unbanUserPermanent(userId) {
+            if (!requireAdmin()) return;
+            if (!confirm('⚠️ هل تريد فك الحظر عن هذا المستخدم؟')) return;
+
+            try {
+                await db.ref('users/' + userId).update({
                     isBanned: false,
                     isActive: true,
                     banReason: null,
-                    banDate: null
+                    banDate: null,
+                    unbannedBy: currentUser?.uid || 'system',
+                    unbannedByName: userData?.name || 'المدير',
+                    unbannedDate: Date.now()
                 });
+
                 await db.ref('audit_logs').push({
-                    action: 'update',
-                    performedBy: window.userData?.name || 'المدير',
+                    action: 'unban_permanent',
+                    performedBy: userData?.name || 'المدير',
                     userId: currentUser?.uid || 'unknown',
-                    details: { target: userId, action: 'unban' },
+                    details: { target: userId },
                     timestamp: Date.now()
                 });
+
                 showToast('✅ تم فك الحظر');
                 await loadAllData();
                 renderUsers();
                 updateDashboard();
                 updateBadges();
-            } catch (err) { showToast('❌ ' + err.message, 'error'); }
+            } catch (err) {
+                showToast('❌ ' + err.message, 'error');
+            }
+        }
+
+        async function banUserFromModal() {
+            const id = document.getElementById('editUserId').value;
+            if (!id) return;
+            const reason = prompt('📌 سبب الحظر:');
+            if (!reason) return;
+            await banUserPermanent(id, reason);
+            closeModal('editUserModal');
+        }
+
+        async function unbanUserFromModal() {
+            const id = document.getElementById('editUserId').value;
+            if (!id) return;
+            await unbanUserPermanent(id);
+            closeModal('editUserModal');
         }
 
         async function deleteUser(userId) {
@@ -3267,7 +3518,6 @@
             if (!confirm('⚠️ حذف جميع تعليقات هذا المستخدم؟')) return;
             try {
                 const userComments = allComments.filter(c => c.userId === userId);
-                // حذف التعليقات من داخل المنشورات
                 for (const comment of userComments) {
                     if (comment.isInternal) {
                         const post = allForumPosts.find(p => p.id === comment.postId);
@@ -3298,20 +3548,6 @@
             document.getElementById('notifTitle').value = `📢 إشعار لـ ${user.name || 'المستخدم'}`;
             document.getElementById('notifTarget').value = userId;
             openModal('addNotificationModal');
-        }
-
-        async function banUserFromModal() {
-            const id = document.getElementById('editUserId').value;
-            if (!id) return;
-            await banUser(id);
-            closeModal('editUserModal');
-        }
-
-        async function unbanUserFromModal() {
-            const id = document.getElementById('editUserId').value;
-            if (!id) return;
-            await unbanUser(id);
-            closeModal('editUserModal');
         }
 
         document.getElementById('addUserForm').addEventListener('submit', async (e) => {
@@ -3366,7 +3602,7 @@
         });
 
         // ============================================================
-        // Comments Management
+        // Comments Management - مع الردود الرسمية بالشعار والصورة
         // ============================================================
         function renderComments() {
             if (!requireAdmin()) return;
@@ -3523,9 +3759,10 @@
             }
         }
 
+        // ===== الرد الرسمي بشعار المنصة وصورة الفريق =====
         async function officialReplyComment(commentId) {
             if (!requireAdmin()) return;
-            const reply = prompt('📌 اكتب الرد الرسمي:');
+            const reply = prompt('📌 اكتب الرد الرسمي من فريق الثانوية الرسمية بلس:');
             if (!reply) return;
 
             try {
@@ -3534,9 +3771,11 @@
 
                 const replyData = {
                     text: reply,
-                    adminName: window.userData?.name || 'فريق الثانوية الرسمية',
-                    adminPhoto: window.userData?.photoURL || '',
-                    timestamp: Date.now()
+                    adminName: TEAM_NAME,
+                    adminPhoto: TEAM_LOGO,
+                    timestamp: Date.now(),
+                    isOfficialReply: true,
+                    verified: true
                 };
 
                 if (comment.isInternal) {
@@ -3545,19 +3784,20 @@
                         const replies = post.comments[comment.internalIndex].adminReplies || [];
                         replies.push(replyData);
                         post.comments[comment.internalIndex].adminReplies = replies;
+                        post.comments[comment.internalIndex].status = 'approved';
                         await updateData('forum_posts', comment.postId, { comments: post.comments });
                     }
                 }
 
                 await db.ref('audit_logs').push({
                     action: 'official_reply',
-                    performedBy: window.userData?.name || 'المدير',
+                    performedBy: TEAM_NAME,
                     userId: currentUser?.uid || 'unknown',
                     details: { target: commentId, reply: reply },
                     timestamp: Date.now()
                 });
 
-                showToast('✅ تم إرسال الرد الرسمي');
+                showToast('✅ تم إرسال الرد الرسمي من فريق الثانوية الرسمية بلس');
                 await loadAllData();
                 renderComments();
             } catch (err) {
@@ -3583,13 +3823,13 @@
 
                 await db.ref('audit_logs').push({
                     action: 'official_like',
-                    performedBy: window.userData?.name || 'المدير',
+                    performedBy: TEAM_NAME,
                     userId: currentUser?.uid || 'unknown',
                     details: { target: commentId },
                     timestamp: Date.now()
                 });
 
-                showToast('❤️ تم الإعجاب الرسمي');
+                showToast('❤️ تم الإعجاب الرسمي من فريق الثانوية الرسمية بلس');
                 await loadAllData();
                 renderComments();
             } catch (err) {
@@ -3945,9 +4185,10 @@
             } catch (err) { showToast('❌ ' + err.message, 'error'); }
         }
 
+        // ===== الرد الرسمي على منشورات المنتدى =====
         async function officialReplyForum(postId) {
             if (!requireAdmin()) return;
-            const reply = prompt('📌 اكتب الرد الرسمي على هذا المنشور:');
+            const reply = prompt('📌 اكتب الرد الرسمي من فريق الثانوية الرسمية بلس:');
             if (!reply) return;
 
             try {
@@ -3957,29 +4198,32 @@
                 const comments = post.comments || [];
                 comments.push({
                     text: reply,
-                    user: 'فريق الثانوية الرسمية',
-                    userPhoto: '',
-                    userId: 'admin',
+                    user: TEAM_NAME,
+                    userPhoto: TEAM_LOGO,
+                    userId: TEAM_UID,
                     status: 'approved',
                     isAdminReply: true,
+                    isOfficialReply: true,
+                    verified: true,
                     likes: 0,
                     createdAt: Date.now()
                 });
 
                 await updateData('forum_posts', postId, {
                     comments: comments,
-                    isOfficial: true
+                    isOfficial: true,
+                    status: 'approved'
                 });
 
                 await db.ref('audit_logs').push({
                     action: 'official_reply',
-                    performedBy: window.userData?.name || 'المدير',
+                    performedBy: TEAM_NAME,
                     userId: currentUser?.uid || 'unknown',
                     details: { target: postId, reply: reply },
                     timestamp: Date.now()
                 });
 
-                showToast('✅ تم إرسال الرد الرسمي');
+                showToast('✅ تم إرسال الرد الرسمي من فريق الثانوية الرسمية بلس');
                 await loadAllData();
                 renderForum();
             } catch (err) {
@@ -4000,13 +4244,13 @@
 
                 await db.ref('audit_logs').push({
                     action: 'official_like',
-                    performedBy: window.userData?.name || 'المدير',
+                    performedBy: TEAM_NAME,
                     userId: currentUser?.uid || 'unknown',
                     details: { target: postId },
                     timestamp: Date.now()
                 });
 
-                showToast('❤️ تم الإعجاب الرسمي');
+                showToast('❤️ تم الإعجاب الرسمي من فريق الثانوية الرسمية بلس');
                 await loadAllData();
                 renderForum();
             } catch (err) {
@@ -4090,8 +4334,8 @@
                     isPinned,
                     isUrgent,
                     isOfficial: true,
-                    author: 'فريق الثانوية الرسمية بلس',
-                    userId: 'admin',
+                    author: TEAM_NAME,
+                    userId: TEAM_UID,
                     likesCount: 0,
                     comments: [],
                     createdAt: Date.now()
@@ -4459,7 +4703,7 @@
         });
 
         // ============================================================
-        // Ads - with Realtime Database
+        // Ads
         // ============================================================
         document.getElementById('adImagesInput').addEventListener('change', function(e) {
             const files = e.target.files;
@@ -4893,7 +5137,7 @@
         }
 
         // ============================================================
-        // Settings - Realtime Database
+        // Settings
         // ============================================================
         async function saveSettings() {
             if (!requireAdmin()) return;
@@ -4937,6 +5181,7 @@
             const activeAds = allAds.filter(a => a.active).length;
             const pendingHandwritten = allHandwritten.filter(h => h.status === 'pending').length;
             const onlineCount = allOnlineUsers.length;
+            const bannedUsers = allUsers.filter(u => u.isBanned).length;
 
             document.getElementById('commentsBadge').textContent = pendingComments > 0 ? pendingComments : '';
             document.getElementById('uploadsBadge').textContent = pendingUploads > 0 ? pendingUploads : '';
@@ -4972,7 +5217,10 @@
 
         console.log('✅ لوحة التحكم الخارقة - Realtime Database Version');
         console.log('📊 جميع البيانات من Realtime Database');
-        console.log('🟢 تحديثات لحظية كل 5 ثوانٍ');
+        console.log('🟢 تحديثات لحظية للمتصلين');
+        console.log('🔵 علامة توثيق زرقاء لفريق الثانوية الرسمية بلس');
+        console.log('🚫 نظام حظر دائم يمنع الدخول مهما حدث');
+        console.log('📌 ردود رسمية بشعار المنصة وصورة الفريق');
 
         // تحميل أولي للبيانات
         setTimeout(() => {
