@@ -2475,7 +2475,7 @@
         }
 
         // ============================================================
-        // تحميل جميع البيانات - مع تعديل التعامل مع comments ككائن
+        // تحميل جميع البيانات - مع التعامل مع comments ككائن
         // ============================================================
         async function loadAllData() {
             if (!requireAdmin()) return;
@@ -2518,10 +2518,6 @@
                             const isOfficial = comment.isOfficialReply || comment.isAdminReply ||
                                 (comment.user === TEAM_NAME);
 
-                            // حساب عدد الردود الرسمية (كائن)
-                            const repliesCount = comment.adminReplies ? Object.keys(comment.adminReplies)
-                                .length : 0;
-
                             allComments.push({
                                 id: post.id + '_c' + key,
                                 text: comment.text || '',
@@ -2539,7 +2535,8 @@
                                 isInternal: true,
                                 internalIndex: key,
                                 isOfficialReply: isOfficial,
-                                isVerified: comment.verified || false
+                                isVerified: comment.verified || false,
+                                postAuthor: post.author || 'مجهول'
                             });
                         });
                     }
@@ -2571,7 +2568,8 @@
                                 isInternal: true,
                                 internalIndex: key,
                                 isOfficialReply: isOfficial,
-                                isVerified: comment.verified || false
+                                isVerified: comment.verified || false,
+                                postAuthor: post.author || 'فريق الثانوية'
                             });
                         });
                     }
@@ -2604,7 +2602,7 @@
                 });
                 allComments.slice(0, 5).forEach(c => {
                     allActivities.push({
-                        text: `💬 تعليق: "${(c.text || '').substring(0, 30)}..." من ${c.userName}`,
+                        text: `💬 تعليق: "${(c.text || '').substring(0, 30)}..." من ${c.userName} على ${c.postTitle}`,
                         time: c.createdAt ? formatDate(c.createdAt) : 'الآن',
                         status: c.status || 'pending'
                     });
@@ -3597,7 +3595,7 @@
             }
 
             let html =
-                `<table><thead><tr><th>#</th><th>التعليق</th><th>المستخدم</th><th>المصدر</th><th>الحالة</th><th>ردود رسمية</th><th>الإجراءات</th></tr></thead><tbody>`;
+                `<table><thead><tr><th>#</th><th>التعليق</th><th>المستخدم</th><th>المنشور</th><th>المصدر</th><th>الحالة</th><th>ردود رسمية</th><th>الإجراءات</th></tr></thead><tbody>`;
 
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
@@ -3627,12 +3625,14 @@
                 }
 
                 const sourceDisplay = c.source || 'غير معروف';
+                const postDisplay = c.postTitle ? `${c.postTitle}` : 'بدون عنوان';
 
                 html += `
                         <tr>
                             <td>${start + i + 1}</td>
                             <td style="max-width:200px;word-wrap:break-word;font-size:11px;">${safeText(c.text || '')}</td>
                             <td>${userNameDisplay}</td>
+                            <td style="font-size:10px;max-width:120px;word-wrap:break-word;">${safeText(postDisplay)}</td>
                             <td style="font-size:10px;">${sourceDisplay}</td>
                             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                             <td>${officialReplies > 0 ? `📌 ${officialReplies}` : '-'}</td>
