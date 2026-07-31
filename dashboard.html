@@ -2475,7 +2475,7 @@
         }
 
         // ============================================================
-        // تحميل جميع البيانات
+        // تحميل جميع البيانات - مع تعديل التعامل مع comments ككائن
         // ============================================================
         async function loadAllData() {
             if (!requireAdmin()) return;
@@ -2506,19 +2506,24 @@
                 allAuditLogs = auditLogs || [];
                 allUploads = allBooks.filter(b => b.status === 'pending');
 
-                // جلب جميع التعليقات
+                // جلب جميع التعليقات - التعامل مع comments ككائن
                 allComments = [];
 
                 // تعليقات المنتدى الداخلية
                 allForumPosts.forEach(post => {
-                    if (post.comments && post.comments.length > 0) {
-                        post.comments.forEach((comment, index) => {
+                    if (post.comments) {
+                        Object.keys(post.comments).forEach((key, index) => {
+                            const comment = post.comments[key];
                             if (comment.status === 'rejected') return;
                             const isOfficial = comment.isOfficialReply || comment.isAdminReply ||
                                 (comment.user === TEAM_NAME);
 
+                            // حساب عدد الردود الرسمية (كائن)
+                            const repliesCount = comment.adminReplies ? Object.keys(comment.adminReplies)
+                                .length : 0;
+
                             allComments.push({
-                                id: post.id + '_c' + index,
+                                id: post.id + '_c' + key,
                                 text: comment.text || '',
                                 userName: comment.user || 'مجهول',
                                 userPhoto: comment.userPhoto || '',
@@ -2529,10 +2534,10 @@
                                 sourceType: 'forum',
                                 status: comment.status || 'pending',
                                 createdAt: comment.createdAt || Date.now(),
-                                adminReplies: comment.adminReplies || [],
+                                adminReplies: comment.adminReplies || {},
                                 adminLiked: comment.adminLiked || false,
                                 isInternal: true,
-                                internalIndex: index,
+                                internalIndex: key,
                                 isOfficialReply: isOfficial,
                                 isVerified: comment.verified || false
                             });
@@ -2542,14 +2547,15 @@
 
                 // تعليقات منشورات الفريق الداخلية
                 allTeamPosts.forEach(post => {
-                    if (post.comments && post.comments.length > 0) {
-                        post.comments.forEach((comment, index) => {
+                    if (post.comments) {
+                        Object.keys(post.comments).forEach((key, index) => {
+                            const comment = post.comments[key];
                             if (comment.status === 'rejected') return;
                             const isOfficial = comment.isOfficialReply || comment.isAdminReply ||
                                 (comment.user === TEAM_NAME);
 
                             allComments.push({
-                                id: 'team_' + post.id + '_c' + index,
+                                id: 'team_' + post.id + '_c' + key,
                                 text: comment.text || '',
                                 userName: comment.user || 'مجهول',
                                 userPhoto: comment.userPhoto || '',
@@ -2560,10 +2566,10 @@
                                 sourceType: 'team',
                                 status: comment.status || 'pending',
                                 createdAt: comment.createdAt || Date.now(),
-                                adminReplies: comment.adminReplies || [],
+                                adminReplies: comment.adminReplies || {},
                                 adminLiked: comment.adminLiked || false,
                                 isInternal: true,
-                                internalIndex: index,
+                                internalIndex: key,
                                 isOfficialReply: isOfficial,
                                 isVerified: comment.verified || false
                             });
@@ -2859,7 +2865,11 @@
             }
 
             const quickStats = document.getElementById('quickStats');
-            const officialReplies = allComments.reduce((sum, c) => sum + (c.adminReplies ? c.adminReplies.length : 0), 0);
+            // حساب عدد الردود الرسمية باستخدام Object.keys
+            const officialReplies = allComments.reduce((sum, c) => {
+                const count = c.adminReplies ? Object.keys(c.adminReplies).length : 0;
+                return sum + count;
+            }, 0);
             quickStats.innerHTML = `
                     <table>
                         <thead><tr><th>المؤشر</th><th>القيمة</th></tr></thead>
@@ -3477,8 +3487,15 @@
                     if (comment.isInternal) {
                         const post = allForumPosts.find(p => p.id === comment.postId);
                         if (post && post.comments && post.comments[comment.internalIndex]) {
-                            post.comments.splice(comment.internalIndex, 1);
-                            await updateData('forum_posts', comment.postId, { comments: post.comments });
+                            delete post.comments[comment.internalIndex];
+                            // إعادة ترتيب المفاتيح
+                            const newComments = {};
+                            let index = 0;
+                            Object.keys(post.comments).forEach(key => {
+                                newComments[index] = post.comments[key];
+                                index++;
+                            });
+                            await updateData('forum_posts', comment.postId, { comments: newComments });
                         }
                     }
                 }
@@ -3592,7 +3609,8 @@
                 const statusText = c.status === 'approved' ? '✅ مقبول' :
                     c.status === 'pending' ? '⏳ في الانتظار' : '❌ مرفوض';
 
-                const officialReplies = c.adminReplies ? c.adminReplies.length : 0;
+                // حساب عدد الردود الرسمية (كائن)
+                const officialReplies = c.adminReplies ? Object.keys(c.adminReplies).length : 0;
 
                 // عرض اسم المستخدم مع الصورة والشعار وعلامة التوثيق إذا كان رداً رسمياً
                 let userNameDisplay = safeText(c.userName || 'مجهول');
@@ -3717,8 +3735,16 @@
                 if (comment.isInternal) {
                     const post = allForumPosts.find(p => p.id === comment.postId);
                     if (post && post.comments && post.comments[comment.internalIndex]) {
-                        post.comments.splice(comment.internalIndex, 1);
-                        await updateData('forum_posts', comment.postId, { comments: post.comments });
+                        // حذف التعليق من الكائن
+                        delete post.comments[comment.internalIndex];
+                        // إعادة ترتيب المفاتيح
+                        const newComments = {};
+                        let index = 0;
+                        Object.keys(post.comments).forEach(key => {
+                            newComments[index] = post.comments[key];
+                            index++;
+                        });
+                        await updateData('forum_posts', comment.postId, { comments: newComments });
                     }
                 }
 
@@ -3765,8 +3791,11 @@
                 if (comment.isInternal) {
                     const post = allForumPosts.find(p => p.id === comment.postId);
                     if (post && post.comments && post.comments[comment.internalIndex]) {
-                        const replies = post.comments[comment.internalIndex].adminReplies || [];
-                        replies.push(replyData);
+                        // التأكد من أن adminReplies كائن (Object) وليس مصفوفة
+                        let replies = post.comments[comment.internalIndex].adminReplies || {};
+                        // إضافة الرد ككائن مع مفتاح فريد
+                        const replyKey = 'reply_' + Date.now();
+                        replies[replyKey] = replyData;
                         post.comments[comment.internalIndex].adminReplies = replies;
                         post.comments[comment.internalIndex].status = 'approved';
                         await updateData('forum_posts', comment.postId, { comments: post.comments });
@@ -4179,8 +4208,9 @@
                 const post = allForumPosts.find(p => p.id === postId);
                 if (!post) { showToast('❌ المنشور غير موجود', 'error'); return; }
 
-                const comments = post.comments || [];
-                comments.push({
+                const comments = post.comments || {};
+                const newCommentKey = 'reply_' + Date.now();
+                comments[newCommentKey] = {
                     text: reply,
                     user: TEAM_NAME,
                     userPhoto: TEAM_LOGO,
@@ -4191,7 +4221,7 @@
                     verified: true,
                     likes: 0,
                     createdAt: Date.now()
-                });
+                };
 
                 await updateData('forum_posts', postId, {
                     comments: comments,
@@ -4321,7 +4351,7 @@
                     author: TEAM_NAME,
                     userId: TEAM_UID,
                     likesCount: 0,
-                    comments: [],
+                    comments: {},
                     createdAt: Date.now()
                 });
                 await db.ref('audit_logs').push({
@@ -5074,7 +5104,11 @@
             const activeAds = allAds.filter(a => a.active).length;
             const totalHandwritten = allHandwritten.length;
             const totalYoutube = allYoutube.length;
-            const officialReplies = allComments.reduce((sum, c) => sum + (c.adminReplies ? c.adminReplies.length : 0), 0);
+            // حساب عدد الردود الرسمية
+            const officialReplies = allComments.reduce((sum, c) => {
+                const count = c.adminReplies ? Object.keys(c.adminReplies).length : 0;
+                return sum + count;
+            }, 0);
 
             document.getElementById('analyticsStats').innerHTML = `
                     <div class="stat-card green"><div class="stat-number">${totalDownloads}</div><div class="stat-label">📥 التحميلات</div></div>
